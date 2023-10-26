@@ -34,3 +34,4 @@
 # extra
 bin
 *.depend
+*.layout

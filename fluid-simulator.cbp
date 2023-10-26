@@ -39,7 +39,8 @@
 			<Add option="-lglfw3 -lX11" />
 			<Add library="/usr/local/lib/libglfw3.a" />
 		</Linker>
-		<Unit filename="main.cpp" />
+		<Unit filename="header/teste.h" />
+		<Unit filename="src/main.cpp" />
 		<Extensions />
 	</Project>
 </CodeBlocks_project_file>
