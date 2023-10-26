@@ -1,4 +1,6 @@
 #include <iostream>
+
+#include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
 using namespace std;
@@ -21,6 +23,12 @@ int main()
     }
 
     glfwMakeContextCurrent(window);
+
+    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+    {
+        std::cout << "Failed to initialize GLAD" << std::endl;
+        return -1;
+    }
 
     while(!glfwWindowShouldClose(window))
     {

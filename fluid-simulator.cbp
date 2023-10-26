@@ -33,12 +33,18 @@
 			<Add option="-std=c11" />
 			<Add option="-fexceptions" />
 			<Add directory="/usr/local/include" />
+			<Add directory="./glad/include" />
 		</Compiler>
 		<Linker>
 			<Add option="-static-libstdc++" />
 			<Add option="-lglfw3 -lX11" />
 			<Add library="/usr/local/lib/libglfw3.a" />
 		</Linker>
+		<Unit filename="glad/include/KHR/khrplatform.h" />
+		<Unit filename="glad/include/glad/glad.h" />
+		<Unit filename="glad/src/glad.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="header/teste.h" />
 		<Unit filename="src/main.cpp" />
 		<Extensions />
