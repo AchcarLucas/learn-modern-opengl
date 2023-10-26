@@ -3,6 +3,8 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
+#include "triangle.hpp"
+
 using namespace std;
 
 const int WIDTH = 800;
@@ -54,6 +56,11 @@ int main()
     glViewport(0, 0, WIDTH, HEIGHT);
 
     glfwSetFramebufferSizeCallback(window, changeFrameBufferSizeCallback);
+
+    /*
+     * Cria o VBO de um triângulo
+     */
+    VBO *triangle = createTriangle();
 
     while(!glfwWindowShouldClose(window))
     {

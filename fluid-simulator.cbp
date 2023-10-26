@@ -13,6 +13,7 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-g" />
+					<Add directory="project/include" />
 				</Compiler>
 			</Target>
 			<Target title="Release">
@@ -22,6 +23,7 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-O2" />
+					<Add directory="project/include" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
@@ -45,8 +47,11 @@
 		<Unit filename="glad/src/glad.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="header/teste.h" />
-		<Unit filename="src/main.cpp" />
+		<Unit filename="project/include/VBO." />
+		<Unit filename="project/include/teste.h" />
+		<Unit filename="project/src/VBO." />
+		<Unit filename="project/src/main.cpp" />
+		<Unit filename="project/src/triangle.cpp" />
 		<Extensions />
 	</Project>
 </CodeBlocks_project_file>
