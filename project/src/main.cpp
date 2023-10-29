@@ -3,6 +3,7 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
+#include "image.hpp"
 #include "texture.hpp"
 #include "object.hpp"
 #include "shader.hpp"
@@ -58,8 +59,11 @@ int main()
 
     glfwSetFramebufferSizeCallback(window, changeFrameBufferSizeCallback);
 
+    _stbi_set_flip_vertically_on_load(true);
+
     Texture2D *texture_1 = new Texture2D("resources/textures/container.jpg");
     Texture2D *texture_2 = new Texture2D("resources/textures/wall.jpg");
+    Texture2D *texture_3 = new Texture2D("resources/textures/awesomeface.png", true);
 
     Shader *shader_1 = new Shader("glsl/first_vertex_shader.vs", "glsl/first_fragment_shader.fs");
     Shader *shader_2 = new Shader("glsl/interpolate_vertex_shader.vs", "glsl/interpolate_fragment_shader.fs");
@@ -77,7 +81,7 @@ int main()
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 
         texture_1->bind(GL_TEXTURE1);
-        texture_2->bind(GL_TEXTURE2);
+        texture_3->bind(GL_TEXTURE2);
 
         shader_3->use();
         quad->_vao->bind();

@@ -3,7 +3,7 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 
-unsigned char *stbi_load(std::string file, int *width, int *height, int *n_channel, int desired_channels)
+unsigned char *_stbi_load(std::string file, int *width, int *height, int *n_channel, int desired_channels)
 {
     unsigned char *buffer = stbi_load(file.c_str(), width, height, n_channel, desired_channels);
     if(!buffer) {
@@ -14,9 +14,14 @@ unsigned char *stbi_load(std::string file, int *width, int *height, int *n_chann
     return buffer;
 }
 
-void stbi_image_free(unsigned char *buffer)
+void _stbi_set_flip_vertically_on_load(bool flag_true_if_should_flip)
 {
-    STBI_FREE(buffer);
+    stbi__vertically_flip_on_load_global = flag_true_if_should_flip;
+}
+
+void _stbi_image_free(unsigned char *buffer)
+{
+    stbi_image_free(buffer);
 }
 
 
