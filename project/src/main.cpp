@@ -3,6 +3,7 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
+#include "texture.hpp"
 #include "object.hpp"
 #include "shader.hpp"
 
@@ -18,8 +19,9 @@ void changeFrameBufferSizeCallback(GLFWwindow* window, int width, int height)
 
 void processInput(GLFWwindow *window)
 {
-    if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+    if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
         glfwSetWindowShouldClose(window, true);
+    }
 }
 
 int main()
@@ -39,8 +41,7 @@ int main()
 
     GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "OpenGL with GLFW", NULL, NULL);
 
-    if (window == NULL)
-    {
+    if (window == NULL) {
         std::cout << "Failed to create GLFW window" << std::endl;
         glfwTerminate();
         return -1;
@@ -48,8 +49,7 @@ int main()
 
     glfwMakeContextCurrent(window);
 
-    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
-    {
+    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
         std::cout << "Failed to initialize GLAD" << std::endl;
         return -1;
     }
@@ -58,23 +58,25 @@ int main()
 
     glfwSetFramebufferSizeCallback(window, changeFrameBufferSizeCallback);
 
-    Shader *first_shader = new Shader("glsl/first_vertex_shader.vs", "glsl/first_fragment_shader.fs");
-    Shader *interpolate_shader = new Shader("glsl/interpolate_vertex_shader.vs", "glsl/interpolate_fragment_shader.fs");
+    Texture2D *texture_1 = new Texture2D("resources/textures/container.jpg");
+    Texture2D *texture_2 = new Texture2D("resources/textures/wall.jpg");
+
+    Shader *shader_1 = new Shader("glsl/first_vertex_shader.vs", "glsl/first_fragment_shader.fs");
+    Shader *shader_2 = new Shader("glsl/interpolate_vertex_shader.vs", "glsl/interpolate_fragment_shader.fs");
 
     SObject *quad = createQuad();
     SObject *triangle = createTriangle();
 
-    while(!glfwWindowShouldClose(window))
-    {
+    while(!glfwWindowShouldClose(window)) {
         glClear(GL_COLOR_BUFFER_BIT);
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 
-        interpolate_shader->use();
+        shader_2->use();
         quad->_vao->bind();
         quad->_ebo->bind();
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
-        /*interpolate_shader->use();
+        /*shader_1->use();
         triangle->_vao->bind();
         triangle->_ebo->bind();
         glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0);*/
@@ -85,14 +87,13 @@ int main()
         glfwSwapBuffers(window);
     }
 
-/*    delete triangle->_vao;
-    delete triangle->_vbo;
-    delete triangle->_ebo;
-    delete triangle;*/
+    delete texture_1;
+    delete texture_2;
 
-    delete quad->_vao;
-    delete quad->_vbo;
-    delete quad->_ebo;
+    delete shader_1;
+    delete shader_2;
+
+    delete triangle;
     delete quad;
 
     glfwTerminate();

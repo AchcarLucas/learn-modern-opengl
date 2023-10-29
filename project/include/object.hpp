@@ -3,11 +3,19 @@
 
 #include "vao.hpp"
 
-struct SObject
+class SObject
 {
-    VAO *_vao;
-    VBO *_vbo;
-    EBO *_ebo;
+    public:
+        VAO *_vao;
+        VBO *_vbo;
+        EBO *_ebo;
+
+    ~SObject()
+    {
+        delete _vao;
+        delete _vbo;
+        delete _ebo;
+    }
 };
 
 SObject *createTriangle();

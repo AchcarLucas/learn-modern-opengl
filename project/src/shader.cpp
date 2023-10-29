@@ -17,8 +17,7 @@ Shader::Shader(std::string vs_path, std::string fs_path)
     std::cout << "FRAGMENT SHADER FILE [" << fs_path << "]" << std::endl;
     std::cout << "----------------------------------------" << std::endl;
 
-    try
-    {
+    try {
         // faz a abertura dos shaderes
         vs_file.open(vs_path);
         fs_file.open(fs_path);
@@ -37,8 +36,7 @@ Shader::Shader(std::string vs_path, std::string fs_path)
         vs_code = vs_stream.str();
         fs_code = fs_stream.str();
     }
-    catch(std::ifstream::failure e)
-    {
+    catch(std::ifstream::failure e) {
         std::cout << "ERROR::SHADER::FILE_NOT_SUCCESFULLY_READ" << std::endl;
         return;
     }
@@ -107,8 +105,7 @@ void Shader::getShaderLog(GLuint shader, std::string success_message, std::strin
 
     glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
 
-    if(success)
-    {
+    if(success) {
         std::cout << success_message << std::endl;
         return;
     }
@@ -124,8 +121,7 @@ void Shader::getProgramLog(GLuint program, std::string success_message, std::str
 
     glGetProgramiv(program, GL_LINK_STATUS, &success);
 
-    if(success)
-    {
+    if(success) {
         std::cout << success_message << std::endl;
         return;
     }

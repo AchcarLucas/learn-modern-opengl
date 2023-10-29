@@ -1,6 +1,8 @@
 #ifndef VBO_HPP
 #define VBO_HPP
 
+#include <iostream>
+
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 

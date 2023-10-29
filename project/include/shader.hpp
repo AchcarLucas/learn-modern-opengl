@@ -8,7 +8,6 @@
 #include <fstream>
 #include <sstream>
 
-
 class Shader
 {
     public:

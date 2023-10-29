@@ -46,13 +46,13 @@ sudo make install
 Ao finalizar, será exibido no terminal o local de instalação das libs e os includes como pode
 ser visto na imagem:
 
-![glfw-install](./image/img_1.png)
+![glfw-install](./images/img_1.png)
 
 Configuração do CodeBlock:
 
 Em ```Build Options -> Compiler Settings``` habilite o ```-std=c11``` o ```-static-libstdc++```
 
-![glfw-codeblock-config](./image/img_2.png)
+![glfw-codeblock-config](./images/img_2.png)
 
 Em ```Build Options -> Linker Settings``` adicione o local onde a lib ```libglfw3.a``` está instalado
 

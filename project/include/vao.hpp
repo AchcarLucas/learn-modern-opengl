@@ -1,6 +1,8 @@
 #ifndef VAO_HPP
 #define VAO_HPP
 
+#include <iostream>
+
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 

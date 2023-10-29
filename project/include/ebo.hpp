@@ -1,6 +1,8 @@
 #ifndef EBO_HPP
 #define EBO_HPP
 
+#include <iostream>
+
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
