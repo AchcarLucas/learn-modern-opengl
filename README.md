@@ -1,4 +1,4 @@
-# learn-opengl-program
+# learn-opengl
 
 Instalação das dependências:
 
