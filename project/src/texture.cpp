@@ -30,3 +30,9 @@ Texture2D::~Texture2D()
 {
     glDeleteTextures(1, &this->texture);
 }
+
+void Texture2D::bind(GLenum _GL_TEXTURE)
+{
+    glActiveTexture(_GL_TEXTURE);
+    glBindTexture(GL_TEXTURE_2D, this->texture);
+}

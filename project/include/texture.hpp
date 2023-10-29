@@ -14,6 +14,8 @@ class Texture2D
         Texture2D(std::string, bool alpha_channel = false);
         virtual ~Texture2D();
 
+        void bind(GLenum);
+
     protected:
         GLuint texture;
         unsigned char *image;
