@@ -17,6 +17,8 @@ using namespace std;
 const int WIDTH = 800;
 const int HEIGHT = 600;
 
+GLFWwindow* window;
+
 void changeFrameBufferSizeCallback(GLFWwindow* window, int width, int height)
 {
     glViewport(0, 0, width, height);
@@ -29,7 +31,7 @@ void processInput(GLFWwindow *window)
     }
 }
 
-int main()
+void initOpenGL()
 {
     glfwInit();
 
@@ -44,19 +46,19 @@ int main()
         #endif
     #endif
 
-    GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "OpenGL with GLFW", NULL, NULL);
+    window = glfwCreateWindow(WIDTH, HEIGHT, "OpenGL with GLFW", NULL, NULL);
 
     if (window == NULL) {
         std::cout << "Failed to create GLFW window" << std::endl;
         glfwTerminate();
-        return -1;
+        exit(-1);
     }
 
     glfwMakeContextCurrent(window);
 
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
         std::cout << "Failed to initialize GLAD" << std::endl;
-        return -1;
+        exit(-1);
     }
 
     glViewport(0, 0, WIDTH, HEIGHT);
@@ -64,6 +66,11 @@ int main()
     glfwSetFramebufferSizeCallback(window, changeFrameBufferSizeCallback);
 
     _stbi_set_flip_vertically_on_load(true);
+}
+
+int main()
+{
+    initOpenGL();
 
     Texture2D *texture_1 = new Texture2D("resources/textures/container.jpg");
     Texture2D *texture_2 = new Texture2D("resources/textures/wall.jpg");
@@ -86,7 +93,7 @@ int main()
     SObject *triangle = createTriangle();
 
     /*
-     * transform
+     * transform test
      */
 
     glm::vec4 vec(1.0f, 0.0f, 0.0f, 1.0f);
