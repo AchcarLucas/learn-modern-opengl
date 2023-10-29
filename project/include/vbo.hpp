@@ -1,5 +1,5 @@
-#ifndef VBO_H
-#define VBO_H
+#ifndef VBO_HPP
+#define VBO_HPP
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -8,12 +8,17 @@ class VBO
 {
     public:
         VBO();
-        void setVBOBuffer(float *, unsigned int, unsigned int);
+        virtual ~VBO();
+
+        void bind();
+        void VBOBuffer(float *, unsigned int, unsigned int);
+
+        GLuint getVBO();
 
     protected:
-        unsigned int _vbo;
+        GLuint _vbo;
 
     private:
 };
 
-#endif // VBO_H
+#endif // VBO_HPP

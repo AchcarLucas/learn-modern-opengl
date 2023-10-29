@@ -3,7 +3,8 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-#include "triangle.hpp"
+#include "object.hpp"
+#include "shader.hpp"
 
 using namespace std;
 
@@ -57,21 +58,42 @@ int main()
 
     glfwSetFramebufferSizeCallback(window, changeFrameBufferSizeCallback);
 
-    /*
-     * Cria o VBO de um triângulo
-     */
-    VBO *triangle = createTriangle();
+    Shader *first_shader = new Shader("glsl/first_vertex_shader.vs", "glsl/first_fragment_shader.fs");
+    Shader *interpolate_shader = new Shader("glsl/interpolate_vertex_shader.vs", "glsl/interpolate_fragment_shader.fs");
+
+    SObject *quad = createQuad();
+    SObject *triangle = createTriangle();
 
     while(!glfwWindowShouldClose(window))
     {
         glClear(GL_COLOR_BUFFER_BIT);
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 
+        interpolate_shader->use();
+        quad->_vao->bind();
+        quad->_ebo->bind();
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+        /*interpolate_shader->use();
+        triangle->_vao->bind();
+        triangle->_ebo->bind();
+        glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0);*/
+
         processInput(window);
 
         glfwPollEvents();
         glfwSwapBuffers(window);
     }
+
+/*    delete triangle->_vao;
+    delete triangle->_vbo;
+    delete triangle->_ebo;
+    delete triangle;*/
+
+    delete quad->_vao;
+    delete quad->_vbo;
+    delete quad->_ebo;
+    delete quad;
 
     glfwTerminate();
     return 0;

@@ -1,8 +1,8 @@
-#ifndef TRIANGLE_H
-#define TRIANGLE_H
+#ifndef OBJECT_H
+#define OBJECT_H
 
 #include "vbo.hpp"
 
 VBO *createTriangle();
 
-#endif // TRIANGLE_H
+#endif // OBJECT_H
