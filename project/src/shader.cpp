@@ -103,6 +103,21 @@ void Shader::setFloat(const std::string &name, float value) const
     glUniform1f(glGetUniformLocation(this->_id, name.c_str()), value);
 }
 
+void Shader::setMatrix2fv(const std::string &name, const GLfloat *value)
+{
+    glUniformMatrix2fv(glGetUniformLocation(this->_id, name.c_str()), 1, GL_FALSE, value);
+}
+
+void Shader::setMatrix3fv(const std::string &name, const GLfloat *value)
+{
+    glUniformMatrix3fv(glGetUniformLocation(this->_id, name.c_str()), 1, GL_FALSE, value);
+}
+
+void Shader::setMatrix4fv(const std::string &name, const GLfloat *value)
+{
+    glUniformMatrix4fv(glGetUniformLocation(this->_id, name.c_str()), 1, GL_FALSE, value);
+}
+
 void Shader::getShaderLog(GLuint shader, std::string success_message, std::string error_message)
 {
     char log[512];
