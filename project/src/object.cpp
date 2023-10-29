@@ -1,18 +1,7 @@
 #include "object.hpp"
 
-float triangle_vertices[] =
-{
-    0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f,   // bottom right
-    -0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,   // bottom left
-    0.0f,  0.5f, 0.0f,  0.0f, 0.0f, 1.0f    // top
-};
-
-unsigned int triangle_indices[] =
-{
-    0, 1, 2,   // first triangle
-};
-
 float quad_vertices[] = {
+    // position             color
      0.5f,  0.5f, 0.0f, 1.0f, 0.0f, 0.0f, // top right
      0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, // bottom right
     -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, // bottom left
@@ -43,9 +32,11 @@ SObject *createQuad()
     _ebo->bind();
     _ebo->EBOBuffer(quad_indices, sizeof(quad_indices), GL_STATIC_DRAW);
 
+    // position
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
 
+    // color
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
 
@@ -55,6 +46,19 @@ SObject *createQuad()
 
     return object;
 }
+
+float triangle_vertices[] =
+{
+    // position             color
+    0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f,   // bottom right
+    -0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,   // bottom left
+    0.0f,  0.5f, 0.0f,  0.0f, 0.0f, 1.0f    // top
+};
+
+unsigned int triangle_indices[] =
+{
+    0, 1, 2,   // first triangle
+};
 
 SObject *createTriangle()
 {
