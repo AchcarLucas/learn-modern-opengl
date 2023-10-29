@@ -1,4 +1,4 @@
-# 2d-fluid-simulation
+# learn-opengl-program
 
 Instalação das dependências:
 
