@@ -118,6 +118,26 @@ void Shader::setMatrix4fv(const std::string &name, const GLfloat *value)
     glUniformMatrix4fv(glGetUniformLocation(this->_id, name.c_str()), 1, GL_FALSE, value);
 }
 
+void Shader::setUniform1fv(const std::string &name, const GLfloat *value)
+{
+    glUniform1fv(glGetUniformLocation(this->_id, name.c_str()), 1, value);
+}
+
+void Shader::setUniform2fv(const std::string &name, const GLfloat *value)
+{
+    glUniform2fv(glGetUniformLocation(this->_id, name.c_str()), 1, value);
+}
+
+void Shader::setUniform3fv(const std::string &name, const GLfloat *value)
+{
+    glUniform3fv(glGetUniformLocation(this->_id, name.c_str()), 1, value);
+}
+
+void Shader::setUniform4fv(const std::string &name, const GLfloat *value)
+{
+    glUniform4fv(glGetUniformLocation(this->_id, name.c_str()), 1, value);
+}
+
 void Shader::getShaderLog(GLuint shader, std::string success_message, std::string error_message)
 {
     char log[512];

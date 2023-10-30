@@ -113,3 +113,8 @@ SObject *createCube()
 {
     return createObject(cube_vertices, sizeof(cube_vertices), cube_indices, sizeof(cube_indices));
 }
+
+SObject *createLight()
+{
+    return createObject(cube_vertices, sizeof(cube_vertices), cube_indices, sizeof(cube_indices));
+}

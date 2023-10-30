@@ -24,7 +24,7 @@ int run_003(const int width, const int height)
     view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
 
     glm::mat4 projection;
-    projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
+    projection = glm::perspective(glm::radians(45.0f), (float)width / height, 0.1f, 100.0f);
 
     shader->use();
     shader->setInt("texture0", 0);

@@ -25,6 +25,11 @@ class Shader
         void setMatrix2fv(const std::string &name, const GLfloat *value);
         void setMatrix3fv(const std::string &name, const GLfloat *value);
         void setMatrix4fv(const std::string &name, const GLfloat *value);
+
+        void setUniform1fv(const std::string &name, const GLfloat *value);
+        void setUniform2fv(const std::string &name, const GLfloat *value);
+        void setUniform3fv(const std::string &name, const GLfloat *value);
+        void setUniform4fv(const std::string &name, const GLfloat *value);
     protected:
         GLuint _id;
 

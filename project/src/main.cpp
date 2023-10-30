@@ -6,7 +6,7 @@ using namespace std;
 const int _WIDTH = 800;
 const int _HEIGHT = 600;
 
-#define EXEC_TEST 0
+#define EXEC_TEST 5
 
 int main()
 {
