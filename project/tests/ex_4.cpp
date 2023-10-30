@@ -10,7 +10,7 @@
 
 using namespace std;
 
-int run_003()
+int run_004()
 {
     _stbi_set_flip_vertically_on_load(true);
 
@@ -86,3 +86,4 @@ int run_003()
     glfwTerminate();
     return 0;
 }
+
