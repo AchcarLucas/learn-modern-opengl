@@ -12,7 +12,9 @@ int main()
 {
     initOpenGL(_WIDTH, _HEIGHT);
     #ifdef EXEC_TEST
-        #if EXEC_TEST == 1
+        #if EXEC_TEST == 0
+            return run_default();
+        #elif EXEC_TEST == 1
             return run_001();
         #elif EXEC_TEST == 2
             return run_002();

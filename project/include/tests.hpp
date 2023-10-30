@@ -1,6 +1,7 @@
 #ifndef TESTS_HPP
 #define TESTS_HPP
 
+int run_default();
 int run_001();
 int run_002();
 
