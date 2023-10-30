@@ -1,4 +1,4 @@
-# learn-opengl
+# learn-modern-opengl
 
 Instalação das dependências:
 
