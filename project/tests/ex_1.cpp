@@ -74,6 +74,7 @@ int run_001()
     delete shader_1;
     delete shader_2;
     delete shader_3;
+    delete shader_4;
 
     delete triangle;
     delete quad;
