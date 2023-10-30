@@ -13,15 +13,15 @@ int main()
     initOpenGL(_WIDTH, _HEIGHT);
     #ifdef EXEC_TEST
         #if EXEC_TEST == 0
-            return run_default();
+            return run_default(_WIDTH, _HEIGHT);
         #elif EXEC_TEST == 1
-            return run_001();
+            return run_001(_WIDTH, _HEIGHT);
         #elif EXEC_TEST == 2
-            return run_002();
+            return run_002(_WIDTH, _HEIGHT);
         #elif EXEC_TEST == 3
-            return run_003();
+            return run_003(_WIDTH, _HEIGHT);
         #elif EXEC_TEST == 4
-            return run_004();
+            return run_004(_WIDTH, _HEIGHT);
         #endif
     #endif
 }

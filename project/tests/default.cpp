@@ -10,7 +10,7 @@
 
 using namespace std;
 
-int run_default()
+int run_default(const int width, const int height)
 {
     _stbi_set_flip_vertically_on_load(true);
 
