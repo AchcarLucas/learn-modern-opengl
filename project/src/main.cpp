@@ -6,7 +6,7 @@ using namespace std;
 const int _WIDTH = 800;
 const int _HEIGHT = 600;
 
-#define EXEC_TEST 5
+#define EXEC_TEST 6
 
 int main()
 {
@@ -23,6 +23,8 @@ int main()
         #elif EXEC_TEST == 4
             return run_004(_WIDTH, _HEIGHT);
         #elif EXEC_TEST == 5
+            return run_005(_WIDTH, _HEIGHT);
+        #elif EXEC_TEST == 6
             return run_005(_WIDTH, _HEIGHT);
         #endif
     #endif
