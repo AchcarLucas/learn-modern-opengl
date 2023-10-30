@@ -39,6 +39,7 @@
 			<Add directory="/usr/local/include" />
 			<Add directory="./lib" />
 			<Add directory="lib/glad/include" />
+			<Add directory="lib/std_image" />
 		</Compiler>
 		<Linker>
 			<Add option="-static-libstdc++" />
