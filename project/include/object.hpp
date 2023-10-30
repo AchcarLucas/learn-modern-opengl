@@ -20,5 +20,6 @@ class SObject
 
 SObject *createTriangle();
 SObject *createQuad();
+SObject *createCube();
 
 #endif // OBJECT_HPP
