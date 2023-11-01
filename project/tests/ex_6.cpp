@@ -24,10 +24,10 @@ inline float last_frame = 0.0f;
 
 int run_006(const int width, const int height)
 {
-    _stbi_set_flip_vertically_on_load(true);
-
     float _WIDTH = width;
     float _HEIGHT = height;
+
+    _stbi_set_flip_vertically_on_load(true);
 
     Shader *shader_cube = new Shader("glsl/ex_6/ex_6_vertex_shader.vs", "glsl/ex_6/ex_6_fragment_shader.fs");
     Shader *shader_light = new Shader("glsl/ex_6/light_vertex_shader.vs", "glsl/ex_6/light_fragment_shader.fs");

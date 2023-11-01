@@ -22,8 +22,6 @@ inline Camera *camera = new Camera();
 inline float delta_time = 0.0f;	// time between current frame and last frame
 inline float last_frame = 0.0f;
 
-void processInput(GLFWwindow *window, float delta_time);
-
 int run_004(const int width, const int height)
 {
     float _WIDTH = width;
