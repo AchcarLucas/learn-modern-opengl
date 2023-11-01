@@ -119,14 +119,17 @@ int run_006(const int width, const int height)
     return 0;
 }
 
-inline void processInput(GLFWwindow *window, float delta_time)
+void processInput(GLFWwindow *window, float delta_time)
 {
+    camera->processInput(window, delta_time);
 }
 
-inline void mouseCallback(GLFWwindow* window, double xpos, double ypos)
+void mouseCallback(GLFWwindow* window, double x_pos, double y_pos)
 {
+    camera->mouseCallback(window, x_pos, y_pos);
 }
 
-inline void scrollCallback(GLFWwindow* window, double xoffset, double yoffset)
+void scrollCallback(GLFWwindow* window, double x_offset, double y_offset)
 {
+    camera->scrollCallback(window, x_offset, y_offset);
 }
