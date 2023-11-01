@@ -62,8 +62,6 @@ int run_001(const int width, const int height)
         triangle->_ebo->bind();
         glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0);*/
 
-        processInput(window);
-
         glfwPollEvents();
         glfwSwapBuffers(window);
     }

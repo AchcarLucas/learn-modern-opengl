@@ -26,8 +26,6 @@ int run_default(const int width, const int height)
         quad->_ebo->bind();
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
-        processInput(window);
-
         glfwPollEvents();
         glfwSwapBuffers(window);
     }

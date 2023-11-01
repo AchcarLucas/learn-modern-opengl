@@ -3,6 +3,7 @@
 #include "texture.hpp"
 #include "object.hpp"
 #include "shader.hpp"
+#include "camera.hpp"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -10,12 +11,26 @@
 
 using namespace std;
 
+inline void processInput(GLFWwindow *, float);
+inline void mouseCallback(GLFWwindow*, double, double);
+inline void scrollCallback(GLFWwindow*, double, double);
+
+// camera class
+inline Camera *camera = new Camera();
+
+// timing
+inline float delta_time = 0.0f;	// time between current frame and last frame
+inline float last_frame = 0.0f;
+
 int run_006(const int width, const int height)
 {
     _stbi_set_flip_vertically_on_load(true);
 
-    Shader *shader_cube = new Shader("glsl/ex_6_color/ex_6_vertex_shader.vs", "glsl/ex_6_color/ex_6_fragment_shader.fs");
-    Shader *shader_light = new Shader("glsl/ex_6_color/light_vertex_shader.vs", "glsl/ex_6_color/light_fragment_shader.fs");
+    float _WIDTH = width;
+    float _HEIGHT = height;
+
+    Shader *shader_cube = new Shader("glsl/ex_6/ex_6_vertex_shader.vs", "glsl/ex_6/ex_6_fragment_shader.fs");
+    Shader *shader_light = new Shader("glsl/ex_6/light_vertex_shader.vs", "glsl/ex_6/light_fragment_shader.fs");
 
     SObject *cube = createCube();
     SObject *light = createLight();
@@ -25,12 +40,6 @@ int run_006(const int width, const int height)
     Texture2D *texture_0 = new Texture2D("resources/textures/container.jpg");
     Texture2D *texture_1 = new Texture2D("resources/textures/awesomeface.png", true);
 
-    glm::mat4 view = glm::mat4(1.0f);
-    view = glm::translate(view, glm::vec3(0.0f, 0.0f, -8.0f));
-
-    glm::mat4 projection;
-    projection = glm::perspective(glm::radians(45.0f), (float)width / height, 0.1f, 100.0f);
-
     shader_cube->use();
     shader_cube->setInt("texture0", 0);
     shader_cube->setInt("texture1", 1);
@@ -38,20 +47,28 @@ int run_006(const int width, const int height)
     glEnable(GL_DEPTH_TEST);
 
     while(!glfwWindowShouldClose(window)) {
+        float current_frame = static_cast<float>(glfwGetTime());
+        delta_time = current_frame - last_frame;
+        last_frame = current_frame;
+
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+
+        glm::mat4 projection = glm::perspective(glm::radians(camera->getFov()), (float)_WIDTH / (float)_HEIGHT, 0.1f, 100.0f);
+        glm::mat4 view = glm::lookAt(camera->getCamPos(), camera->getCamPos() + camera->getCamFront(), camera->getUpVector());
 
         {
             shader_cube->use();
 
             glm::mat4 model = glm::mat4(1.0f);
-            model = glm::rotate(model, glm::radians(-45.0f), glm::vec3(1.0f, 1.0f, 1.0f));
+            model = glm::rotate(model, glm::radians(-45.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 
-            glm::vec3 objectColor = glm::vec3(1.0f, 0.5f, 0.31f);
-            glm::vec3 lightColor = glm::vec3(1.0f, 1.0f, 1.0f);
+            glm::vec3 object_color = glm::vec3(1.0f, 0.5f, 0.31f);
+            glm::vec3 light_color = glm::vec3(1.0f, 1.0f, 1.0f);
 
-            shader_cube->setUniform3fv("objectColor", glm::value_ptr(objectColor));
-            shader_cube->setUniform3fv("lightColor",  glm::value_ptr(lightColor));
+            shader_cube->setUniform3fv("objectColor", glm::value_ptr(object_color));
+            shader_cube->setUniform3fv("lightColor",  glm::value_ptr(light_color));
+            shader_cube->setUniform3fv("lightPos", glm::value_ptr(light_position));
 
             shader_cube->setMatrix4fv("model", glm::value_ptr(model));
             shader_cube->setMatrix4fv("view", glm::value_ptr(view));
@@ -83,7 +100,7 @@ int run_006(const int width, const int height)
             glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
         }
 
-        processInput(window);
+        processInput(window, delta_time);
 
         glfwPollEvents();
         glfwSwapBuffers(window);
@@ -100,4 +117,16 @@ int run_006(const int width, const int height)
 
     glfwTerminate();
     return 0;
+}
+
+inline void processInput(GLFWwindow *window, float delta_time)
+{
+}
+
+inline void mouseCallback(GLFWwindow* window, double xpos, double ypos)
+{
+}
+
+inline void scrollCallback(GLFWwindow* window, double xoffset, double yoffset)
+{
 }

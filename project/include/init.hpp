@@ -8,8 +8,7 @@
 
 extern GLFWwindow* window;
 
-void changeFrameBufferSizeCallback(GLFWwindow* window, int width, int height);
-void processInput(GLFWwindow *window);
-void initOpenGL(const int width, const int height);
+void changeFrameBufferSizeCallback(GLFWwindow*, int, int);
+void initOpenGL(const int, const int);
 
 #endif // INIT_HPP

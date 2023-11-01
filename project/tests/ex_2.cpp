@@ -51,8 +51,6 @@ int run_002(const int width, const int height)
 
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
-        processInput(window);
-
         glfwPollEvents();
         glfwSwapBuffers(window);
     }
