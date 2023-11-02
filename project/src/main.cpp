@@ -9,7 +9,7 @@ const int _HEIGHT = 600;
 // #define ASSIMP_TEST
 
 #ifndef ASSIMP_TEST
-    #define EXEC_TEST 11
+    #define EXEC_TEST 10
 #endif
 
 int main()

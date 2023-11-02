@@ -65,7 +65,7 @@ int run_011(const int width, const int height)
         delta_time = current_frame - last_frame;
         last_frame = current_frame;
 
-        mesh->Draw(shader);
+        mesh->draw(shader);
 
         processInput(window, delta_time);
 

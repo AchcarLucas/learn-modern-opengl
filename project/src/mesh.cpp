@@ -14,7 +14,7 @@ Mesh::~Mesh()
     //dtor
 }
 
-void Mesh::Draw(Shader *shader)
+void Mesh::draw(Shader *shader)
 {
     // vamos criar um array de contadores para cada tipo de textura
     std::map<TextureType, unsigned int> textures;
