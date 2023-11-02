@@ -30,7 +30,8 @@ int run_009(const int width, const int height)
     _stbi_set_flip_vertically_on_load(true);
 
     //Shader *shader_cube = new Shader("glsl/ex_9/global_light.vs", "glsl/ex_9/global_light.fs");
-    Shader *shader_cube = new Shader("glsl/ex_9/point_light.vs", "glsl/ex_9/point_light.fs");
+    //Shader *shader_cube = new Shader("glsl/ex_9/point_light.vs", "glsl/ex_9/point_light.fs");
+    Shader *shader_cube = new Shader("glsl/ex_9/spot_light.vs", "glsl/ex_9/spot_light.fs");
     Shader *shader_light = new Shader("glsl/ex_9/light_vertex_shader.vs", "glsl/ex_9/light_fragment_shader.fs");
 
     SObject *cube = createCube();
@@ -38,16 +39,20 @@ int run_009(const int width, const int height)
 
     Texture2D *texture_0 = new Texture2D("resources/textures/container2.png", true);
     Texture2D *texture_1 = new Texture2D("resources/textures/container2_specular.png", true);
+    Texture2D *texture_2 = new Texture2D("resources/textures/flashlight_texture_1.jpg", false);
 
     shader_cube->use();
     shader_cube->setInt("material.diffuse", 0);
     shader_cube->setInt("material.specular", 1);
+    shader_cube->setInt("light.texture", 2);
 
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     glfwSetCursorPosCallback(window, mouseCallback);
     glfwSetScrollCallback(window, scrollCallback);
 
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glEnable(GL_DEPTH_TEST);
+    glEnable(GL_BLEND);
 
     glm::vec4 light_vector(1.2f, 1.0f, 2.0f, 0.0f);
 
@@ -85,6 +90,8 @@ int run_009(const int width, const int height)
             float constant = 1.0f;
             float linear = 0.09f;
             float quadratic = 0.032f;
+            float inner_cutoff = glm::cos(glm::radians(12.5f));
+            float outer_cutoff = glm::cos(glm::radians(17.0f));
 
             float material_shininess = 64.0f;
 
@@ -93,14 +100,21 @@ int run_009(const int width, const int height)
             shader_cube->setUniform1fv("iTime", &i_time);
 
             shader_cube->setUniform3fv("viewPos", glm::value_ptr(camera->getCamPos()));
+            shader_cube->setUniform2fv("viewPort", glm::value_ptr(glm::vec2(_WIDTH, _HEIGHT)));
 
             shader_cube->setUniform4fv("light.vector", glm::value_ptr(light_vector));
             shader_cube->setUniform3fv("light.ambient", glm::value_ptr(light_ambient));
             shader_cube->setUniform3fv("light.diffuse", glm::value_ptr(light_diffuse));
             shader_cube->setUniform3fv("light.specular", glm::value_ptr(light_specular));
+
             shader_cube->setUniform1fv("light.constant", &constant);
             shader_cube->setUniform1fv("light.linear", &linear);
             shader_cube->setUniform1fv("light.quadratic", &quadratic);
+
+            shader_cube->setUniform3fv("light.position", glm::value_ptr(camera->getCamPos()));
+            shader_cube->setUniform3fv("light.direction", glm::value_ptr(camera->getCamFront()));
+            shader_cube->setUniform1fv("light.inner_cutoff", &inner_cutoff);
+            shader_cube->setUniform1fv("light.outer_cutoff", &outer_cutoff);
 
             shader_cube->setUniform1fv("material.shininess", &material_shininess);
 
@@ -109,6 +123,7 @@ int run_009(const int width, const int height)
 
             texture_0->bind(GL_TEXTURE0);
             texture_1->bind(GL_TEXTURE1);
+            texture_2->bind(GL_TEXTURE2);
 
             cube->_vao->bind();
             cube->_ebo->bind();
@@ -151,6 +166,7 @@ int run_009(const int width, const int height)
 
     delete texture_0;
     delete texture_1;
+    delete texture_2;
 
     delete shader_cube;
     delete shader_light;
