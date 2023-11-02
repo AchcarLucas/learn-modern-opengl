@@ -138,6 +138,11 @@ void Shader::setUniform4fv(const std::string &name, const GLfloat *value)
     glUniform4fv(glGetUniformLocation(this->_id, name.c_str()), 1, value);
 }
 
+void Shader::setUniform1i(const std::string &name, const GLint value)
+{
+    glUniform1i(glGetUniformLocation(this->_id, name.c_str()), value);
+}
+
 void Shader::getShaderLog(GLuint shader, std::string success_message, std::string error_message)
 {
     char log[512];

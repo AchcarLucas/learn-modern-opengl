@@ -30,6 +30,8 @@ class Shader
         void setUniform2fv(const std::string &name, const GLfloat *value);
         void setUniform3fv(const std::string &name, const GLfloat *value);
         void setUniform4fv(const std::string &name, const GLfloat *value);
+
+        void setUniform1i(const std::string &name, const GLint value);
     protected:
         GLuint _id;
 
