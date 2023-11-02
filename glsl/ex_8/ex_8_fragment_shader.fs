@@ -45,8 +45,9 @@ void main()
 	vec3 specular = pow(max(dot(view_dir, reflect_dir), 0.0f), material.shininess) * light.specular * specular_map;
 
 	// emission (with effect sin)
-	vec3 emission = vec3(texture(material.emission, texCoord + 0.045f + vec2(0.0, iTime * 0.75))) * 2.0f;
+	vec3 emission = vec3(texture(material.emission, texCoord + 0.045f + vec2(0.0, iTime * 0.75))) * (sin(iTime) * 0.5 + 0.5) * 2.0f;
 	emission = emission * step(vec3(1.0f), vec3(1.0f) - specular_map);
+	
 
 	vec3 result = (ambient + diffuse + specular + emission);
 	FragColor = vec4(result, 1.0f);
