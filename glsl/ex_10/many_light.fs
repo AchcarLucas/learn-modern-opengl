@@ -67,10 +67,6 @@ uniform DirectionalLight directional_light;
 uniform PointLight point_lights[NR_POINT_LIGHTS];
 uniform SpotLight spot_lights[NR_SPOT_LIGHTS];
 
-vec3 CalcDirectionalLight(DirectionalLight light, vec3 normal, vec3 view_dir);
-vec3 CalcPointLight(PointLight light, vec3 normal, vec3 frag_pos, vec3 view_dir);
-vec3 CalcSpotLight(SpotLight light, vec3 frag_pos);
-
 vec3 CalcDirectionalLight(DirectionalLight light, vec3 normal, vec3 view_dir)
 {
     vec3 light_dir = normalize(-light.direction);
