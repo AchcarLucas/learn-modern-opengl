@@ -1,6 +1,8 @@
 #ifndef TESTS_HPP
 #define TESTS_HPP
 
+int load_assimp_test();
+
 int run_default(const int, const int);
 int run_001(const int, const int);
 int run_002(const int, const int);

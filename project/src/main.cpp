@@ -6,11 +6,18 @@ using namespace std;
 const int _WIDTH = 800;
 const int _HEIGHT = 600;
 
-#define EXEC_TEST 10
+#define ASSIMP_TEST
+
+#ifndef ASSIMP_TEST
+    #define EXEC_TEST 10
+#endif
 
 int main()
 {
     initOpenGL(_WIDTH, _HEIGHT);
+    #ifdef ASSIMP_TEST
+        return load_assimp_test();
+    #endif
     #ifdef EXEC_TEST
         #if EXEC_TEST == 0
             return run_default(_WIDTH, _HEIGHT);
