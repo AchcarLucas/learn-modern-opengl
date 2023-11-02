@@ -11,7 +11,7 @@
 class Camera
 {
     public:
-        Camera();
+        Camera(glm::vec3 position = glm::vec3(0.0f, 0.0f, 3.0f));
         virtual ~Camera();
 
         void processInput(GLFWwindow *window, float);
@@ -27,7 +27,7 @@ class Camera
         float getYaw() { return this->yaw; }
         float getPitch() { return this->pitch; }
     protected:
-        glm::vec3 cam_pos = glm::vec3(0.0f, 0.0f, 3.0f);
+        glm::vec3 cam_pos = glm::vec3(0.0f, 0.0f, 0.0f);
         glm::vec3 cam_target = glm::vec3(0.0f, 0.0f, 0.0f);
         glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
         glm::vec3 cam_front = glm::vec3(0.0f, 0.0f, -1.0f);

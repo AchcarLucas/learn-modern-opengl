@@ -1,8 +1,8 @@
 #include "camera.hpp"
 
-Camera::Camera()
+Camera::Camera(glm::vec3 position)
 {
-    //ctor
+    this->cam_pos = position;
 }
 
 Camera::~Camera()
