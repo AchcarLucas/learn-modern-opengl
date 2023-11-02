@@ -23,6 +23,8 @@ Texture2D::Texture2D(std::string file, TextureType type, bool alpha_channel)
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, alpha_channel ? GL_RGBA : GL_RGB, GL_UNSIGNED_BYTE, this->image);
     glGenerateMipmap(GL_TEXTURE_2D);
 
+    this->type = type;
+
     _stbi_image_free(this->image);
 }
 
@@ -35,4 +37,9 @@ void Texture2D::bind(GLenum _GL_TEXTURE)
 {
     glActiveTexture(_GL_TEXTURE);
     glBindTexture(GL_TEXTURE_2D, this->texture);
+}
+
+TextureType Texture2D::getType()
+{
+    return this->type;
 }

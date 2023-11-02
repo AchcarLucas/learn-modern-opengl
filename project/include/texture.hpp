@@ -25,6 +25,7 @@ class Texture2D
         virtual ~Texture2D();
 
         void bind(GLenum);
+        TextureType getType();
 
     protected:
         GLuint texture;
