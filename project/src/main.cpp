@@ -6,7 +6,7 @@ using namespace std;
 const int _WIDTH = 800;
 const int _HEIGHT = 600;
 
-#define ASSIMP_TEST
+// #define ASSIMP_TEST
 
 #ifndef ASSIMP_TEST
     #define EXEC_TEST 10

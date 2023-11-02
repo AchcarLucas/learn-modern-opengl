@@ -1,6 +1,6 @@
 #include "texture.hpp"
 
-Texture2D::Texture2D(std::string file, bool alpha_channel)
+Texture2D::Texture2D(std::string file, TextureType type, bool alpha_channel)
 {
     glGenTextures(1, &this->texture);
 
