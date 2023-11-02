@@ -362,11 +362,15 @@
 		<Unit filename="project/src/vbo.cpp" />
 		<Unit filename="project/tests/default.cpp" />
 		<Unit filename="project/tests/ex_1.cpp" />
+		<Unit filename="project/tests/ex_10.cpp" />
 		<Unit filename="project/tests/ex_2.cpp" />
 		<Unit filename="project/tests/ex_3.cpp" />
 		<Unit filename="project/tests/ex_4.cpp" />
 		<Unit filename="project/tests/ex_5.cpp" />
 		<Unit filename="project/tests/ex_6.cpp" />
+		<Unit filename="project/tests/ex_7.cpp" />
+		<Unit filename="project/tests/ex_8.cpp" />
+		<Unit filename="project/tests/ex_9.cpp" />
 		<Extensions />
 	</Project>
 </CodeBlocks_project_file>
