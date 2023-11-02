@@ -49,7 +49,6 @@ class Texture2D
     protected:
         GLuint texture;
         TextureType type;
-        unsigned char *image;
 
     private:
 };

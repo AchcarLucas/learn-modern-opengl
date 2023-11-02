@@ -13,19 +13,19 @@ Texture2D::Texture2D(std::string file, TextureType type, bool alpha_channel)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
     int width, height, n_channel;
-    this->image = _stbi_load(file.c_str(), &width, &height, &n_channel);
+    unsigned char *image = _stbi_load(file.c_str(), &width, &height, &n_channel);
 
-    if(!this->image) {
+    if(!image) {
         std::cout << "ERROR:LOAD::TEXTURE_2D" << std::endl;
         return;
     }
 
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, alpha_channel ? GL_RGBA : GL_RGB, GL_UNSIGNED_BYTE, this->image);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, alpha_channel ? GL_RGBA : GL_RGB, GL_UNSIGNED_BYTE, image);
     glGenerateMipmap(GL_TEXTURE_2D);
 
     this->type = type;
 
-    _stbi_image_free(this->image);
+    _stbi_image_free(image);
 }
 
 Texture2D::~Texture2D()
