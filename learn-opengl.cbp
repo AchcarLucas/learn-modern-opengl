@@ -5,6 +5,7 @@
 		<Option title="learn-modern-opengl" />
 		<Option pch_mode="2" />
 		<Option compiler="gcc" />
+		<Option virtualFolders="project/src/" />
 		<Build>
 			<Target title="Debug">
 				<Option output="bin/Debug/learn-modern-opengl" prefix_auto="1" extension_auto="1" />
@@ -346,6 +347,7 @@
 		<Unit filename="project/include/ebo.hpp" />
 		<Unit filename="project/include/image.hpp" />
 		<Unit filename="project/include/init.hpp" />
+		<Unit filename="project/include/mesh.hpp" />
 		<Unit filename="project/include/object.hpp" />
 		<Unit filename="project/include/shader.hpp" />
 		<Unit filename="project/include/tests.hpp" />
@@ -357,6 +359,7 @@
 		<Unit filename="project/src/image.cpp" />
 		<Unit filename="project/src/init.cpp" />
 		<Unit filename="project/src/main.cpp" />
+		<Unit filename="project/src/mesh.cpp" />
 		<Unit filename="project/src/object.cpp" />
 		<Unit filename="project/src/shader.cpp" />
 		<Unit filename="project/src/texture.cpp" />
@@ -365,6 +368,7 @@
 		<Unit filename="project/tests/default.cpp" />
 		<Unit filename="project/tests/ex_1.cpp" />
 		<Unit filename="project/tests/ex_10.cpp" />
+		<Unit filename="project/tests/ex_11.cpp" />
 		<Unit filename="project/tests/ex_2.cpp" />
 		<Unit filename="project/tests/ex_3.cpp" />
 		<Unit filename="project/tests/ex_4.cpp" />
