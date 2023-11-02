@@ -48,6 +48,20 @@ ser visto na imagem:
 
 ![glfw-install](./images/img_1.png)
 
+Instalação do Assimp:
+
+Baixe o Assimp https://github.com/assimp/assimp versão 5.3.1
+após baixar e extrair, faça a build
+
+```
+cd assimp
+cmake CMakeLists.txt 
+cmake --build .
+```
+
+faça a copia dos ```.so``` para a pasta ```/usr/local/lib``` e crie um atalho do ```libassimp.so.5``` para a 
+pasta principal do projeto
+
 Configuração do CodeBlock:
 
 Em ```Build Options -> Compiler Settings``` habilite o ```-std=c11``` o ```-static-libstdc++```
@@ -55,10 +69,13 @@ Em ```Build Options -> Compiler Settings``` habilite o ```-std=c11``` o ```-stat
 ![glfw-codeblock-config](./images/img_2.png)
 
 Em ```Build Options -> Linker Settings``` adicione o local onde a lib ```libglfw3.a``` está instalado
+Em ```Build Options -> Linker Settings``` adicione o local onde a lib ```libassimp.so``` está instalado
 
-Ainda em ```Build Options -> Linker Settings```, adicione em ```Other linker options``` os seguintes links ```-lglfw3 -lX11```
+Ainda em ```Build Options -> Linker Settings```, adicione em ```Other linker options``` os seguintes links ```-lglfw3 -lassimp.so -lX11```
+
 
 Em ```Build Options -> Search directories``` adicione o local onde o include ```GLFW``` está instalado
+Em ```Build Options -> Search directories``` adicione o local onde o include ```Assimp``` está instalado
 
 Pronto, o Codeblock está configurado
 
