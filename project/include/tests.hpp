@@ -10,5 +10,6 @@ int run_005(const int, const int);
 int run_006(const int, const int);
 int run_007(const int, const int);
 int run_008(const int, const int);
+int run_009(const int, const int);
 
 #endif // INIT_HPP
