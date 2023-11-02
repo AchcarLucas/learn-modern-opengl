@@ -125,16 +125,19 @@ int run_010(const int width, const int height)
                 }
             }
 
-            float inner_cutoff = glm::cos(glm::radians(12.5f));
+            float inner_cutoff = glm::cos(glm::radians(15.5f));
             float outer_cutoff = glm::cos(glm::radians(17.0f));
 
             {
                 glm::vec3 light_ambient(0.2f, 0.2f, 0.2f);
                 glm::vec3 light_diffuse(0.2f, 0.2f, 0.2f);
-                glm::vec3 light_specular(0.1f, 0.1f, 0.1f);
+                glm::vec3 light_specular(0.2f, 0.2f, 0.2f);
 
-                shader_cube->setUniform3fv("spot_lights[0].position", glm::value_ptr(camera->getCamPos()));
-                shader_cube->setUniform3fv("spot_lights[0].direction", glm::value_ptr(camera->getCamFront()));
+                glm::vec3 position(0.0f, 0.0f, 2.5f);
+                glm::vec3 direction(0.0f, 0.0f, -1.0f);
+
+                shader_cube->setUniform3fv("spot_lights[0].position", glm::value_ptr(position));
+                shader_cube->setUniform3fv("spot_lights[0].direction", glm::value_ptr(direction));
 
                 shader_cube->setUniform1fv("spot_lights[0].inner_cutoff", &inner_cutoff);
                 shader_cube->setUniform1fv("spot_lights[0].outer_cutoff", &outer_cutoff);

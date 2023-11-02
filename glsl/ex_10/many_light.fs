@@ -111,17 +111,19 @@ vec3 CalcPointLight(PointLight light, vec3 normal, vec3 frag_pos, vec3 view_dir)
     return (ambient + diffuse + specular);
 }
 
-vec3 CalcSpotLight(SpotLight light, vec3 frag_pos)
+vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 frag_pos)
 {
     if(!light.enabled)
         return vec3(0.0f, 0.0f, 0.0f);
 
     vec3 light_dir = normalize(light.position - frag_pos);
 
+    float diff = max(dot(normal, light_dir), 0.0);
+
     float theta = dot(light_dir, normalize(-light.direction));
     float epsilon = light.inner_cutoff - light.outer_cutoff;
 
-    float intensity = clamp((theta - light.outer_cutoff) / epsilon, 0.0, 1.0);
+    float intensity = smoothstep(0.0, 1.0, (theta - light.outer_cutoff) / epsilon) * diff;
 
     // combine results
     vec3 ambient  = light.ambient * vec3(texture(material.diffuse, texCoord));
@@ -148,7 +150,7 @@ void main()
 
     // phase 3: Spot light
     for(int i = 0; i < NR_SPOT_LIGHTS; i++)
-        result += CalcSpotLight(spot_lights[i], fragPos);
+        result += CalcSpotLight(spot_lights[i], norm, fragPos);
     
     FragColor = vec4(result, 1.0);
 }
