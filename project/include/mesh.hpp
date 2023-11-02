@@ -11,6 +11,11 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "texture.hpp"
+#include "shader.hpp"
+
+#include "vao.hpp"
+#include "vbo.hpp"
+#include "ebo.hpp"
 
 struct Vertex {
     glm::vec3 position;
@@ -21,16 +26,23 @@ struct Vertex {
 class Mesh
 {
     public:
-        Mesh();
+        Mesh(std::vector<Vertex> vertices, std::vector<GLuint> indices, std::vector<Texture2D> textures);
         virtual ~Mesh();
+
+        void Draw(Shader &shader);
 
         std::vector<Vertex> vertices;
         std::vector<GLuint> indices;
         std::vector<Texture2D> textures;
 
+
     protected:
+        VAO vao;
+        VBO vbo;
+        EBO ebo;
 
     private:
+        void setupMesh();
 };
 
 #endif // MESH_HPP

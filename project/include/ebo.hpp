@@ -13,7 +13,7 @@ class EBO
         virtual ~EBO();
 
         void bind();
-        void EBOBuffer(unsigned int *, unsigned int, unsigned int);
+        void EBOBuffer(const void *, unsigned int, unsigned int);
 
         GLuint getEBO();
 
