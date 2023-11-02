@@ -16,7 +16,7 @@ inline void mouseCallback(GLFWwindow*, double, double);
 inline void scrollCallback(GLFWwindow*, double, double);
 
 // camera class
-inline Camera *camera = new Camera();
+inline Camera *camera = new Camera(glm::vec3(0.0f, 0.0f, 5.0f));
 
 // timing
 inline float delta_time = 0.0f;	// time between current frame and last frame
@@ -35,8 +35,6 @@ int run_007(const int width, const int height)
     SObject *cube = createCube();
     SObject *light = createLight();
 
-    glm::vec4 light_position(1.2f, 1.0f, 2.0f, 0.0f);
-
     Texture2D *texture_0 = new Texture2D("resources/textures/container.jpg");
     Texture2D *texture_1 = new Texture2D("resources/textures/awesomeface.png", true);
 
@@ -50,6 +48,7 @@ int run_007(const int width, const int height)
 
     glEnable(GL_DEPTH_TEST);
 
+    glm::vec4 light_position(1.2f, 1.0f, 2.0f, 0.0f);
     float angle_rotate = 0.0f;
 
     while(!glfwWindowShouldClose(window)) {
@@ -71,13 +70,37 @@ int run_007(const int width, const int height)
             glm::mat4 model = glm::mat4(1.0f);
             model = glm::rotate(model, glm::radians(-45.0f + angle_rotate), glm::vec3(1.0f, 1.0f, 1.0f));
 
-            glm::vec3 object_color = glm::vec3(1.0f, 0.5f, 0.31f);
-            glm::vec3 light_color = glm::vec3(1.0f, 1.0f, 1.0f);
-
-            shader_cube->setUniform3fv("objectColor", glm::value_ptr(object_color));
-            shader_cube->setUniform3fv("lightColor",  glm::value_ptr(light_color));
-            shader_cube->setUniform3fv("lightPos", glm::value_ptr(light_position));
             shader_cube->setUniform3fv("viewPos", glm::value_ptr(camera->getCamPos()));
+
+            /*
+            glm::vec3 light_ambient(0.2f, 0.2f, 0.2f);
+            glm::vec3 light_diffuse(0.5f, 0.5f, 0.5f);
+            glm::vec3 light_specular(1.0f, 1.0f, 1.0f);
+            */
+
+            glm::vec3 light_color;
+            light_color.x = sin(glfwGetTime() * 2.0f);
+            light_color.y = sin(glfwGetTime() * 0.7f);
+            light_color.z = sin(glfwGetTime() * 1.3f);
+
+            glm::vec3 light_diffuse = light_color   * glm::vec3(0.5f); // decrease the influence
+            glm::vec3 light_ambient = light_diffuse * glm::vec3(0.2f); // low influence
+            glm::vec3 light_specular(1.0f, 1.0f, 1.0f);
+
+            glm::vec3 material_ambient(1.0f, 0.5f, 0.31f);
+            glm::vec3 material_diffuse(1.0f, 0.5f, 0.31f);
+            glm::vec3 material_specular(1.0f, 0.5f, 0.31f);
+            float material_shininess = 32.0f;
+
+            shader_cube->setUniform3fv("light.position", glm::value_ptr(light_position));
+            shader_cube->setUniform3fv("light.ambient", glm::value_ptr(light_ambient));
+            shader_cube->setUniform3fv("light.diffuse", glm::value_ptr(light_diffuse));
+            shader_cube->setUniform3fv("light.specular", glm::value_ptr(light_specular));
+
+            shader_cube->setUniform3fv("material.ambient", glm::value_ptr(material_ambient));
+            shader_cube->setUniform3fv("material.diffuse", glm::value_ptr(material_diffuse));
+            shader_cube->setUniform3fv("material.specular", glm::value_ptr(material_specular));
+            shader_cube->setUniform1fv("material.shininess", &material_shininess);
 
             shader_cube->setMatrix4fv("model", glm::value_ptr(model));
             shader_cube->setMatrix4fv("view", glm::value_ptr(view));
