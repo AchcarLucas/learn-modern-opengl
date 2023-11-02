@@ -40,11 +40,13 @@
 			<Add directory="./lib" />
 			<Add directory="lib/glad/include" />
 			<Add directory="lib/std_image" />
+			<Add directory="lib/assimp-5.3.1" />
 		</Compiler>
 		<Linker>
 			<Add option="-static-libstdc++" />
-			<Add option="-lglfw3 -lX11" />
+			<Add option="-lglfw3 -lassimp -lX11" />
 			<Add library="/usr/local/lib/libglfw3.a" />
+			<Add library="/usr/local/lib/libassimp.so" />
 		</Linker>
 		<Unit filename="lib/glad/include/KHR/khrplatform.h" />
 		<Unit filename="lib/glad/include/glad/glad.h" />
@@ -371,6 +373,7 @@
 		<Unit filename="project/tests/ex_7.cpp" />
 		<Unit filename="project/tests/ex_8.cpp" />
 		<Unit filename="project/tests/ex_9.cpp" />
+		<Unit filename="project/tests/load_assimp_test.cpp" />
 		<Extensions />
 	</Project>
 </CodeBlocks_project_file>
