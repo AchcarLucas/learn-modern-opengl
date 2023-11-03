@@ -30,22 +30,19 @@ struct Vertex {
         this->normal = normal;
         this->tex = tex;
     }
-
-
 };
 
 class Mesh
 {
     public:
         Mesh(std::vector<Vertex> vertices, std::vector<GLuint> indices, std::vector<Texture2D*> textures);
-        virtual ~Mesh();
+        virtual ~Mesh() { };
 
         void draw(Shader *shader);
 
         std::vector<Vertex> vertices;
         std::vector<GLuint> indices;
         std::vector<Texture2D*> textures;
-
 
     protected:
         VAO vao;

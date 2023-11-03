@@ -77,3 +77,13 @@ void Camera::scrollCallback(GLFWwindow* window, double x_offset, double y_offset
     if (this->fov > MAX_FOV)
         this->fov = MAX_FOV;
 }
+
+glm::mat4 Camera::getPerspectiveMatrix(int width, int height, float near, float far)
+{
+    return glm::perspective(glm::radians(getFov()), (float)width / (float)height, near, far);
+}
+
+glm::mat4 Camera::getViewMatrix()
+{
+    return glm::lookAt(getCamPos(), getCamPos() + getCamFront(), getUpVector());
+}

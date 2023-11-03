@@ -73,8 +73,10 @@ int run_011(const int width, const int height)
         glfwSwapBuffers(window);
     }
 
+
     delete mesh;
     delete shader;
+    delete camera;
 
     for (auto& texture : textures) {
         delete texture;

@@ -12,43 +12,55 @@
 enum TextureType {
     DIFFUSE = 1,
     SPECULAR,
+    EMISSIVE,
     ALBEDO,
+    AMBIENT,
     AMBIENT_OCCLUSION,
     NORMAL,
+    OPACITY,
+    SHININESS,
     METALLIC,
     ROUGHNESS,
     BUMP,
     GLOSSY,
-    DISPLACEMENT
+    DISPLACEMENT,
+    REFLECTION,
+    LIGHTMAP,
+    HEIGHT
 };
 
 typedef std::map<TextureType, std::string> TextureTypeMap;
 
 inline TextureTypeMap textureTypeMap = {
-    {TextureType::DIFFUSE, "texture_diffuse"},
-    {TextureType::SPECULAR, "texture_specular"},
-    {TextureType::ALBEDO, "texture_albedo"},
-    {TextureType::AMBIENT_OCCLUSION, "texture_ambient_occlusion"},
-    {TextureType::NORMAL, "texture_normal"},
-    {TextureType::METALLIC, "texture_metallic"},
-    {TextureType::ROUGHNESS, "texture_roughness"},
-    {TextureType::BUMP, "texture_bump"},
-    {TextureType::GLOSSY, "texture_glossy"},
-    {TextureType::DISPLACEMENT, "texture_displacement"},
+    {TextureType::DIFFUSE, "diffuse"},
+    {TextureType::SPECULAR, "specular"},
+    {TextureType::EMISSIVE, "emissive"},
+    {TextureType::ALBEDO, "albedo"},
+    {TextureType::AMBIENT_OCCLUSION, "ambient_occlusion"},
+    {TextureType::AMBIENT, "ambient"},
+    {TextureType::NORMAL, "normal"},
+    {TextureType::OPACITY, "opacity"},
+    {TextureType::SHININESS, "shininess"},
+    {TextureType::METALLIC, "metallic"},
+    {TextureType::ROUGHNESS, "roughness"},
+    {TextureType::BUMP, "bump"},
+    {TextureType::GLOSSY, "glossy"},
+    {TextureType::DISPLACEMENT, "displacement"},
+    {TextureType::REFLECTION, "reflection"},
+    {TextureType::LIGHTMAP, "lightmap"},
+    {TextureType::HEIGHT, "height"},
 };
 
 class Texture2D
 {
     public:
         Texture2D(const std::string file, const TextureType type = TextureType::ALBEDO, bool alpha_channel = false);
-        Texture2D(const std::string file, const std::string directory, const TextureType type = TextureType::ALBEDO, bool alpha_channel = false);
         virtual ~Texture2D();
 
         void bind(GLenum);
-        TextureType getType();
 
+        TextureType getType() { return type; };
         std::string getFile() { return file; }
-        std::string getDirectory() { return directory; }
 
     protected:
         GLuint texture;
@@ -56,7 +68,6 @@ class Texture2D
 
     private:
         std::string file;
-        std::string directory;
 };
 
 #endif // TEXTURE_HPP

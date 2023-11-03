@@ -102,6 +102,7 @@ int run_004(const int width, const int height)
 
     delete shader;
     delete cube;
+    delete camera;
 
     glfwTerminate();
     return 0;

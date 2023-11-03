@@ -11,8 +11,12 @@ Model::Model(std::string path)
         std::cout << "ERROR::ASSIMP::" << importer.GetErrorString() << std::endl;
         return;
     }
+
     directory = path.substr(0, path.find_last_of('/'));
     processNode(scene->mRootNode, scene);
+
+    std::cout << this->textures.size() << " TEXTURE(S) LOADED" << std::endl;
+    std::cout << this->meshes.size() << " MESHE(S) LOADED" << std::endl;
 }
 
 Model::~Model()
@@ -43,28 +47,29 @@ void Model::processNode(aiNode *node, const aiScene *scene)
 
 Mesh *Model::processMesh(aiMesh *mesh, const aiScene *scene)
 {
-    std::vector<Vertex> vertices;
-    std::vector<GLuint> indices;
-    std::vector<Texture2D *> textures;
+    std::vector<Vertex> mesh_vertices;
+    std::vector<GLuint> mesh_indices;
+    std::vector<Texture2D *> mesh_textures;
 
     for(unsigned int i = 0; i < mesh->mNumVertices; ++i) {
         Vertex vertex;
         vertex.position = glm::vec3(mesh->mVertices[i].x, mesh->mVertices[i].y, mesh->mVertices[i].z);
         vertex.normal = glm::vec3(mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z);
+
         if(mesh->mTextureCoords[0]) {
             vertex.tex = glm::vec2(mesh->mTextureCoords[0][i].x, mesh->mTextureCoords[0][i].y);
         } else {
             vertex.tex = glm::vec2(0.0f);
         }
 
-        vertices.push_back(vertex);
+        mesh_vertices.push_back(vertex);
     }
 
-    for(unsigned int i = 0; i < mesh->mNumFaces; i++)
+    for(unsigned int i = 0; i < mesh->mNumFaces; ++i)
     {
         aiFace face = mesh->mFaces[i];
-        for(unsigned int i = 0; i < face.mNumIndices; i++) {
-            indices.push_back(face.mIndices[i]);
+        for(unsigned int j = 0; j < face.mNumIndices; ++j) {
+            mesh_indices.push_back(face.mIndices[j]);
         }
     }
 
@@ -72,33 +77,39 @@ Mesh *Model::processMesh(aiMesh *mesh, const aiScene *scene)
 
     // 1. diffuse maps
     std::vector<Texture2D *> diffuse_maps = loadMaterialTextures(material, aiTextureType_DIFFUSE, TextureType::DIFFUSE);
-    textures.insert(textures.end(), diffuse_maps.begin(), diffuse_maps.end());
+    mesh_textures.insert(mesh_textures.end(), diffuse_maps.begin(), diffuse_maps.end());
     // 2. specular maps
     std::vector<Texture2D *> specular_maps = loadMaterialTextures(material, aiTextureType_SPECULAR, TextureType::SPECULAR);
-    textures.insert(textures.end(), specular_maps.begin(), specular_maps.end());
+    mesh_textures.insert(mesh_textures.end(), specular_maps.begin(), specular_maps.end());
     // 3. normal maps
     std::vector<Texture2D *> normal_maps = loadMaterialTextures(material, aiTextureType_HEIGHT, TextureType::NORMAL);
-    textures.insert(textures.end(), normal_maps.begin(), normal_maps.end());
+    mesh_textures.insert(mesh_textures.end(), normal_maps.begin(), normal_maps.end());
     // 4. height maps
-    std::vector<Texture2D *> height_maps = loadMaterialTextures(material, aiTextureType_AMBIENT, TextureType::AMBIENT_OCCLUSION);
-    textures.insert(textures.end(), height_maps.begin(), height_maps.end());
+    std::vector<Texture2D *> height_maps = loadMaterialTextures(material, aiTextureType_AMBIENT, TextureType::AMBIENT);
+    mesh_textures.insert(mesh_textures.end(), height_maps.begin(), height_maps.end());
+    // 5. displacement maps
+    std::vector<Texture2D *> displacement_maps = loadMaterialTextures(material, aiTextureType_DISPLACEMENT, TextureType::DISPLACEMENT);
+    mesh_textures.insert(mesh_textures.end(), displacement_maps.begin(), displacement_maps.end());
 
-    return new Mesh(vertices, indices, textures);
+    return new Mesh(mesh_vertices, mesh_indices, mesh_textures);
 }
 
 std::vector<Texture2D*> Model::loadMaterialTextures(aiMaterial *material, aiTextureType ai_type, TextureType texture_type)
 {
-    std::vector<Texture2D *> _textures;
+    std::vector<Texture2D *> mesh_textures;
 
     for(unsigned int i = 0; i < material->GetTextureCount(ai_type); ++i) {
         aiString str;
         material->GetTexture(ai_type, i, &str);
 
         bool skip = false;
-        for(unsigned int i = 0; i < textures.size(); i++) {
-            if(!std::strcmp(textures[i]->getFile().c_str(), str.data)) {
+
+        for(unsigned int j = 0; j < this->textures.size(); ++j) {
+            std::string file = (this->directory + '/' + str.data);
+            // se a textura já estiver carregada, basta apenas fazer a associação na mesh
+            if(textures[j]->getFile() == file) {
                 // mantém a textura já carregada e pula a etapa de carregamento de texturas
-                textures.push_back(textures[i]);
+                mesh_textures.push_back(textures[j]);
                 // considerando apenas um tipo de material por vez
                 skip = true;
                 break;
@@ -107,11 +118,14 @@ std::vector<Texture2D*> Model::loadMaterialTextures(aiMaterial *material, aiText
 
         // se a textura já existe, ela já foi carregada e associada, não precisamos recarregar
         if(!skip) {
-            _textures.push_back(new Texture2D(str.data, this->directory, texture_type));
+            // carrega a nova textura
+            Texture2D *texture_loaded = new Texture2D(this->directory + '/' + str.data, texture_type);
+            mesh_textures.push_back(texture_loaded);
+            this->textures.push_back(texture_loaded);
         }
     }
 
-    return _textures;
+    return mesh_textures;
 }
 
 void Model::draw(Shader *shader)

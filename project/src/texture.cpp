@@ -36,16 +36,12 @@ Texture2D::Texture2D(const std::string file, const TextureType type, bool alpha_
     glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, image);
     glGenerateMipmap(GL_TEXTURE_2D);
 
+    std::cout << "LOAD::TEXTURE_2D <" << file << ">:<" << textureTypeMap[type] << ">" << std::endl;
+
     this->type = type;
     this->file = file;
 
     _stbi_image_free(image);
-}
-
-Texture2D::Texture2D(const std::string file, const std::string directory, const TextureType type, bool alpha_channel)
-{
-    this->directory = directory;
-    Texture2D(directory + '/' + file, type, alpha_channel);
 }
 
 Texture2D::~Texture2D()
@@ -57,9 +53,4 @@ void Texture2D::bind(GLenum _GL_TEXTURE)
 {
     glActiveTexture(_GL_TEXTURE);
     glBindTexture(GL_TEXTURE_2D, this->texture);
-}
-
-TextureType Texture2D::getType()
-{
-    return this->type;
 }

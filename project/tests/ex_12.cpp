@@ -1,11 +1,10 @@
-
 #include "init.hpp"
 #include "image.hpp"
 #include "texture.hpp"
 #include "object.hpp"
 #include "shader.hpp"
 #include "camera.hpp"
-#include "mesh.hpp"
+#include "model.hpp"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -18,23 +17,11 @@ inline void mouseCallback(GLFWwindow*, double, double);
 inline void scrollCallback(GLFWwindow*, double, double);
 
 // camera class
-inline Camera *camera = new Camera(glm::vec3(0.0f, 0.0f, 5.0f));
+inline Camera *camera = new Camera(glm::vec3(0.0f, 0.0f, 3.0f));
 
 // timing
 inline float delta_time = 0.0f;	// time between current frame and last frame
 inline float last_frame = 0.0f;
-
-inline std::vector<Vertex> ex_11_vertices = {
-    Vertex(glm::vec3(0.5f,  0.5f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(1.0f, 1.0f)),
-    Vertex(glm::vec3(0.5f, -0.5f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(1.0f, 0.0f)),
-    Vertex(glm::vec3(-0.5f, -0.5f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(0.0f, 0.0f)),
-    Vertex(glm::vec3(-0.5f,  0.5f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(0.0f, 1.0f))
-};
-
-inline std::vector<GLuint> ex_11_indices = {
-    0, 1, 3,
-    1, 2, 3
-};
 
 int run_012(const int width, const int height)
 {
@@ -43,20 +30,18 @@ int run_012(const int width, const int height)
 
     _stbi_set_flip_vertically_on_load(true);
 
-    Shader *shader = new Shader("glsl/first_vertex_shader.vs", "glsl/first_fragment_shader.fs");
+    Shader *shader = new Shader("glsl/ex_12/model_loading.vs", "glsl/ex_12/model_loading.fs");
+    Model *model_obj = new Model("./resources/obj/backpack/backpack.obj");
 
     std::vector<Texture2D*> textures;
-
-    textures.push_back(new Texture2D("resources/textures/container.jpg"));
-    textures.push_back(new Texture2D("resources/textures/awesomeface.png", TextureType::ALBEDO, true));
-
-    Mesh *mesh = new Mesh(ex_11_vertices, ex_11_indices, textures);
 
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     glfwSetCursorPosCallback(window, mouseCallback);
     glfwSetScrollCallback(window, scrollCallback);
 
     glEnable(GL_DEPTH_TEST);
+
+    // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
     while(!glfwWindowShouldClose(window)) {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -66,7 +51,21 @@ int run_012(const int width, const int height)
         delta_time = current_frame - last_frame;
         last_frame = current_frame;
 
-        mesh->draw(shader);
+        shader->use();
+
+        glm::mat4 projection = camera->getPerspectiveMatrix(_WIDTH, _HEIGHT);
+        glm::mat4 view = camera->getViewMatrix();
+
+        shader->setMatrix4fv("projection", glm::value_ptr(projection));
+        shader->setMatrix4fv("view", glm::value_ptr(view));
+
+        glm::mat4 model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f)); // translate it down so it's at the center of the scene
+        model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));	// it's a bit too big for our scene, so scale it down
+
+        shader->setMatrix4fv("model", glm::value_ptr(model));
+
+        model_obj->draw(shader);
 
         processInput(window, delta_time);
 
@@ -74,12 +73,9 @@ int run_012(const int width, const int height)
         glfwSwapBuffers(window);
     }
 
-    delete mesh;
+    delete model_obj;
     delete shader;
-
-    for (auto& texture : textures) {
-        delete texture;
-    }
+    delete camera;
 
     glfwTerminate();
     return 0;

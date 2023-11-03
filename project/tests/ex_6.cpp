@@ -123,6 +123,7 @@ int run_006(const int width, const int height)
 
     delete cube;
     delete light;
+    delete camera;
 
     glfwTerminate();
     return 0;

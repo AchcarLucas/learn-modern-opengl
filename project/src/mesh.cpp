@@ -9,11 +9,6 @@ Mesh::Mesh(std::vector<Vertex> vertices, std::vector<GLuint> indices, std::vecto
     setupMesh();
 }
 
-Mesh::~Mesh()
-{
-    //dtor
-}
-
 void Mesh::draw(Shader *shader)
 {
     // vamos criar um array de contadores para cada tipo de textura
@@ -26,6 +21,8 @@ void Mesh::draw(Shader *shader)
 
     unsigned int i_texture = 0;
 
+    shader->use();
+
     for (auto& texture : this->textures) {
         // obtemos o tipo de textura
         TextureType type = texture->getType();
@@ -34,13 +31,15 @@ void Mesh::draw(Shader *shader)
         // será a estrutura interna do nosso shader
         shader->setInt(("material." + texture_name).c_str(), i_texture);
         // vamos já criar o bind para a nossa textura
-        texture->bind(GL_TEXTURE0 + (++i_texture));
+        texture->bind(GL_TEXTURE0 + (i_texture++));
     }
 
-    shader->use();
+
     this->vao.bind();
     this->ebo.bind();
+
     glDrawElements(GL_TRIANGLES, this->indices.size(), GL_UNSIGNED_INT, 0);
+
     glBindVertexArray(0);
 }
 
