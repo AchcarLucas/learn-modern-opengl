@@ -40,8 +40,8 @@ inline std::vector<Vertex> ex_15_floor_vertices = {
 };
 
 inline std::vector<GLuint> ex_15_indices = {
-    0, 1, 3,
-    1, 2, 3
+    3, 1, 0,
+    3, 2, 1
 };
 
 class TransparentSorted {
@@ -95,6 +95,9 @@ int run_015(const int width, const int height)
     glfwSetCursorPosCallback(window, mouseCallback);
     glfwSetScrollCallback(window, scrollCallback);
 
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_FRONT);
+
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -117,6 +120,7 @@ int run_015(const int width, const int height)
     while(!glfwWindowShouldClose(window)) {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+        glEnable(GL_CULL_FACE);
 
         float current_frame = static_cast<float>(glfwGetTime());
         delta_time = current_frame - last_frame;
@@ -150,6 +154,8 @@ int run_015(const int width, const int height)
         window_shader->use();
         window_shader->setMatrix4fv("projection", glm::value_ptr(projection));
         window_shader->setMatrix4fv("view", glm::value_ptr(view));
+
+        glDisable(GL_CULL_FACE);
 
         // grass
         {
@@ -189,6 +195,8 @@ int run_015(const int width, const int height)
                 mesh_window->draw(window_shader);
             }
         }
+
+        glEnable(GL_CULL_FACE);
 
         processInput(window, delta_time);
 
