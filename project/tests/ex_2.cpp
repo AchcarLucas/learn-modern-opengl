@@ -15,7 +15,7 @@ int run_002(const int width, const int height)
     _stbi_set_flip_vertically_on_load(true);
 
     Texture2D *texture_0 = new Texture2D("resources/textures/container.jpg");
-    Texture2D *texture_1 = new Texture2D("resources/textures/awesomeface.png", TextureType::ALBEDO, true);
+    Texture2D *texture_1 = new Texture2D("resources/textures/awesomeface.png", TextureType::ALBEDO);
 
     Shader *shader = new Shader("glsl/test_2_vertex_shader.vs", "glsl/test_2_fragment_shader.fs");
     SObject *quad = createQuad();

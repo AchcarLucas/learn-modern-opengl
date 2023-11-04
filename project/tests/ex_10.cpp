@@ -35,8 +35,8 @@ int run_010(const int width, const int height)
     SObject *cube = createCube();
     SObject *light = createLight();
 
-    Texture2D *texture_0 = new Texture2D("resources/textures/container2.png", TextureType::ALBEDO, true);
-    Texture2D *texture_1 = new Texture2D("resources/textures/container2_specular.png", TextureType::ALBEDO, true);
+    Texture2D *texture_0 = new Texture2D("resources/textures/container2.png", TextureType::ALBEDO);
+    Texture2D *texture_1 = new Texture2D("resources/textures/container2_specular.png", TextureType::ALBEDO);
 
     shader_cube->use();
     shader_cube->setInt("material.diffuse", 0);

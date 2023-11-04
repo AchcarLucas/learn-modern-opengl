@@ -1,6 +1,6 @@
 #include "texture.hpp"
 
-Texture2D::Texture2D(const std::string file, const TextureType type, bool alpha_channel)
+Texture2D::Texture2D(const std::string file, const TextureType type)
 {
     int width, height, n_channel;
     unsigned char *image = _stbi_load(file.c_str(), &width, &height, &n_channel);
@@ -11,17 +11,15 @@ Texture2D::Texture2D(const std::string file, const TextureType type, bool alpha_
         return;
     }
 
-    GLenum format;
-
     switch(n_channel) {
         case 1:
-            format = GL_RED;
+            this->format = GL_RED;
             break;
         case 3:
-            format = GL_RGB;
+            this->format = GL_RGB;
             break;
         case 4:
-            format = GL_RGBA;
+            this->format = GL_RGBA;
             break;
     }
 

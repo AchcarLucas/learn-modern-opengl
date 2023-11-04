@@ -47,7 +47,7 @@ int run_011(const int width, const int height)
     std::vector<Texture2D*> textures;
 
     textures.push_back(new Texture2D("resources/textures/container.jpg"));
-    textures.push_back(new Texture2D("resources/textures/awesomeface.png", TextureType::ALBEDO, true));
+    textures.push_back(new Texture2D("resources/textures/awesomeface.png", TextureType::ALBEDO));
 
     Mesh *mesh = new Mesh(ex_11_vertices, ex_11_indices, textures);
 

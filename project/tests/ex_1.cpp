@@ -16,7 +16,7 @@ int run_001(const int width, const int height)
 
     Texture2D *texture_1 = new Texture2D("resources/textures/container.jpg");
     Texture2D *texture_2 = new Texture2D("resources/textures/wall.jpg");
-    Texture2D *texture_3 = new Texture2D("resources/textures/awesomeface.png", TextureType::ALBEDO, true);
+    Texture2D *texture_3 = new Texture2D("resources/textures/awesomeface.png", TextureType::ALBEDO);
 
     Shader *shader_1 = new Shader("glsl/first_vertex_shader.vs", "glsl/first_fragment_shader.fs");
     Shader *shader_2 = new Shader("glsl/interpolate_vertex_shader.vs", "glsl/interpolate_fragment_shader.fs");

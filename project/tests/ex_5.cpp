@@ -38,7 +38,7 @@ int run_005(const int width, const int height)
     glm::vec3 light_position(1.2f, 1.0f, 2.0f);
 
     Texture2D *texture_0 = new Texture2D("resources/textures/container.jpg");
-    Texture2D *texture_1 = new Texture2D("resources/textures/awesomeface.png", TextureType::ALBEDO, true);
+    Texture2D *texture_1 = new Texture2D("resources/textures/awesomeface.png", TextureType::ALBEDO);
 
     shader_cube->use();
     shader_cube->setInt("texture0", 0);

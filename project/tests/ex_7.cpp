@@ -36,7 +36,7 @@ int run_007(const int width, const int height)
     SObject *light = createLight();
 
     Texture2D *texture_0 = new Texture2D("resources/textures/container.jpg");
-    Texture2D *texture_1 = new Texture2D("resources/textures/awesomeface.png", TextureType::ALBEDO, true);
+    Texture2D *texture_1 = new Texture2D("resources/textures/awesomeface.png", TextureType::ALBEDO);
 
     shader_cube->use();
     shader_cube->setInt("texture0", 0);

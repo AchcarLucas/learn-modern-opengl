@@ -54,17 +54,19 @@ inline TextureTypeMap textureTypeMap = {
 class Texture2D
 {
     public:
-        Texture2D(const std::string file, const TextureType type = TextureType::ALBEDO, bool alpha_channel = false);
+        Texture2D(const std::string file, const TextureType type = TextureType::ALBEDO);
         virtual ~Texture2D();
 
         void bind(GLenum);
 
-        TextureType getType() { return type; };
-        std::string getFile() { return file; }
+        TextureType getType() { return this->type; }
+        std::string getFile() { return this->file; }
+        GLenum getFormat() { return this->format; }
 
     protected:
         GLuint texture;
         TextureType type;
+        GLenum format;
 
     private:
         std::string file;
