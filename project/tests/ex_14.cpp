@@ -142,6 +142,7 @@ int run_014(const int width, const int height)
 
     delete model_obj;
     delete shader;
+    delete outlining_shader;
     delete camera;
 
     for(auto &texture : textures) {

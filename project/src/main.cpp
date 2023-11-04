@@ -9,7 +9,7 @@ const int _HEIGHT = 600;
 // #define ASSIMP_TEST
 
 #ifndef ASSIMP_TEST
-    #define EXEC_TEST 14
+    #define EXEC_TEST 15
 #endif
 
 int main()
@@ -49,6 +49,8 @@ int main()
             return run_013(_WIDTH, _HEIGHT);
         #elif EXEC_TEST == 14
             return run_014(_WIDTH, _HEIGHT);
+        #elif EXEC_TEST == 15
+            return run_015(_WIDTH, _HEIGHT);
         #endif
     #endif
 }
