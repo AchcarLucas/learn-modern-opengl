@@ -33,8 +33,6 @@ int run_012(const int width, const int height)
     Shader *shader = new Shader("glsl/ex_12/model_loading.vs", "glsl/ex_12/model_loading.fs");
     Model *model_obj = new Model("./resources/obj/backpack/backpack.obj");
 
-    std::vector<Texture2D*> textures;
-
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     glfwSetCursorPosCallback(window, mouseCallback);
     glfwSetScrollCallback(window, scrollCallback);

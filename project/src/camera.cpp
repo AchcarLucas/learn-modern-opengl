@@ -2,7 +2,7 @@
 
 Camera::Camera(glm::vec3 position)
 {
-    this->cam_pos = position;
+    this->setCamPos(position);
 }
 
 Camera::~Camera()

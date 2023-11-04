@@ -18,6 +18,8 @@ class Camera
         void mouseCallback(GLFWwindow* window, double xpos, double ypos);
         void scrollCallback(GLFWwindow* window, double xoffset, double yoffset);
 
+        void setCamPos(glm::vec3 position) { this->cam_pos = position; }
+
         glm::vec3 getCamPos() { return this->cam_pos; }
         glm::vec3 getCamFront() { return this->cam_front; }
         glm::vec3 getCamTarget() { return this->cam_target; }
@@ -30,7 +32,7 @@ class Camera
         glm::mat4 getPerspectiveMatrix(int width, int height, float near = 0.1f, float far = 100.0f);
         glm::mat4 getViewMatrix();
     protected:
-        glm::vec3 cam_pos = glm::vec3(0.0f, 0.0f, 0.0f);
+        glm::vec3 cam_pos;
         glm::vec3 cam_target = glm::vec3(0.0f, 0.0f, 0.0f);
         glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
         glm::vec3 cam_front = glm::vec3(0.0f, 0.0f, -1.0f);
