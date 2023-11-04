@@ -23,9 +23,9 @@ void Camera::processInput(GLFWwindow *window, float delta_time)
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
         this->cam_pos -= cam_speed * this->cam_front;
     if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-        this->cam_pos -= glm::normalize(glm::cross(this->cam_front, this->up)) * cam_speed;
+        this->cam_pos -= glm::normalize(this->getRightVector()) * cam_speed;
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-        this->cam_pos += glm::normalize(glm::cross(this->cam_front, this->up)) * cam_speed;
+        this->cam_pos += glm::normalize(this->getRightVector()) * cam_speed;
 }
 
 void Camera::mouseCallback(GLFWwindow* window, double x_pos, double y_pos)

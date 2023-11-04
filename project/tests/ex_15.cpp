@@ -63,6 +63,19 @@ class TransparentSorted {
         }
 };
 
+glm::mat4 billboard(glm::vec3 position, glm::vec3 camera, glm::vec3 up, glm::vec3 right) {
+    glm::vec3 look = normalize(camera - position);
+
+    glm::mat4 _transform;
+
+    _transform[0] = glm::vec4(right, 0.0f);
+    _transform[1] = glm::vec4(cross(look, right), 0.0f);
+    _transform[2] = glm::vec4(look, 0.0f);
+    _transform[3] = glm::vec4(position, 1.0f);
+
+    return _transform;
+}
+
 int run_015(const int width, const int height)
 {
     _stbi_set_flip_vertically_on_load(true);
@@ -162,9 +175,10 @@ int run_015(const int width, const int height)
             for(auto &vegetation : vegetations) {
                 grass_shader->use();
 
-                glm::mat4 model = glm::mat4(1.0f);
+                glm::mat4 model(1.0f);
                 model = glm::translate(model, vegetation); // translate it down so it's at the center of the scene
                 model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));	// it's a bit too big for our scene, so scale it down
+                model = glm::rotate(model, glm::radians(camera->getYaw()+ 90.0f), glm::vec3(0.0f, -1.0f, 0.0f));
 
                 grass_shader->setMatrix4fv("model", glm::value_ptr(model));
 

@@ -24,6 +24,7 @@ class Camera
         glm::vec3 getCamFront() { return this->cam_front; }
         glm::vec3 getCamTarget() { return this->cam_target; }
         glm::vec3 getUpVector() { return this->up; }
+        glm::vec3 getRightVector() { return glm::cross(this->cam_front, this->up); }
 
         float getFov() { return this->fov; }
         float getYaw() { return this->yaw; }
