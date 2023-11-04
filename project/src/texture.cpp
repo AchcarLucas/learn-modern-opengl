@@ -11,6 +11,9 @@ Texture2D::Texture2D(const std::string file, const TextureType type)
         return;
     }
 
+    this->width = width;
+    this->height = height;
+
     switch(n_channel) {
         case 1:
             this->format = GL_RED;
@@ -31,7 +34,7 @@ Texture2D::Texture2D(const std::string file, const TextureType type)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-    glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, image);
+    glTexImage2D(GL_TEXTURE_2D, 0, this->format, width, height, 0, this->format, GL_UNSIGNED_BYTE, image);
     glGenerateMipmap(GL_TEXTURE_2D);
 
     std::cout << "LOAD::TEXTURE_2D <" << file << ">:<" << textureTypeMap[type] << ">" << std::endl;

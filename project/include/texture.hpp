@@ -63,10 +63,14 @@ class Texture2D
         std::string getFile() { return this->file; }
         GLenum getFormat() { return this->format; }
 
+        unsigned int getWidth() { return this->width; }
+        unsigned int getHeight() { return this->height; }
+
     protected:
         GLuint texture;
         TextureType type;
         GLenum format;
+        unsigned int width, height;
 
     private:
         std::string file;

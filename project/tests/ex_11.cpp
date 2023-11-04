@@ -37,9 +37,6 @@ inline std::vector<GLuint> ex_11_indices = {
 
 int run_011(const int width, const int height)
 {
-    float _WIDTH = width;
-    float _HEIGHT = height;
-
     _stbi_set_flip_vertically_on_load(true);
 
     Shader *shader = new Shader("glsl/first_vertex_shader.vs", "glsl/first_fragment_shader.fs");
