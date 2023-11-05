@@ -58,3 +58,13 @@ Pronto, o Codeblock está configurado
 ### 🚀 Executando um exemplo
 
 Após finalizar a instalação das libs e a configuração do codeblock, no arquivo ```main.cpp``` mude os exemplos pela definition ```EXEC_TEST X``` , onde o ```X``` é o número do exemplo que você desejar.
+
+## Exemplo-1
+![ex_1](./images/img_1.png)
+## Exemplo-2
+![ex_2](./images/img_2.png)
+## Exemplo-3
+![ex_3](./images/img_3.png)
+## Exemplo-4
+![ex_4](./images/img_4.gif)
+
