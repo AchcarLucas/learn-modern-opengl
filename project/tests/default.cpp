@@ -24,9 +24,6 @@ inline float last_frame = 0.0f;
 
 int run_default(const int width, const int height)
 {
-    float _WIDTH = width;
-    float _HEIGHT = height;
-
     _stbi_set_flip_vertically_on_load(true);
 
     Shader *shader = new Shader("glsl/first_vertex_shader.vs", "glsl/first_fragment_shader.fs");
