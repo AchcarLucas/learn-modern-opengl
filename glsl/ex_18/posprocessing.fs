@@ -101,6 +101,9 @@ void main()
     // gray color
     //FragColor = vec4(gray_scale(texture(screenTexture, TexCoords), vec3(0.2126f, 0.7152f, 0.0722f)), 1.0f);
 
-    vec3 color = kernel_color(kernel_5, offset);
-    FragColor = vec4(color, 1.0f);
+    /*
+        vec3 color = kernel_color(kernel_5, offset);
+        FragColor = vec4(color, 1.0f);
+    */
+    FragColor = texture(screenTexture, TexCoords);
 }
