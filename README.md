@@ -1,57 +1,39 @@
 # learn-modern-opengl
 
-Instalação das dependências:
+Projeto criado para aprender opengl - exemplos com refatorações do site [learn opengl](https://learnopengl.com/)
 
-Faça a instalação das seguintes dependências
+## 📋 Instalações das dependências (Linux)
+
+### Instalação da lib X11
 
 ```
 sudo apt-get install doxygen dnf xorg-dev
 sudo dnf install libXcursor-devel libXi-devel libXinerama-devel libXrandr-devel
 ```
 
+### Instalação da lib GLFW (GLFW-3.3.8):
 
-Instalação do GLFW:
+Baixar o pacote [GLFW-3.3.8](https://www.glfw.org/download)
 
-Instalar GLFW-3.3.8 pelo site: https://www.glfw.org/download
-Após isso, extrair e usar os seguintes comandos dentro da pasta ```glfw-3.3.8```
+Após baixar, extrair e faça a compilação usando os comandos dentro da pasta ```glfw-3.3.8```
 
 ```
 cmake -S . -B build
-```
-
-O comando acima irá criar uma pasta chamada build, após isso de cmake build
-
-```
 cmake build
-```
-
-entre na pasta build com o comando 
-
-```
 cd build
-``` 
-
-após isso, fala a compilação do glfw
-
-```
 make build
-```
-
-e a instalação com permissão de root
-
-```
 sudo make install
 ```
 
-Ao finalizar, será exibido no terminal o local de instalação das libs e os includes como pode
+Ao finalizar, será exibido no terminal, os locais de instalações das libs e os includes como pode ser visto na imagem abaixo
 ser visto na imagem:
 
 ![glfw-install](./images/img_1.png)
 
-Instalação do Assimp:
+### Instalação do Assimp (Assimp-5.3.1):
 
-Baixe o Assimp https://github.com/assimp/assimp versão 5.3.1
-após baixar e extrair, faça a build
+Baixe o Assimp [assimp-5.3.1](https://github.com/assimp/assimp)
+após baixar, extrair e faça a sua build
 
 ```
 cd assimp
@@ -59,23 +41,20 @@ cmake CMakeLists.txt
 cmake --build .
 ```
 
-faça a copia dos ```.so``` para a pasta ```/usr/local/lib``` e crie um atalho do ```libassimp.so.5``` para a 
-pasta principal do projeto
+após fazer a build, copie os arquivos ```.so``` para a pasta ```/usr/local/lib``` e crie um atalho do ```libassimp.so.5``` para a 
+pasta principal do projeto clonado
 
-Configuração do CodeBlock:
+## 🔧 Configuração do CodeBlock:
 
-Em ```Build Options -> Compiler Settings``` habilite o ```-std=c11``` o ```-static-libstdc++```
+Verifique se a configuração do seu codeblock como segue as imagens a seguir:
 
-![glfw-codeblock-config](./images/img_2.png)
-
-Em ```Build Options -> Linker Settings``` adicione o local onde a lib ```libglfw3.a``` está instalado
-Em ```Build Options -> Linker Settings``` adicione o local onde a lib ```libassimp.so``` está instalado
-
-Ainda em ```Build Options -> Linker Settings```, adicione em ```Other linker options``` os seguintes links ```-lglfw3 -lassimp.so -lX11```
-
-
-Em ```Build Options -> Search directories``` adicione o local onde o include ```GLFW``` está instalado
-Em ```Build Options -> Search directories``` adicione o local onde o include ```Assimp``` está instalado
+![img_2](./images/img_2.png)
+![img_3](./images/img_3.png)
+![img_4](./images/img_4.png)
+![img_5](./images/img_5.png)
 
 Pronto, o Codeblock está configurado
 
+### 🚀 Executando um exemplo
+
+Após finalizar a instalação das libs e a configuração do codeblock, no arquivo ```main.cpp``` mude os exemplos pela definition ```EXEC_TEST X``` , onde o ```X``` é o número do exemplo que você desejar.
