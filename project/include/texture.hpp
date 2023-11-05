@@ -57,7 +57,7 @@ inline TextureTypeMap textureTypeMap = {
 class Texture2D
 {
     public:
-        Texture2D(const std::string file, const TextureType type = TextureType::ALBEDO);
+        Texture2D(const std::string file, const TextureType type = TextureType::ALBEDO, bool flip = true);
         Texture2D(const int width, const int height, const TextureType type = TextureType::FRAMEBUFFER);
         virtual ~Texture2D();
 
@@ -84,11 +84,13 @@ class Texture2D
 class TextureCube
 {
     public:
-        TextureCube(std::vector<std::string> files);
+        TextureCube(std::vector<std::string> files, bool flip = true);
         virtual ~TextureCube();
 
         unsigned int getWidth() { return this->width; }
         unsigned int getHeight() { return this->height; }
+
+        void bind(GLenum);
 
         GLuint getGenTexture() { return texture; }
         std::vector<std::string> getFiles() { return this->files; }

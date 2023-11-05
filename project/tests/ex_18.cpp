@@ -95,6 +95,50 @@ inline std::vector<Vertex> ex_18_cube_vertices = {
     Vertex(glm::vec3(-0.5f,  0.5f, 0.5f),  glm::vec2(0.0f, 0.0f)),
 };
 
+inline std::vector<Vertex> ex_18_cube_vertices_skybox = {
+    Vertex(glm::vec3(-1.0f,  1.0f, -1.0f)),
+    Vertex(glm::vec3(-1.0f, -1.0f, -1.0f)),
+    Vertex(glm::vec3( 1.0f, -1.0f, -1.0f)),
+    Vertex(glm::vec3( 1.0f, -1.0f, -1.0f)),
+    Vertex(glm::vec3( 1.0f,  1.0f, -1.0f)),
+    Vertex(glm::vec3(-1.0f,  1.0f, -1.0f)),
+
+    Vertex(glm::vec3(-1.0f, -1.0f,  1.0f)),
+    Vertex(glm::vec3(-1.0f, -1.0f, -1.0f)),
+    Vertex(glm::vec3(-1.0f,  1.0f, -1.0f)),
+    Vertex(glm::vec3(-1.0f,  1.0f, -1.0f)),
+    Vertex(glm::vec3(-1.0f,  1.0f,  1.0f)),
+    Vertex(glm::vec3(-1.0f, -1.0f,  1.0f)),
+
+    Vertex(glm::vec3( 1.0f, -1.0f, -1.0f)),
+    Vertex(glm::vec3( 1.0f, -1.0f,  1.0f)),
+    Vertex(glm::vec3( 1.0f,  1.0f,  1.0f)),
+    Vertex(glm::vec3( 1.0f,  1.0f,  1.0f)),
+    Vertex(glm::vec3( 1.0f,  1.0f, -1.0f)),
+    Vertex(glm::vec3( 1.0f, -1.0f, -1.0f)),
+
+    Vertex(glm::vec3(-1.0f, -1.0f,  1.0f)),
+    Vertex(glm::vec3(-1.0f,  1.0f,  1.0f)),
+    Vertex(glm::vec3( 1.0f,  1.0f,  1.0f)),
+    Vertex(glm::vec3( 1.0f,  1.0f,  1.0f)),
+    Vertex(glm::vec3( 1.0f, -1.0f,  1.0f)),
+    Vertex(glm::vec3(-1.0f, -1.0f,  1.0f)),
+
+    Vertex(glm::vec3(-1.0f,  1.0f, -1.0f)),
+    Vertex(glm::vec3( 1.0f,  1.0f, -1.0f)),
+    Vertex(glm::vec3( 1.0f,  1.0f,  1.0f)),
+    Vertex(glm::vec3( 1.0f,  1.0f,  1.0f)),
+    Vertex(glm::vec3(-1.0f,  1.0f,  1.0f)),
+    Vertex(glm::vec3(-1.0f,  1.0f, -1.0f)),
+
+    Vertex(glm::vec3(-1.0f, -1.0f, -1.0f)),
+    Vertex(glm::vec3(-1.0f, -1.0f,  1.0f)),
+    Vertex(glm::vec3( 1.0f, -1.0f, -1.0f)),
+    Vertex(glm::vec3( 1.0f, -1.0f, -1.0f)),
+    Vertex(glm::vec3(-1.0f, -1.0f,  1.0f)),
+    Vertex(glm::vec3( 1.0f, -1.0f,  1.0f))
+};
+
 inline std::vector<GLuint> ex_18_cube_indices = {
     0, 1, 2,
     5, 4, 3,
@@ -117,12 +161,11 @@ inline std::vector<GLuint> ex_18_cube_indices = {
 
 int run_018(const int width, const int height)
 {
-    _stbi_set_flip_vertically_on_load(true);
-
     camera->setCamPos(glm::vec3(0.0f, 2.0f, 8.0f));
 
     Shader *shader = new Shader("glsl/ex_18/model_loading.vs", "glsl/ex_18/model_loading.fs");
     Shader *shader_cube = new Shader("glsl/ex_18/cube.vs", "glsl/ex_18/cube.fs");
+    Shader *shader_skybox = new Shader("glsl/ex_18/skybox.vs", "glsl/ex_18/skybox.fs");
     Shader *posprocessing_shader = new Shader("glsl/ex_18/posprocessing.vs", "glsl/ex_18/posprocessing.fs");
 
     std::vector<Texture2D*> textures;
@@ -139,21 +182,22 @@ int run_018(const int width, const int height)
 
     /////////////////////////
 
-    std::string dir = "resources/textures/skybox/";
+    std::string dir = "resources/textures/skybox_1/";
 
     vector<std::string> faces = {
-        std::string(dir +"right.jpg"),
-        std::string(dir +"left.jpg"),
-        std::string(dir +"top.jpg"),
+        std::string(dir + "right.jpg"),
+        std::string(dir + "left.jpg"),
+        std::string(dir + "top.jpg"),
         std::string(dir + "bottom.jpg"),
         std::string(dir + "front.jpg"),
         std::string(dir + "back.jpg")
     };
 
-    TextureCube *texture_cube_skybox = new TextureCube(faces);
-    Mesh *mesh_cube_skybox = new Mesh(ex_18_cube_vertices, ex_18_cube_indices, vector<Texture2D*>(), VERTEX_TYPE::ATTRIB_PT);
+    TextureCube *texture_cube_skybox = new TextureCube(faces, false);
+    Mesh *mesh_cube_skybox = new Mesh(ex_18_cube_vertices_skybox, std::vector<Texture2D*>(), VERTEX_TYPE::ATTRIB_P);
 
-    /////////////////////////
+    shader_skybox->use();
+    shader_skybox->setInt("skybox", 0);
 
     // quad posprocessing
     Mesh *mesh_posprocessing = new Mesh(ex_18_quad_vertices, ex_18_quad_indices, std::vector<Texture2D*>());
@@ -178,6 +222,7 @@ int run_018(const int width, const int height)
     // Framebuffer
     FrameBuffer *framebuffer = new FrameBuffer(width, height, GL_DEPTH24_STENCIL8, GL_DEPTH_STENCIL_ATTACHMENT);
 
+
     while(!glfwWindowShouldClose(window)) {
         framebuffer->bind();
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -191,6 +236,21 @@ int run_018(const int width, const int height)
         glm::mat4 projection = camera->getPerspectiveMatrix(width, height);
         glm::mat4 view = camera->getViewMatrix();
 
+
+        // skybox
+        {
+            glDepthFunc(GL_LEQUAL);
+            glm::mat4 view_modify = glm::mat4(glm::mat3(camera->getViewMatrix()));
+            shader_skybox->use();
+            shader_skybox->setMatrix4fv("projection", glm::value_ptr(projection));
+            shader_skybox->setMatrix4fv("view", glm::value_ptr(view_modify));
+
+            texture_cube_skybox->bind(GL_TEXTURE0);
+            mesh_cube_skybox->draw(shader_skybox);
+
+            glBindVertexArray(0);
+            glDepthFunc(GL_LESS);
+        }
 
         // floor
         {
@@ -229,18 +289,19 @@ int run_018(const int width, const int height)
             }
         }
 
+        // pos-processing
+        {
+            framebuffer->unbind();
+            glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+            glClear(GL_COLOR_BUFFER_BIT);
 
-        // second pass
-        framebuffer->unbind();
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
+            glDisable(GL_DEPTH_TEST);
 
-        glDisable(GL_DEPTH_TEST);
-
-        posprocessing_shader->use();
-        posprocessing_shader->setInt("screenTexture", 0);
-        framebuffer->getTexture2D()->bind(GL_TEXTURE0);
-        mesh_posprocessing->draw(posprocessing_shader);
+            posprocessing_shader->use();
+            posprocessing_shader->setInt("screenTexture", 0);
+            framebuffer->getTexture2D()->bind(GL_TEXTURE0);
+            mesh_posprocessing->draw(posprocessing_shader);
+        }
 
         processInput(window, delta_time);
 
@@ -249,6 +310,8 @@ int run_018(const int width, const int height)
     }
 
     delete shader;
+    delete shader_cube;
+    delete shader_skybox;
     delete posprocessing_shader;
 
     delete mesh_floor;

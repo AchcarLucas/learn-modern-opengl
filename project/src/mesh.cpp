@@ -9,6 +9,14 @@ Mesh::Mesh(std::vector<Vertex> vertices, std::vector<GLuint> indices, std::vecto
     setupMesh(vt);
 }
 
+Mesh::Mesh(std::vector<Vertex> vertices, std::vector<Texture2D*> textures, VERTEX_TYPE vt)
+{
+    this->vertices = vertices;
+    this->textures = textures;
+
+    setupMesh(vt);
+}
+
 void Mesh::draw(Shader *shader)
 {
     // vamos criar um array de contadores para cada tipo de textura
@@ -36,9 +44,13 @@ void Mesh::draw(Shader *shader)
 
 
     this->vao.bind();
-    this->ebo.bind();
 
-    glDrawElements(GL_TRIANGLES, this->indices.size(), GL_UNSIGNED_INT, 0);
+    if(!this->indices.empty()) {
+        this->ebo.bind();
+        glDrawElements(GL_TRIANGLES, this->indices.size(), GL_UNSIGNED_INT, 0);
+    } else {
+        glDrawArrays(GL_TRIANGLES, 0, this->vertices.size());
+    }
 
     glBindVertexArray(0);
 }
@@ -50,8 +62,10 @@ void Mesh::setupMesh(VERTEX_TYPE vt)
     this->vbo.bind();
     this->vbo.VBOBuffer(&this->vertices[0], this->vertices.size() * sizeof(Vertex), GL_STATIC_DRAW);
 
-    this->ebo.bind();
-    this->ebo.EBOBuffer(&this->indices[0], this->indices.size() * sizeof(GLuint), GL_STATIC_DRAW);
+    if(!this->indices.empty()) {
+        this->ebo.bind();
+        this->ebo.EBOBuffer(&this->indices[0], this->indices.size() * sizeof(GLuint), GL_STATIC_DRAW);
+    }
 
     unsigned int index = 0;
 

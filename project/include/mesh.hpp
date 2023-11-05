@@ -70,6 +70,7 @@ class Mesh
 {
     public:
         Mesh(std::vector<Vertex> vertices, std::vector<GLuint> indices, std::vector<Texture2D*> textures, VERTEX_TYPE vt = VERTEX_TYPE::ATTRIB_PNT);
+        Mesh(std::vector<Vertex> vertices, std::vector<Texture2D*> textures, VERTEX_TYPE vt = VERTEX_TYPE::ATTRIB_PNT);
         virtual ~Mesh() { };
 
         void draw(Shader *shader);

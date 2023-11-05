@@ -17,8 +17,10 @@ static GLenum ImageTypeFormat(int format)
     return GL_NONE;
 }
 
-Texture2D::Texture2D(const std::string file, const TextureType type)
+Texture2D::Texture2D(const std::string file, const TextureType type, bool flip)
 {
+    _stbi_set_flip_vertically_on_load(flip);
+
     int width, height, n_channel;
     unsigned char *image = _stbi_load(file.c_str(), &width, &height, &n_channel);
 
@@ -81,8 +83,10 @@ void Texture2D::bind(GLenum _GL_TEXTURE)
     glBindTexture(GL_TEXTURE_2D, this->texture);
 }
 
-TextureCube::TextureCube(std::vector<std::string> files)
+TextureCube::TextureCube(std::vector<std::string> files, bool flip)
 {
+    _stbi_set_flip_vertically_on_load(flip);
+
     glGenTextures(1, &this->texture);
     glBindTexture(GL_TEXTURE_CUBE_MAP, this->texture);
 
@@ -98,6 +102,8 @@ TextureCube::TextureCube(std::vector<std::string> files)
             return;
         }
 
+        this->format = ImageTypeFormat(n_channel);
+
         glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, this->format, width, height, 0, this->format, GL_UNSIGNED_BYTE, data);
         _stbi_image_free(data);
 
@@ -107,7 +113,6 @@ TextureCube::TextureCube(std::vector<std::string> files)
     this->files = files;
     this->width = width;
     this->height = height;
-    this->format = ImageTypeFormat(n_channel);
 
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -119,4 +124,10 @@ TextureCube::TextureCube(std::vector<std::string> files)
 TextureCube::~TextureCube()
 {
     glDeleteTextures(1, &this->texture);
+}
+
+void TextureCube::bind(GLenum _GL_TEXTURE)
+{
+    glActiveTexture(_GL_TEXTURE);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, this->texture);
 }
