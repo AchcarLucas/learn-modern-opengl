@@ -2,6 +2,7 @@
 #define TEXTURE_HPP
 
 #include <string>
+#include <vector>
 #include <map>
 
 #include <glad/glad.h>
@@ -78,6 +79,30 @@ class Texture2D
 
     private:
         std::string file;
+};
+
+class TextureCube
+{
+    public:
+        TextureCube(std::vector<std::string> files);
+        virtual ~TextureCube();
+
+        unsigned int getWidth() { return this->width; }
+        unsigned int getHeight() { return this->height; }
+
+        GLuint getGenTexture() { return texture; }
+        std::vector<std::string> getFiles() { return this->files; }
+        GLenum getFormat() { return this->format; }
+
+    protected:
+        GLuint texture;
+        GLenum format;
+        unsigned int width, height;
+
+    private:
+
+        std::vector<std::string> files;
+
 };
 
 #endif // TEXTURE_HPP
