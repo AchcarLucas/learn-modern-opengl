@@ -59,11 +59,11 @@ struct Vertex {
 
 enum VERTEX_TYPE
 {
-    ATTRIB_P = 1,
-    ATTRIB_PC,
-    ATTRIB_PCN,
-    ATTRIB_PNT,
-    ATTRIB_PT
+    ATTRIB_P = 1,   // APENAS POSITION
+    ATTRIB_PC,      // POSITION, COLOR
+    ATTRIB_PCN,     // POSITION, COLOR, NORMAL
+    ATTRIB_PNT,     // POSITION, NORMAL, TEX
+    ATTRIB_PT       // POSITION, TEX
 };
 
 class Mesh
