@@ -26,7 +26,8 @@ enum TextureType {
     DISPLACEMENT,
     REFLECTION,
     LIGHTMAP,
-    HEIGHT
+    HEIGHT,
+    FRAMEBUFFER
 };
 
 typedef std::map<TextureType, std::string> TextureTypeMap;
@@ -49,12 +50,14 @@ inline TextureTypeMap textureTypeMap = {
     {TextureType::REFLECTION, "reflection"},
     {TextureType::LIGHTMAP, "lightmap"},
     {TextureType::HEIGHT, "height"},
+    {TextureType::FRAMEBUFFER, "framebuffer"},
 };
 
 class Texture2D
 {
     public:
         Texture2D(const std::string file, const TextureType type = TextureType::ALBEDO);
+        Texture2D(const int width, const int height, const TextureType type = TextureType::FRAMEBUFFER);
         virtual ~Texture2D();
 
         void bind(GLenum);
@@ -66,6 +69,7 @@ class Texture2D
         unsigned int getWidth() { return this->width; }
         unsigned int getHeight() { return this->height; }
 
+        GLuint getGenTexture() { return texture; }
     protected:
         GLuint texture;
         TextureType type;
