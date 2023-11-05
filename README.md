@@ -60,11 +60,46 @@ Pronto, o Codeblock está configurado
 Após finalizar a instalação das libs e a configuração do codeblock, no arquivo ```main.cpp``` mude os exemplos pela definition ```EXEC_TEST X``` , onde o ```X``` é o número do exemplo que você desejar.
 
 ## Exemplo-1
-![ex_1](./images/img_1.png)
-## Exemplo-2
-![ex_2](./images/img_2.png)
-## Exemplo-3
-![ex_3](./images/img_3.png)
-## Exemplo-4
-![ex_4](./images/img_4.gif)
+![ex_1](./images/ex_1.png)
 
+## Exemplo-2
+![ex_2](./images/ex_2.png)
+
+## Exemplo-3
+![ex_3](./images/ex_3.png)
+
+## Exemplo-4
+![ex_4](./images/ex_4.gif)
+
+## Exemplo-5
+![ex_5](./images/ex_5.png)
+
+## Exemplo-6
+![ex_6](./images/ex_6.gif)
+
+## Exemplo-7
+![ex_7](./images/ex_7.gif)
+
+## Exemplo-8
+![ex_8](./images/ex_8.gif)
+
+## Exemplo-9
+![ex_9](./images/ex_9.gif)
+
+## Exemplo-10
+![ex_10](./images/ex_10.gif)
+
+## Exemplo-12
+![ex_12](./images/ex_12.png)
+
+## Exemplo-14
+![ex_14](./images/ex_14.png)
+
+## Exemplo-15
+![ex_15](./images/ex_15.png)
+
+## Exemplo-16
+![ex_16](./images/ex_16.png)
+
+## Exemplo-17
+![ex_17](./images/ex_17.png)
