@@ -19,10 +19,29 @@
 
 struct Vertex {
     glm::vec3 position;
+    glm::vec3 color;
     glm::vec3 normal;
     glm::vec2 tex;
 
     Vertex() { };
+
+    Vertex(glm::vec3 position)
+    {
+        this->position = position;
+    }
+
+    Vertex(glm::vec3 position, glm::vec3 color)
+    {
+        this->position = position;
+        this->color = color;
+    }
+
+    Vertex(glm::vec3 position, glm::vec3 color, glm::vec3 normal)
+    {
+        this->position = position;
+        this->color = color;
+        this->normal = normal;
+    }
 
     Vertex(glm::vec3 position, glm::vec3 normal, glm::vec2 tex)
     {
@@ -30,12 +49,27 @@ struct Vertex {
         this->normal = normal;
         this->tex = tex;
     }
+
+    Vertex(glm::vec3 position, glm::vec2 tex)
+    {
+        this->position = position;
+        this->tex = tex;
+    }
+};
+
+enum VERTEX_TYPE
+{
+    ATTRIB_P = 1,
+    ATTRIB_PC,
+    ATTRIB_PCN,
+    ATTRIB_PNT,
+    ATTRIB_PT
 };
 
 class Mesh
 {
     public:
-        Mesh(std::vector<Vertex> vertices, std::vector<GLuint> indices, std::vector<Texture2D*> textures);
+        Mesh(std::vector<Vertex> vertices, std::vector<GLuint> indices, std::vector<Texture2D*> textures, VERTEX_TYPE vt = VERTEX_TYPE::ATTRIB_PNT);
         virtual ~Mesh() { };
 
         void draw(Shader *shader);
@@ -50,7 +84,7 @@ class Mesh
         EBO ebo;
 
     private:
-        void setupMesh();
+        void setupMesh(VERTEX_TYPE vt);
 };
 
 #endif // MESH_HPP

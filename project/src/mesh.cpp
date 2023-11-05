@@ -1,12 +1,12 @@
 #include "mesh.hpp"
 
-Mesh::Mesh(std::vector<Vertex> vertices, std::vector<GLuint> indices, std::vector<Texture2D*> textures)
+Mesh::Mesh(std::vector<Vertex> vertices, std::vector<GLuint> indices, std::vector<Texture2D*> textures, VERTEX_TYPE vt)
 {
     this->vertices = vertices;
     this->indices = indices;
     this->textures = textures;
 
-    setupMesh();
+    setupMesh(vt);
 }
 
 void Mesh::draw(Shader *shader)
@@ -43,7 +43,7 @@ void Mesh::draw(Shader *shader)
     glBindVertexArray(0);
 }
 
-void Mesh::setupMesh()
+void Mesh::setupMesh(VERTEX_TYPE vt)
 {
     this->vao.bind();
 
@@ -53,17 +53,29 @@ void Mesh::setupMesh()
     this->ebo.bind();
     this->ebo.EBOBuffer(&this->indices[0], this->indices.size() * sizeof(GLuint), GL_STATIC_DRAW);
 
+    unsigned int index = 0;
+
     // vertex positions
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
-    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(index, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, position));
+    glEnableVertexAttribArray(index++);
+
+    // vertex colors
+    if(vt == ATTRIB_PC || vt == ATTRIB_PCN) {
+        glVertexAttribPointer(index, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, color));
+        glEnableVertexAttribArray(index++);
+    }
 
     // vertex normals
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, normal));
-    glEnableVertexAttribArray(1);
+    if(vt == ATTRIB_PCN || vt == ATTRIB_PNT) {
+        glVertexAttribPointer(index, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, normal));
+        glEnableVertexAttribArray(index++);
+    }
 
-    // vertex texture coords
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, tex));
-    glEnableVertexAttribArray(2);
+    // vertex texs
+    if(vt == ATTRIB_PNT || vt == ATTRIB_PT) {
+        glVertexAttribPointer(index, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, tex));
+        glEnableVertexAttribArray(index++);
+    }
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);

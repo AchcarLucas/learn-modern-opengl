@@ -92,7 +92,7 @@ TextureCube::TextureCube(std::vector<std::string> files)
         unsigned char *data = _stbi_load(files[i].c_str(), &width, &height, &n_channel, 0);
 
         if (!data) {
-            std::cout << "ERROR:LOAD_CUBEMAP cubemap tex failed to load at path: " << files[i] << std::endl;
+            std::cout << "ERROR::LOAD::CUBEMAP: " << files[i] << std::endl;
             _stbi_image_free(data);
             delete this;
             return;
@@ -100,6 +100,8 @@ TextureCube::TextureCube(std::vector<std::string> files)
 
         glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, this->format, width, height, 0, this->format, GL_UNSIGNED_BYTE, data);
         _stbi_image_free(data);
+
+        std::cout << "LOAD::TEXTURE_CUBEMAP <" << files[i] << ">" << std::endl;
     }
 
     this->files = files;
@@ -116,4 +118,5 @@ TextureCube::TextureCube(std::vector<std::string> files)
 
 TextureCube::~TextureCube()
 {
+    glDeleteTextures(1, &this->texture);
 }
