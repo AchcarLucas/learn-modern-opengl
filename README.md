@@ -11,7 +11,7 @@ sudo apt-get install doxygen dnf xorg-dev
 sudo dnf install libXcursor-devel libXi-devel libXinerama-devel libXrandr-devel
 ```
 
-### Instalação da lib GLFW (GLFW-3.3.8):
+### Instalação da lib GLFW (GLFW-3.3.8)
 
 Baixar o pacote [GLFW-3.3.8](https://www.glfw.org/download)
 
@@ -29,7 +29,7 @@ Ao finalizar, será exibido no terminal, os locais de instalações das libs e o
 
 ![glfw-install](./images/img_1.png)
 
-### Instalação do Assimp (Assimp-5.3.1):
+### Instalação do Assimp (Assimp-5.3.1)
 
 Baixe o Assimp [assimp-5.3.1](https://github.com/assimp/assimp)
 após baixar, extrair e faça a sua build
@@ -43,7 +43,7 @@ cmake --build .
 após fazer a build, copie os arquivos ```.so``` para a pasta ```/usr/local/lib``` e crie um atalho do ```libassimp.so.5``` para a 
 pasta principal do projeto clonado
 
-## 🔧 Configuração do CodeBlock:
+## 🔧 Configuração do CodeBlock
 
 Verifique se a configuração do seu codeblock como segue as imagens a seguir:
 
