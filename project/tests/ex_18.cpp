@@ -236,7 +236,6 @@ int run_018(const int width, const int height)
         glm::mat4 projection = camera->getPerspectiveMatrix(width, height);
         glm::mat4 view = camera->getViewMatrix();
 
-
         // skybox
         {
             glDepthFunc(GL_LEQUAL);
