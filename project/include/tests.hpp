@@ -21,5 +21,6 @@ int run_014(const int, const int);
 int run_015(const int, const int);
 int run_016(const int, const int);
 int run_017(const int, const int);
+int run_018(const int, const int);
 
 #endif // INIT_HPP
