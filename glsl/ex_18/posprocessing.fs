@@ -105,5 +105,6 @@ void main()
         vec3 color = kernel_color(kernel_5, offset);
         FragColor = vec4(color, 1.0f);
     */
+
     FragColor = texture(screenTexture, TexCoords);
 }
