@@ -25,8 +25,7 @@ make build
 sudo make install
 ```
 
-Ao finalizar, será exibido no terminal, os locais de instalações das libs e os includes como pode ser visto na imagem abaixo
-ser visto na imagem:
+Ao finalizar, será exibido no terminal, os locais de instalações das libs e os includes como pode ser visto na imagem abaixo:
 
 ![glfw-install](./images/img_1.png)
 
