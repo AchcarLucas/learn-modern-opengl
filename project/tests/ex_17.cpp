@@ -226,6 +226,7 @@ int run_017(const int width, const int height)
     }
 
     delete shader;
+    delete posprocessing_shader;
 
     delete mesh_floor;
     delete mesh_cube;
