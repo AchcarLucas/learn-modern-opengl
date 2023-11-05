@@ -2,7 +2,6 @@
 
 Projeto criado para aprender opengl - exemplos com refatorações do site [learn opengl](https://learnopengl.com/)
 
-Instalação das dependências:
 ## 📋 Instalações das dependências (Linux)
 
 ### Instalação da lib X11
