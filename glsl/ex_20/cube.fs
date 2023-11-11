@@ -17,7 +17,14 @@ uniform vec3 camera_pos;
 
 void main()
 {
+    float ratio = 1.00 / 1.52;
     vec3 _incident = normalize(position - camera_pos);
-    vec3 _reflect = reflect(_incident, normalize(normal));
-    FragColor = vec4(texture(skybox, _reflect).rgb, 1.0f);
+    /*
+        vec3 _reflect = reflect(_incident, normalize(normal));
+        FragColor = vec4(texture(skybox, _reflect).rgb, 1.0f);
+    */
+
+    vec3 _refract = refract(_incident, normalize(normal), ratio);
+    FragColor = vec4(texture(skybox, _refract).rgb, 1.0f);
+    
 }
