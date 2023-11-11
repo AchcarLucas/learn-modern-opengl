@@ -56,7 +56,7 @@ Pronto, o Codeblock está configurado
 
 ### 🚀 Executando um exemplo
 
-Após finalizar a instalação das libs e a configuração do codeblock, no arquivo ```tests.hpp``` mude os exemplos pela definition ```#define run(width, height) run_XXX(width, height)``` , onde o ```XXXX``` é o número do exemplo que você deseja.
+Após finalizar a instalação das libs e a configuração do codeblock, no arquivo ```tests.hpp``` mude os exemplos pela definition ```#define run(width, height) run_XXX(width, height)``` , onde o ```XXX``` é o número do exemplo que você deseja.
 
 ## Exemplo-1
 ![ex_1](./images/ex_1.png)
