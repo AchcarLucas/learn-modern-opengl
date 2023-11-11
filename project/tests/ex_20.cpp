@@ -263,11 +263,14 @@ int run_020(const int width, const int height)
             shader_cube->setMatrix4fv("view", glm::value_ptr(view));
             shader_cube->setUniform3fv("camera_pos", glm::value_ptr(camera->getCamPos()));
 
+            float angle = 0.0f;
             for(auto &cube : cube_positions) {
                 glm::mat4 model = glm::mat4(1.0f);
                 model = glm::translate(model, glm::vec3(cube)); // translate it down so it's at the center of the scene
                 model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));	// it's a bit too big for our scene, so scale it down
-                model = glm::rotate(model, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+                model = glm::rotate(model, glm::radians(angle), glm::vec3(0.0f, 1.0f, 0.0f));
+
+                angle += 25.0f;
 
                 shader_cube->setMatrix4fv("model", glm::value_ptr(model));
 
