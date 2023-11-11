@@ -18,9 +18,6 @@ in VS_DATA {
     vec3 position;
 } vs_in;
 
-
-
-
 void main()
 {
     float ratio = 1.00 / 1.52;
