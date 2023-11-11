@@ -15,6 +15,7 @@ uniform mat4 projection;
 void main()
 {
     tex_coords = aTexCoords;
+    // https://www.songho.ca/opengl/gl_normaltransform.html
     normal = mat3(transpose(inverse(model))) * aNormal;
     position = vec3(model * vec4(aPos, 1.0));
     gl_Position = projection * view * model * vec4(aPos, 1.0);
