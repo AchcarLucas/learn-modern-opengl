@@ -26,76 +26,76 @@ inline Camera *camera = new Camera(glm::vec3(0.0f, 0.0f, 5.0f));
 inline float delta_time = 0.0f;	// time between current frame and last frame
 inline float last_frame = 0.0f;
 
-inline std::vector<Vertex> ex_18_quad_vertices = {
+inline std::vector<Vertex> ex_20_quad_vertices = {
     Vertex(glm::vec3(1.0f,  1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(1.0f, 1.0f)),
     Vertex(glm::vec3(1.0f, -1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(1.0f, 0.0f)),
     Vertex(glm::vec3(-1.0f, -1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(0.0f, 0.0f)),
     Vertex(glm::vec3(-1.0f,  1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(0.0f, 1.0f))
 };
 
-inline std::vector<Vertex> ex_18_floor_vertices = {
+inline std::vector<Vertex> ex_20_floor_vertices = {
     Vertex(glm::vec3(0.5f,  0.5f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(7.0f, 7.0f)),
     Vertex(glm::vec3(0.5f, -0.5f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(7.0f, 0.0f)),
     Vertex(glm::vec3(-0.5f, -0.5f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(0.0f, 0.0f)),
     Vertex(glm::vec3(-0.5f,  0.5f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(0.0f, 7.0f))
 };
 
-inline std::vector<GLuint> ex_18_indices = {
+inline std::vector<GLuint> ex_20_indices = {
     0, 1, 3,
     1, 2, 3
 };
 
-inline std::vector<GLuint> ex_18_quad_indices = {
+inline std::vector<GLuint> ex_20_quad_indices = {
     3, 1, 0,
     3, 2, 1
 };
 
-inline std::vector<Vertex> ex_18_cube_vertices = {
+inline std::vector<Vertex> ex_20_cube_vertices = {
     // Back face
-    Vertex(glm::vec3(-0.5f, -0.5f, -0.5f),  glm::vec2(0.0f, 0.0f)),
-    Vertex(glm::vec3(0.5f,  0.5f, -0.5f),  glm::vec2(1.0f, 1.0f)),
-    Vertex(glm::vec3(0.5f, -0.5f, -0.5f),  glm::vec2(1.0f, 0.0f)),
-    Vertex(glm::vec3(0.5f,  0.5f, -0.5f),  glm::vec2(1.0f, 1.0f)),
-    Vertex(glm::vec3(-0.5f,  0.5f, -0.5f),  glm::vec2(0.0f, 1.0f)),
-    Vertex(glm::vec3(-0.5f, -0.5f, -0.5f),  glm::vec2(0.0f, 0.0f)),
+    Vertex(glm::vec3(-0.5f, -0.5f, -0.5f),  glm::vec2(0.0f, 0.0f), glm::vec3(0.0f,  0.0f, -1.0f)),
+    Vertex(glm::vec3(0.5f,  0.5f, -0.5f),  glm::vec2(1.0f, 1.0f), glm::vec3(0.0f,  0.0f, -1.0f)),
+    Vertex(glm::vec3(0.5f, -0.5f, -0.5f),  glm::vec2(1.0f, 0.0f), glm::vec3(0.0f,  0.0f, -1.0f)),
+    Vertex(glm::vec3(0.5f,  0.5f, -0.5f),  glm::vec2(1.0f, 1.0f), glm::vec3(0.0f,  0.0f, -1.0f)),
+    Vertex(glm::vec3(-0.5f,  0.5f, -0.5f),  glm::vec2(0.0f, 1.0f), glm::vec3(0.0f,  0.0f, -1.0f)),
+    Vertex(glm::vec3(-0.5f, -0.5f, -0.5f),  glm::vec2(0.0f, 0.0f), glm::vec3(0.0f,  0.0f, -1.0f)),
     // Front face
-    Vertex(glm::vec3(-0.5f, -0.5f,  0.5f),  glm::vec2(0.0f, 0.0f)),
-    Vertex(glm::vec3(0.5f, -0.5f,  0.5f),  glm::vec2(1.0f, 0.0f)),
-    Vertex(glm::vec3(0.5f,  0.5f,  0.5f),  glm::vec2(1.0f, 1.0f)),
-    Vertex(glm::vec3(0.5f,  0.5f,  0.5f),  glm::vec2(1.0f, 1.0f)),
-    Vertex(glm::vec3(-0.5f,  0.5f,  0.5f),  glm::vec2(0.0f, 1.0f)),
-    Vertex(glm::vec3(-0.5f, -0.5f,  0.5f),  glm::vec2(0.0f, 0.0f)),
+    Vertex(glm::vec3(-0.5f, -0.5f,  0.5f),  glm::vec2(0.0f, 0.0f), glm::vec3(0.0f,  0.0f, 1.0f)),
+    Vertex(glm::vec3(0.5f, -0.5f,  0.5f),  glm::vec2(1.0f, 0.0f), glm::vec3(0.0f,  0.0f, 1.0f)),
+    Vertex(glm::vec3(0.5f,  0.5f,  0.5f),  glm::vec2(1.0f, 1.0f), glm::vec3(0.0f,  0.0f, 1.0f)),
+    Vertex(glm::vec3(0.5f,  0.5f,  0.5f),  glm::vec2(1.0f, 1.0f), glm::vec3(0.0f,  0.0f, 1.0f)),
+    Vertex(glm::vec3(-0.5f,  0.5f,  0.5f),  glm::vec2(0.0f, 1.0f), glm::vec3(0.0f,  0.0f, 1.0f)),
+    Vertex(glm::vec3(-0.5f, -0.5f,  0.5f),  glm::vec2(0.0f, 0.0f), glm::vec3(0.0f,  0.0f, 1.0f)),
     // Left face
-    Vertex(glm::vec3(-0.5f,  0.5f,  0.5f),  glm::vec2(1.0f, 0.0f)),
-    Vertex(glm::vec3(-0.5f,  0.5f, -0.5f),  glm::vec2(1.0f, 1.0f)),
-    Vertex(glm::vec3(-0.5f, -0.5f, -0.5f),  glm::vec2(0.0f, 1.0f)),
-    Vertex(glm::vec3(-0.5f, -0.5f, -0.5f),  glm::vec2(0.0f, 1.0f)),
-    Vertex(glm::vec3(-0.5f, -0.5f,  0.5f),  glm::vec2(0.0f, 0.0f)),
-    Vertex(glm::vec3(-0.5f,  0.5f,  0.5f),  glm::vec2(1.0f, 0.0f)),
+    Vertex(glm::vec3(-0.5f,  0.5f,  0.5f),  glm::vec2(1.0f, 0.0f), glm::vec3(-1.0f,  0.0f,  0.0f)),
+    Vertex(glm::vec3(-0.5f,  0.5f, -0.5f),  glm::vec2(1.0f, 1.0f), glm::vec3(-1.0f,  0.0f,  0.0f)),
+    Vertex(glm::vec3(-0.5f, -0.5f, -0.5f),  glm::vec2(0.0f, 1.0f), glm::vec3(-1.0f,  0.0f,  0.0f)),
+    Vertex(glm::vec3(-0.5f, -0.5f, -0.5f),  glm::vec2(0.0f, 1.0f), glm::vec3(-1.0f,  0.0f,  0.0f)),
+    Vertex(glm::vec3(-0.5f, -0.5f,  0.5f),  glm::vec2(0.0f, 0.0f), glm::vec3(-1.0f,  0.0f,  0.0f)),
+    Vertex(glm::vec3(-0.5f,  0.5f,  0.5f),  glm::vec2(1.0f, 0.0f), glm::vec3(-1.0f,  0.0f,  0.0f)),
     // Right face
-    Vertex(glm::vec3(0.5f,  0.5f,  0.5f),  glm::vec2(1.0f, 0.0f)),
-    Vertex(glm::vec3(0.5f, -0.5f, -0.5f),  glm::vec2(0.0f, 1.0f)),
-    Vertex(glm::vec3(0.5f,  0.5f, -0.5f),  glm::vec2(1.0f, 1.0f)),
-    Vertex(glm::vec3(0.5f, -0.5f, -0.5f),  glm::vec2(0.0f, 1.0f)),
-    Vertex(glm::vec3(0.5f,  0.5f,  0.5f),  glm::vec2(1.0f, 0.0f)),
-    Vertex(glm::vec3(0.5f, -0.5f,  0.5f),  glm::vec2(0.0f, 0.0f)),
+    Vertex(glm::vec3(0.5f,  0.5f,  0.5f),  glm::vec2(1.0f, 0.0f), glm::vec3(1.0f,  0.0f,  0.0f)),
+    Vertex(glm::vec3(0.5f, -0.5f, -0.5f),  glm::vec2(0.0f, 1.0f), glm::vec3(1.0f,  0.0f,  0.0f)),
+    Vertex(glm::vec3(0.5f,  0.5f, -0.5f),  glm::vec2(1.0f, 1.0f), glm::vec3(1.0f,  0.0f,  0.0f)),
+    Vertex(glm::vec3(0.5f, -0.5f, -0.5f),  glm::vec2(0.0f, 1.0f), glm::vec3(1.0f,  0.0f,  0.0f)),
+    Vertex(glm::vec3(0.5f,  0.5f,  0.5f),  glm::vec2(1.0f, 0.0f), glm::vec3(1.0f,  0.0f,  0.0f)),
+    Vertex(glm::vec3(0.5f, -0.5f,  0.5f),  glm::vec2(0.0f, 0.0f), glm::vec3(1.0f,  0.0f,  0.0f)),
     // Bottom face
-    Vertex(glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec2(0.0f, 1.0f)),
-    Vertex(glm::vec3(0.5f, -0.5f, -0.5f), glm::vec2(1.0f, 1.0f)),
-    Vertex(glm::vec3(0.5f, -0.5f,  0.5f), glm::vec2(1.0f, 0.0f)),
-    Vertex(glm::vec3(0.5f, -0.5f,  0.5f), glm::vec2(1.0f, 0.0f)),
-    Vertex(glm::vec3(-0.5f, -0.5f,  0.5f), glm::vec2(0.0f, 0.0f)),
-    Vertex(glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec2(0.0f, 1.0f)),
+    Vertex(glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec2(0.0f, 1.0f), glm::vec3(0.0f, -1.0f,  0.0f)),
+    Vertex(glm::vec3(0.5f, -0.5f, -0.5f), glm::vec2(1.0f, 1.0f), glm::vec3(0.0f, -1.0f,  0.0f)),
+    Vertex(glm::vec3(0.5f, -0.5f,  0.5f), glm::vec2(1.0f, 0.0f), glm::vec3(0.0f, -1.0f,  0.0f)),
+    Vertex(glm::vec3(0.5f, -0.5f,  0.5f), glm::vec2(1.0f, 0.0f), glm::vec3(0.0f, -1.0f,  0.0f)),
+    Vertex(glm::vec3(-0.5f, -0.5f,  0.5f), glm::vec2(0.0f, 0.0f), glm::vec3(0.0f, -1.0f,  0.0f)),
+    Vertex(glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec2(0.0f, 1.0f), glm::vec3(0.0f, -1.0f,  0.0f)),
     // Top face
-    Vertex(glm::vec3(-0.5f,  0.5f, -0.5f), glm::vec2(0.0f, 1.0f)),
-    Vertex(glm::vec3(0.5f,  0.5f,  0.5f), glm::vec2(1.0f, 0.0f)),
-    Vertex(glm::vec3(0.5f,  0.5f, -0.5f), glm::vec2(1.0f, 1.0f)),
-    Vertex(glm::vec3(0.5f,  0.5f,  0.5f), glm::vec2(1.0f, 0.0f)),
-    Vertex(glm::vec3(-0.5f,  0.5f, -0.5f), glm::vec2(0.0f, 1.0f)),
-    Vertex(glm::vec3(-0.5f,  0.5f, 0.5f),  glm::vec2(0.0f, 0.0f)),
+    Vertex(glm::vec3(-0.5f,  0.5f, -0.5f), glm::vec2(0.0f, 1.0f), glm::vec3(0.0f,  1.0f,  0.0f)),
+    Vertex(glm::vec3(0.5f,  0.5f,  0.5f), glm::vec2(1.0f, 0.0f), glm::vec3(0.0f,  1.0f,  0.0f)),
+    Vertex(glm::vec3(0.5f,  0.5f, -0.5f), glm::vec2(1.0f, 1.0f), glm::vec3(0.0f,  1.0f,  0.0f)),
+    Vertex(glm::vec3(0.5f,  0.5f,  0.5f), glm::vec2(1.0f, 0.0f), glm::vec3(0.0f,  1.0f,  0.0f)),
+    Vertex(glm::vec3(-0.5f,  0.5f, -0.5f), glm::vec2(0.0f, 1.0f), glm::vec3(0.0f,  1.0f,  0.0f)),
+    Vertex(glm::vec3(-0.5f,  0.5f, 0.5f),  glm::vec2(0.0f, 0.0f), glm::vec3(0.0f,  1.0f,  0.0f)),
 };
 
-inline std::vector<Vertex> ex_18_cube_vertices_skybox = {
+inline std::vector<Vertex> ex_20_cube_vertices_skybox = {
     Vertex(glm::vec3(-1.0f,  1.0f, -1.0f)),
     Vertex(glm::vec3(-1.0f, -1.0f, -1.0f)),
     Vertex(glm::vec3( 1.0f, -1.0f, -1.0f)),
@@ -139,7 +139,7 @@ inline std::vector<Vertex> ex_18_cube_vertices_skybox = {
     Vertex(glm::vec3( 1.0f, -1.0f,  1.0f))
 };
 
-inline std::vector<GLuint> ex_18_cube_indices = {
+inline std::vector<GLuint> ex_20_cube_indices = {
     0, 1, 2,
     5, 4, 3,
 
@@ -163,10 +163,10 @@ int run_020(const int width, const int height)
 {
     camera->setCamPos(glm::vec3(0.0f, 2.0f, 8.0f));
 
-    Shader *shader = new Shader("glsl/ex_19/model_loading.vs", "glsl/ex_19/model_loading.fs");
-    Shader *shader_cube = new Shader("glsl/ex_19/cube.vs", "glsl/ex_19/cube.fs");
-    Shader *shader_skybox = new Shader("glsl/ex_19/skybox.vs", "glsl/ex_19/skybox.fs");
-    Shader *posprocessing_shader = new Shader("glsl/ex_19/posprocessing.vs", "glsl/ex_19/posprocessing.fs");
+    Shader *shader = new Shader("glsl/ex_20/model_loading.vs", "glsl/ex_20/model_loading.fs");
+    Shader *shader_cube = new Shader("glsl/ex_20/cube.vs", "glsl/ex_20/cube.fs");
+    Shader *shader_skybox = new Shader("glsl/ex_20/skybox.vs", "glsl/ex_20/skybox.fs");
+    Shader *posprocessing_shader = new Shader("glsl/ex_20/posprocessing.vs", "glsl/ex_20/posprocessing.fs");
 
     std::vector<Texture2D*> textures;
     textures.push_back(new Texture2D("resources/textures/floor.png", TextureType::ALBEDO));
@@ -174,11 +174,11 @@ int run_020(const int width, const int height)
 
     std::vector<Texture2D*> floor_texture;
     floor_texture.push_back(textures[0]);
-    Mesh *mesh_floor = new Mesh(ex_18_floor_vertices, ex_18_indices, floor_texture, VERTEX_TYPE::ATTRIB_PNT);
+    Mesh *mesh_floor = new Mesh(ex_20_floor_vertices, ex_20_indices, floor_texture, VERTEX_TYPE::ATTRIB_PNT);
 
     std::vector<Texture2D*> cube_texture;
     cube_texture.push_back(textures[1]);
-    Mesh *mesh_cube = new Mesh(ex_18_cube_vertices, ex_18_cube_indices, cube_texture, VERTEX_TYPE::ATTRIB_PT);
+    Mesh *mesh_cube = new Mesh(ex_20_cube_vertices, ex_20_cube_indices, cube_texture, VERTEX_TYPE::ATTRIB_PNT);
 
     /////////////////////////
 
@@ -194,13 +194,13 @@ int run_020(const int width, const int height)
     };
 
     TextureCube *texture_cube_skybox = new TextureCube(faces, false);
-    Mesh *mesh_cube_skybox = new Mesh(ex_18_cube_vertices_skybox, std::vector<Texture2D*>(), VERTEX_TYPE::ATTRIB_P);
+    Mesh *mesh_cube_skybox = new Mesh(ex_20_cube_vertices_skybox, std::vector<Texture2D*>(), VERTEX_TYPE::ATTRIB_P);
 
     shader_skybox->use();
     shader_skybox->setInt("skybox", 0);
 
     // quad posprocessing
-    Mesh *mesh_posprocessing = new Mesh(ex_18_quad_vertices, ex_18_quad_indices, std::vector<Texture2D*>());
+    Mesh *mesh_posprocessing = new Mesh(ex_20_quad_vertices, ex_20_quad_indices, std::vector<Texture2D*>());
 
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     glfwSetCursorPosCallback(window, mouseCallback);
@@ -261,6 +261,7 @@ int run_020(const int width, const int height)
             shader_cube->use();
             shader_cube->setMatrix4fv("projection", glm::value_ptr(projection));
             shader_cube->setMatrix4fv("view", glm::value_ptr(view));
+            shader_cube->setUniform3fv("camera_pos", glm::value_ptr(camera->getCamPos()));
 
             for(auto &cube : cube_positions) {
                 glm::mat4 model = glm::mat4(1.0f);
@@ -269,6 +270,8 @@ int run_020(const int width, const int height)
                 model = glm::rotate(model, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 
                 shader_cube->setMatrix4fv("model", glm::value_ptr(model));
+
+                texture_cube_skybox->bind(GL_TEXTURE0);
 
                 mesh_cube->draw(shader_cube);
             }

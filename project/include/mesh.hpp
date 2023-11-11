@@ -50,6 +50,13 @@ struct Vertex {
         this->tex = tex;
     }
 
+    Vertex(glm::vec3 position, glm::vec2 tex, glm::vec3 normal)
+    {
+        this->position = position;
+        this->normal = normal;
+        this->tex = tex;
+    }
+
     Vertex(glm::vec3 position, glm::vec2 tex)
     {
         this->position = position;
