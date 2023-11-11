@@ -1,9 +1,12 @@
 #ifndef TESTS_HPP
 #define TESTS_HPP
 
+#define run(width, height) run_020(width, height)
+
 int load_assimp_test();
 
 int run_default(const int, const int);
+
 int run_001(const int, const int);
 int run_002(const int, const int);
 int run_003(const int, const int);
@@ -22,5 +25,9 @@ int run_015(const int, const int);
 int run_016(const int, const int);
 int run_017(const int, const int);
 int run_018(const int, const int);
+int run_019(const int, const int);
+int run_020(const int, const int);
+
+
 
 #endif // INIT_HPP
