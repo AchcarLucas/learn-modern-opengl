@@ -80,7 +80,7 @@ Texture2D::Texture2D(const int width, const int height, unsigned int multisample
     glGenTextures(1, &this->texture);
     glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, this->texture);
 
-    glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_RGB, width, height, GL_TRUE);
+    glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, multisample, GL_RGB, width, height, GL_TRUE);
     glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
 }
 
