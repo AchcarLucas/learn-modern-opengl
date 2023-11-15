@@ -169,17 +169,17 @@ int run_021(const int width, const int height)
     Shader *shader_skybox = new Shader("glsl/ex_21/skybox.vs", "glsl/ex_21/skybox.fs");
     Shader *posprocessing_shader = new Shader("glsl/ex_21/posprocessing.vs", "glsl/ex_20/posprocessing.fs");
 
-    shader->setUniformBlockBinding("Matrices", 0);
-    shader_cube->setUniformBlockBinding("Matrices", 0);
-    shader_skybox->setUniformBlockBinding("Matrices", 0);
-    posprocessing_shader->setUniformBlockBinding("Matrices", 0);
-
     glm::mat4 projection = camera->getPerspectiveMatrix(width, height);
     glm::mat4 view = camera->getViewMatrix();
 
-    UBO *ubo = new UBO(2 * sizeof(glm::mat4), 0);
+    UBO *ubo = new UBO("Matrices", 2 * sizeof(glm::mat4), 0);
     ubo->UBOSubBuffer(glm::value_ptr(projection), 0, sizeof(glm::mat4));
     ubo->UBOSubBuffer(glm::value_ptr(view), sizeof(glm::mat4), sizeof(glm::mat4));
+
+    shader->setUniformBlockBinding(ubo->getName(), ubo->getBinding());
+    shader_cube->setUniformBlockBinding(ubo->getName(), ubo->getBinding());
+    shader_skybox->setUniformBlockBinding(ubo->getName(), ubo->getBinding());
+    posprocessing_shader->setUniformBlockBinding(ubo->getName(), ubo->getBinding());
 
     std::vector<Texture2D*> textures;
     textures.push_back(new Texture2D("resources/textures/floor.png", TextureType::ALBEDO));

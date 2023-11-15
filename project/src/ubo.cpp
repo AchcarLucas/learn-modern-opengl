@@ -1,10 +1,11 @@
 #include "ubo.hpp"
 
-UBO::UBO(unsigned int _size, GLuint _binding)
+UBO::UBO(const std::string &name, unsigned int _size, GLuint _binding)
 {
     glGenBuffers(1, &this->_ubo);
 
     this->_binding = _binding;
+    this->_name = name;
 
     this->bind();
     // cria o buffer e initializa com zero
