@@ -13,6 +13,8 @@ class VBO
         virtual ~VBO();
 
         void bind();
+        void unbind();
+
         void VBOBuffer(const void *, unsigned int, unsigned int);
 
         GLuint getVBO();
