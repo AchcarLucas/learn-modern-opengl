@@ -7,7 +7,7 @@
 class UBO
 {
     public:
-        UBO(unsigned int _size);
+        UBO(unsigned int _size, GLuint _binding);
         virtual ~UBO();
 
         void bind();
@@ -19,6 +19,7 @@ class UBO
 
     protected:
         GLuint _ubo;
+        GLuint _binding;
 
     private:
 };

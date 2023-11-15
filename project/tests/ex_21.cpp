@@ -177,7 +177,7 @@ int run_021(const int width, const int height)
     glm::mat4 projection = camera->getPerspectiveMatrix(width, height);
     glm::mat4 view = camera->getViewMatrix();
 
-    UBO *ubo = new UBO(2 * sizeof(glm::mat4));
+    UBO *ubo = new UBO(2 * sizeof(glm::mat4), 0);
     ubo->UBOSubBuffer(glm::value_ptr(projection), 0, sizeof(glm::mat4));
     ubo->UBOSubBuffer(glm::value_ptr(view), sizeof(glm::mat4), sizeof(glm::mat4));
 

@@ -1,8 +1,10 @@
 #include "ubo.hpp"
 
-UBO::UBO(unsigned int _size)
+UBO::UBO(unsigned int _size, GLuint _binding)
 {
     glGenBuffers(1, &this->_ubo);
+
+    this->_binding = _binding;
 
     this->bind();
     // cria o buffer e initializa com zero
@@ -10,7 +12,7 @@ UBO::UBO(unsigned int _size)
 
     this->unbind();
     // define o range do buffer total do buffer uniforme
-    glBindBufferRange(GL_UNIFORM_BUFFER, 0, this->_ubo, 0, _size);
+    glBindBufferRange(GL_UNIFORM_BUFFER, this->_binding, this->_ubo, 0, _size);
 }
 
 UBO::~UBO()
