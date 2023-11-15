@@ -11,9 +11,18 @@
 
 using namespace std;
 
-std::vector<Vertex> mesh_ex_26 = {
+std::vector<Vertex> mesh_ex_26_with_indices = {
     Vertex(glm::vec3(0.05f, 0.05f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f)),
     Vertex(glm::vec3(0.05f, -0.05f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f)),
+    Vertex(glm::vec3(-0.05f, -0.05f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f)),
+    Vertex(glm::vec3(-0.05f, 0.05f, 0.0f), glm::vec3(1.0f, 1.0f, 0.0f)),
+};
+
+std::vector<Vertex> mesh_ex_26_without_indices = {
+    Vertex(glm::vec3(0.05f, 0.05f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f)),
+    Vertex(glm::vec3(0.05f, -0.05f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f)),
+    Vertex(glm::vec3(-0.05f, -0.05f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f)),
+    Vertex(glm::vec3(0.05f, 0.05f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f)),
     Vertex(glm::vec3(-0.05f, -0.05f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f)),
     Vertex(glm::vec3(-0.05f, 0.05f, 0.0f), glm::vec3(1.0f, 1.0f, 0.0f)),
 };
@@ -28,7 +37,8 @@ int run_026(const int width, const int height)
     _stbi_set_flip_vertically_on_load(true);
 
     Shader *shader = new Shader("glsl/ex_26/quad.vs", "glsl/ex_26/quad.fs");
-    Mesh *mesh = new Mesh(mesh_ex_26, indices_mesh_ex_26, std::vector<Texture2D*>(), VERTEX_TYPE::ATTRIB_PC);
+    Mesh *mesh = new Mesh(mesh_ex_26_with_indices, indices_mesh_ex_26, std::vector<Texture2D*>(), VERTEX_TYPE::ATTRIB_PC);
+    //Mesh *mesh = new Mesh(mesh_ex_26_without_indices, std::vector<GLuint>(), std::vector<Texture2D*>(), VERTEX_TYPE::ATTRIB_PC);
 
     glm::vec3 translations[100];
 
