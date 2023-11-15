@@ -16,7 +16,7 @@ void Camera::processInput(GLFWwindow *window, float delta_time)
         glfwSetWindowShouldClose(window, true);
     }
 
-    float cam_speed = static_cast<float>(2.5 * delta_time);
+    float cam_speed = static_cast<float>(speed * delta_time);
 
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
         this->cam_pos += cam_speed * this->cam_front;

@@ -30,6 +30,8 @@ class Camera
         float getYaw() { return this->yaw; }
         float getPitch() { return this->pitch; }
 
+        void setCamSpeed(float _speed) { this->speed= _speed; }
+
         glm::mat4 getPerspectiveMatrix(int width, int height, float near = 0.1f, float far = 100.0f);
         glm::mat4 getViewMatrix();
     protected:
@@ -37,6 +39,8 @@ class Camera
         glm::vec3 cam_target = glm::vec3(0.0f, 0.0f, 0.0f);
         glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
         glm::vec3 cam_front = glm::vec3(0.0f, 0.0f, -1.0f);
+
+        float speed = 2.5f;
 
         float fov = 45.0f;
         float yaw = -90.0f;
