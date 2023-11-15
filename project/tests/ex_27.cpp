@@ -39,7 +39,7 @@ int run_027(const int width, const int height)
 
     Shader *shader = new Shader("glsl/ex_27/quad.vs", "glsl/ex_27/quad.fs");
     Mesh *mesh = new Mesh(mesh_ex_26_with_indices, indices_mesh_ex_26, std::vector<Texture2D*>(), VERTEX_TYPE::ATTRIB_PC);
-    //git sMesh *mesh = new Mesh(mesh_ex_26_without_indices, std::vector<GLuint>(), std::vector<Texture2D*>(), VERTEX_TYPE::ATTRIB_PC);
+    //Mesh *mesh = new Mesh(mesh_ex_26_without_indices, std::vector<GLuint>(), std::vector<Texture2D*>(), VERTEX_TYPE::ATTRIB_PC);
 
     glm::vec3 translations[100];
 
