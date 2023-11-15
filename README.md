@@ -123,3 +123,6 @@ Após finalizar a instalação das libs e a configuração do codeblock, no arqu
 
 ## Exemplo-27
 ![ex_27](./images/ex_27.png)
+
+## Exemplo-28
+![ex_28](./images/ex_28.png)
