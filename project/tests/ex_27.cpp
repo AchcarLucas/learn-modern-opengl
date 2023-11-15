@@ -37,7 +37,8 @@ int run_027(const int width, const int height)
 {
     _stbi_set_flip_vertically_on_load(true);
 
-    Shader *shader = new Shader("glsl/ex_27/quad.vs", "glsl/ex_27/quad.fs");
+    Shader *shader = new Shader("glsl/ex_27/quad_m.vs", "glsl/ex_27/quad_m.fs");
+    //Shader *shader = new Shader("glsl/ex_27/quad.vs", "glsl/ex_27/quad.fs");
     Mesh *mesh = new Mesh(mesh_ex_26_with_indices, indices_mesh_ex_26, std::vector<Texture2D*>(), VERTEX_TYPE::ATTRIB_PC);
     //Mesh *mesh = new Mesh(mesh_ex_26_without_indices, std::vector<GLuint>(), std::vector<Texture2D*>(), VERTEX_TYPE::ATTRIB_PC);
 
