@@ -388,6 +388,10 @@
 		<Unit filename="project/tests/ex_2.cpp" />
 		<Unit filename="project/tests/ex_20.cpp" />
 		<Unit filename="project/tests/ex_21.cpp" />
+		<Unit filename="project/tests/ex_22.cpp" />
+		<Unit filename="project/tests/ex_23.cpp" />
+		<Unit filename="project/tests/ex_24.cpp" />
+		<Unit filename="project/tests/ex_25.cpp" />
 		<Unit filename="project/tests/ex_3.cpp" />
 		<Unit filename="project/tests/ex_4.cpp" />
 		<Unit filename="project/tests/ex_5.cpp" />
