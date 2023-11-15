@@ -18,6 +18,8 @@ class Model
 
         void draw(Shader *shader);
 
+        std::vector<Mesh *> getMeshes() { return meshes; }
+
     protected:
         std::vector<Mesh *> meshes;
         std::vector<Texture2D *> textures;
