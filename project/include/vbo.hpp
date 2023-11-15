@@ -16,6 +16,7 @@ class VBO
         void unbind();
 
         void VBOBuffer(const void *, unsigned int, unsigned int);
+        void VBOBufferDivisor(GLuint _index, GLint _size, GLenum _type, GLsizei stride, const void *pointer = (void*)0);
 
         GLuint getVBO();
 

@@ -25,6 +25,16 @@ void VBO::VBOBuffer(const void *_buffer, unsigned int _size, unsigned int usage)
     glBufferData(GL_ARRAY_BUFFER, _size, _buffer, usage);
 }
 
+void VBO::VBOBufferDivisor(GLuint _index, GLint _size, GLenum _type, GLsizei stride, const void *pointer)
+{
+    const GLuint divisor = 1;
+    glEnableVertexAttribArray(_index);
+    this->bind();
+    glVertexAttribPointer(_index, _size, _type, GL_FALSE, stride, pointer);
+    this->unbind();
+    glVertexAttribDivisor(_index, divisor);
+}
+
 GLuint VBO::getVBO()
 {
     return this->_vbo;
