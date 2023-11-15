@@ -105,3 +105,15 @@ Após finalizar a instalação das libs e a configuração do codeblock, no arqu
 
 ## Exemplo-18
 ![ex_18](./images/ex_18.png)
+
+## Exemplo-22
+![ex_22](./images/ex_22.png)
+
+## Exemplo-23
+![ex_23](./images/ex_23.png)
+
+## Exemplo-24
+![ex_24](./images/ex_24.gif)
+
+## Exemplo-25
+![ex_25](./images/ex_25.png)
