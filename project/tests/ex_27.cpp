@@ -77,11 +77,6 @@ int run_027(const int width, const int height)
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
         shader->use();
-
-        for(unsigned int i = 0; i < 100; i++) {
-            shader->setUniform3fv("pos_offset[" + std::to_string(i) + "]", glm::value_ptr(translations[i]));
-        }
-
         mesh->draw(shader, 100);
 
         glfwPollEvents();
