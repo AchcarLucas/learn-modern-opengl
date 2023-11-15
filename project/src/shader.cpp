@@ -13,6 +13,7 @@ Shader::Shader(const std::string &vs_path, const std::string &fs_path, const std
     // garante que o objeto do ifstream podem lançar exceções
     vs_file.exceptions (std::ifstream::failbit | std::ifstream::badbit);
     fs_file.exceptions (std::ifstream::failbit | std::ifstream::badbit);
+    gs_file.exceptions (std::ifstream::failbit | std::ifstream::badbit);
 
     std::cout << "----------------------------------------" << std::endl;
     std::cout << "VERTEX SHADER FILE [" << vs_path << "]" << std::endl;
