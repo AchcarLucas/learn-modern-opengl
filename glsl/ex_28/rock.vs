@@ -18,8 +18,6 @@ out VS_DATA {
     vec2 tex;
 } vs_out;
 
-uniform mat4 model;
-
 void main()
 {
     vs_out.tex = iTex;
