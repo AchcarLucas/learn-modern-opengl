@@ -15,6 +15,11 @@ void VAO::bind()
     glBindVertexArray(this->_vao);
 }
 
+void VAO::unbind()
+{
+    glBindVertexArray(0);
+}
+
 GLuint VAO::getVAO()
 {
     return this->_vao;

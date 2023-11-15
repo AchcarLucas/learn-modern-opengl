@@ -16,6 +16,7 @@ class VAO
         virtual ~VAO();
 
         void bind();
+        void unbind();
 
         GLuint getVAO();
     protected:
