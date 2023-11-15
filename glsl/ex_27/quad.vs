@@ -2,16 +2,14 @@
 
 layout (location = 0) in vec3 iPosition;
 layout (location = 1) in vec3 iColor;
+layout (location = 4) in vec3 iOffset;
 
 out VS_DATA {
     vec3 color;
 } vs_out;
 
-uniform vec3 pos_offset[100];
-
 void main()
 {
     vs_out.color = iColor;
-    vec3 offset = pos_offset[gl_InstanceID];
-    gl_Position = vec4(iPosition + offset, 1.0);
+    gl_Position = vec4(iPosition + iOffset, 1.0);
 }

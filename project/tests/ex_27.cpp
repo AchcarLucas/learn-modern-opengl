@@ -4,6 +4,7 @@
 #include "object.hpp"
 #include "shader.hpp"
 #include "mesh.hpp"
+#include "vbo.hpp"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -57,6 +58,19 @@ int run_027(const int width, const int height)
         }
     }
 
+    VBO *vbo_array = new VBO();
+
+    {
+        // vamos primeiro fazer o bind no nosso VAO da mesh
+        mesh->getVAO()->bind();
+
+        // agora vamos adicionar os dados de posição em uma VBOBufferDivisor
+        vbo_array->bind();
+        vbo_array->VBOBuffer(glm::value_ptr(translations[0]), sizeof(glm::vec3) * 100, GL_STATIC_DRAW);
+        vbo_array->unbind();
+        vbo_array->VBOBufferDivisor(4, 3, GL_FLOAT, sizeof(glm::vec3));
+    }
+
     while(!glfwWindowShouldClose(window)) {
         glClear(GL_COLOR_BUFFER_BIT);
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -75,6 +89,7 @@ int run_027(const int width, const int height)
 
     delete shader;
     delete mesh;
+    delete vbo_array;
 
     glfwTerminate();
     return 0;
