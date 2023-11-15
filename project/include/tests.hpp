@@ -1,7 +1,7 @@
 #ifndef TESTS_HPP
 #define TESTS_HPP
 
-#define run(width, height) run_026(width, height)
+#define run(width, height) run_027(width, height)
 
 int load_assimp_test();
 
@@ -33,5 +33,6 @@ int run_023(const int, const int);
 int run_024(const int, const int);
 int run_025(const int, const int);
 int run_026(const int, const int);
+int run_027(const int, const int);
 
 #endif // INIT_HPP
