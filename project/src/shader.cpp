@@ -1,12 +1,14 @@
 #include "shader.hpp"
 
-Shader::Shader(std::string vs_path, std::string fs_path)
+Shader::Shader(const std::string &vs_path, const std::string &fs_path, const std::string &gs_path)
 {
     std::string vs_code;
     std::string fs_code;
+    std::string gs_code;
 
     std::ifstream vs_file;
     std::ifstream fs_file;
+    std::ifstream gs_file;
 
     // garante que o objeto do ifstream podem lançar exceções
     vs_file.exceptions (std::ifstream::failbit | std::ifstream::badbit);
@@ -15,26 +17,33 @@ Shader::Shader(std::string vs_path, std::string fs_path)
     std::cout << "----------------------------------------" << std::endl;
     std::cout << "VERTEX SHADER FILE [" << vs_path << "]" << std::endl;
     std::cout << "FRAGMENT SHADER FILE [" << fs_path << "]" << std::endl;
+    if(!gs_path.empty()) {
+        std::cout << "GEOMETRY SHADER FILE [" << gs_path << "]" << std::endl;
+    }
     std::cout << "----------------------------------------" << std::endl;
 
     try {
-        // faz a abertura dos shaderes
+        std::stringstream vs_stream, fs_stream, gs_stream;
+
+        // vertex shader
         vs_file.open(vs_path);
-        fs_file.open(fs_path);
-
-        std::stringstream vs_stream, fs_stream;
-
-        // leia os arquivos e coloque nos bufferes
         vs_stream << vs_file.rdbuf();
-        fs_stream << fs_file.rdbuf();
-
-        // não precisamos mais dos arquivos abertos, podemos fecha-los
         vs_file.close();
-        fs_file.close();
-
-        // vamos colocar
         vs_code = vs_stream.str();
+
+        // fragment shader
+        fs_file.open(fs_path);
+        fs_stream << fs_file.rdbuf();
+        fs_file.close();
         fs_code = fs_stream.str();
+
+        // geometry shader é opcional
+        if(!gs_path.empty()) {
+            gs_file.open(gs_path);
+            gs_stream << gs_file.rdbuf();
+            gs_file.close();
+            gs_code = gs_stream.str();
+        }
     }
     catch(std::ifstream::failure &e) {
         std::cout << "ERROR::SHADER::FILE_NOT_SUCCESFULLY_READ" << std::endl;

@@ -11,7 +11,7 @@
 class Shader
 {
     public:
-        Shader(std::string, std::string);
+        Shader(const std::string&, const std::string&, const std::string&gs_path = std::string());
         virtual ~Shader();
 
         void use();
