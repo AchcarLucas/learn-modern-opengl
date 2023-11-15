@@ -11,8 +11,8 @@
 class RBO
 {
     public:
-        RBO(const int, const int, const GLenum);
-        RBO(const int, const int, const GLenum, unsigned int);
+        RBO(const int width, const int height, const GLenum gl_internalformat);
+        RBO(const int width, const int height, const GLenum gl_internalformat, unsigned int multisample);
         virtual ~RBO();
 
         void bind();
