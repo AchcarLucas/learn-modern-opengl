@@ -50,7 +50,7 @@ Shader::Shader(const std::string &vs_path, const std::string &fs_path, const std
         return;
     }
 
-    unsigned int vertex, fragment;
+    unsigned int vertex, fragment, geometry;
 
     const char *const_char_code;
 
@@ -68,16 +68,32 @@ Shader::Shader(const std::string &vs_path, const std::string &fs_path, const std
     glCompileShader(fragment);
     getShaderLog(fragment, "SHADER::FRAGMENT::COMPILATION_SUCCESSFULLY", "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED");
 
+    if(!gs_path.empty()) {
+        const_char_code = gs_code.c_str();
+        geometry = glCreateShader(GL_GEOMETRY_SHADER);
+        glShaderSource(geometry, 1, &const_char_code, NULL);
+        glCompileShader(geometry);
+        getShaderLog(geometry, "SHADER::GEOMETRY::COMPILATION_SUCCESSFULLY", "ERROR::SHADER::GEOMETRY::COMPILATION_FAILED");
+    }
+
     // faz o link do vertex shader com o fragment shader
     this->_id = glCreateProgram();
     glAttachShader(this->_id, vertex);
     glAttachShader(this->_id, fragment);
+
+    if(!gs_path.empty()) {
+        glAttachShader(this->_id, geometry);
+    }
+
     glLinkProgram(this->_id);
     getProgramLog(this->_id, "SHADER::PROGRAM::LINKING_SUCCESSFULLY", "ERROR::SHADER::PROGRAM::LINKING_FAILED");
 
-    // não precisamos mais do vertex e do fragment shader
     glDeleteShader(vertex);
     glDeleteShader(fragment);
+
+    if(!gs_path.empty()) {
+        glDeleteShader(geometry);
+    }
 
     std::cout << "----------------------------------------" << std::endl;
 }
