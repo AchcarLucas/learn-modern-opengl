@@ -16,7 +16,7 @@ class Model
         Model(std::string path);
         virtual ~Model();
 
-        void draw(Shader *shader);
+        void draw(Shader *shader, GLuint instances = 1);
 
         std::vector<Mesh *> getMeshes() { return meshes; }
 

@@ -128,9 +128,9 @@ std::vector<Texture2D*> Model::loadMaterialTextures(aiMaterial *material, aiText
     return mesh_textures;
 }
 
-void Model::draw(Shader *shader)
+void Model::draw(Shader *shader, GLuint instances)
 {
     for(auto &mesh : this->meshes) {
-        mesh->draw(shader);
+        mesh->draw(shader, instances);
     }
 }
