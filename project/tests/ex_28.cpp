@@ -157,9 +157,11 @@ int run_028(const int width, const int height)
     delete ubo_global;
 
     delete model_asteroid;
-    //delete model_planet;
+    delete model_planet;
 
     delete vbo_array;
+
+    delete mat_model_asteroid;
 
     glfwTerminate();
     return 0;
