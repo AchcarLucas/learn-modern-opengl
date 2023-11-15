@@ -11,14 +11,14 @@
 
 using namespace std;
 
-std::vector<Vertex> mesh_ex_26_with_indices = {
+inline std::vector<Vertex> mesh_ex_26_with_indices = {
     Vertex(glm::vec3(0.05f, 0.05f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f)),
     Vertex(glm::vec3(0.05f, -0.05f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f)),
     Vertex(glm::vec3(-0.05f, -0.05f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f)),
     Vertex(glm::vec3(-0.05f, 0.05f, 0.0f), glm::vec3(1.0f, 1.0f, 0.0f)),
 };
 
-std::vector<Vertex> mesh_ex_26_without_indices = {
+inline std::vector<Vertex> mesh_ex_26_without_indices = {
     Vertex(glm::vec3(0.05f, 0.05f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f)),
     Vertex(glm::vec3(0.05f, -0.05f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f)),
     Vertex(glm::vec3(-0.05f, -0.05f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f)),
@@ -27,7 +27,7 @@ std::vector<Vertex> mesh_ex_26_without_indices = {
     Vertex(glm::vec3(-0.05f, 0.05f, 0.0f), glm::vec3(1.0f, 1.0f, 0.0f)),
 };
 
-std::vector<unsigned int> indices_mesh_ex_26 = {
+inline std::vector<unsigned int> indices_mesh_ex_26 = {
     0, 1, 2,
     0, 2, 3
 };
