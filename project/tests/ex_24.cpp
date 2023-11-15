@@ -75,9 +75,6 @@ int run_024(const int width, const int height)
         model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
         model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
 
-        float i_time = glfwGetTime();
-        shader->setUniform1fv("iTime", &i_time);
-
         shader->setMatrix4fv("model", glm::value_ptr(model));
 
         my_model->draw(shader);
