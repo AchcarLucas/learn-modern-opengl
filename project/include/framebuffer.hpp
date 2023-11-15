@@ -10,7 +10,7 @@ class FrameBuffer
         FrameBuffer(const int width, const int height, const GLenum gl_internalformat, const GLenum gl_attachment);
         virtual ~FrameBuffer();
 
-        void bind();
+        void bind(GLenum target = GL_FRAMEBUFFER);
         void unbind();
 
         Texture2D *getTexture2D() { return framebuffer_tex; }

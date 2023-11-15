@@ -29,9 +29,9 @@ FrameBuffer::~FrameBuffer()
     glDeleteFramebuffers(1, &this->fbo);
 }
 
-void FrameBuffer::bind()
+void FrameBuffer::bind(GLenum target)
 {
-    glBindFramebuffer(GL_FRAMEBUFFER, this->fbo);
+    glBindFramebuffer(target, this->fbo);
 }
 
 void FrameBuffer::unbind()
