@@ -355,6 +355,7 @@
 		<Unit filename="project/include/shader.hpp" />
 		<Unit filename="project/include/tests.hpp" />
 		<Unit filename="project/include/texture.hpp" />
+		<Unit filename="project/include/ubo.hpp" />
 		<Unit filename="project/include/vao.hpp" />
 		<Unit filename="project/include/vbo.hpp" />
 		<Unit filename="project/src/camera.cpp" />
@@ -369,6 +370,7 @@
 		<Unit filename="project/src/rbo.cpp" />
 		<Unit filename="project/src/shader.cpp" />
 		<Unit filename="project/src/texture.cpp" />
+		<Unit filename="project/src/ubo.cpp" />
 		<Unit filename="project/src/vao.cpp" />
 		<Unit filename="project/src/vbo.cpp" />
 		<Unit filename="project/tests/default.cpp" />
@@ -382,7 +384,10 @@
 		<Unit filename="project/tests/ex_16.cpp" />
 		<Unit filename="project/tests/ex_17.cpp" />
 		<Unit filename="project/tests/ex_18.cpp" />
+		<Unit filename="project/tests/ex_19.cpp" />
 		<Unit filename="project/tests/ex_2.cpp" />
+		<Unit filename="project/tests/ex_20.cpp" />
+		<Unit filename="project/tests/ex_21.cpp" />
 		<Unit filename="project/tests/ex_3.cpp" />
 		<Unit filename="project/tests/ex_4.cpp" />
 		<Unit filename="project/tests/ex_5.cpp" />

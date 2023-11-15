@@ -6,6 +6,7 @@
 #include "camera.hpp"
 #include "mesh.hpp"
 #include "framebuffer.hpp"
+#include "ubo.hpp"
 
 #include <algorithm>
 
@@ -159,14 +160,26 @@ inline std::vector<GLuint> ex_20_cube_indices = {
     33, 34, 35
 };
 
-int run_020(const int width, const int height)
+int run_021(const int width, const int height)
 {
     camera->setCamPos(glm::vec3(0.0f, 2.0f, 8.0f));
 
-    Shader *shader = new Shader("glsl/ex_20/model_loading.vs", "glsl/ex_20/model_loading.fs");
-    Shader *shader_cube = new Shader("glsl/ex_20/cube.vs", "glsl/ex_20/cube.fs");
-    Shader *shader_skybox = new Shader("glsl/ex_20/skybox.vs", "glsl/ex_20/skybox.fs");
-    Shader *posprocessing_shader = new Shader("glsl/ex_20/posprocessing.vs", "glsl/ex_20/posprocessing.fs");
+    Shader *shader = new Shader("glsl/ex_21/model_loading.vs", "glsl/ex_21/model_loading.fs");
+    Shader *shader_cube = new Shader("glsl/ex_21/cube.vs", "glsl/ex_21/cube.fs");
+    Shader *shader_skybox = new Shader("glsl/ex_21/skybox.vs", "glsl/ex_21/skybox.fs");
+    Shader *posprocessing_shader = new Shader("glsl/ex_21/posprocessing.vs", "glsl/ex_20/posprocessing.fs");
+
+    shader->setUniformBlockBinding("Matrices", 0);
+    shader_cube->setUniformBlockBinding("Matrices", 0);
+    shader_skybox->setUniformBlockBinding("Matrices", 0);
+    posprocessing_shader->setUniformBlockBinding("Matrices", 0);
+
+    glm::mat4 projection = camera->getPerspectiveMatrix(width, height);
+    glm::mat4 view = camera->getViewMatrix();
+
+    UBO *ubo = new UBO(2 * sizeof(glm::mat4));
+    ubo->UBOSubBuffer(glm::value_ptr(projection), 0, sizeof(glm::mat4));
+    ubo->UBOSubBuffer(glm::value_ptr(view), sizeof(glm::mat4), sizeof(glm::mat4));
 
     std::vector<Texture2D*> textures;
     textures.push_back(new Texture2D("resources/textures/floor.png", TextureType::ALBEDO));
@@ -229,20 +242,16 @@ int run_020(const int width, const int height)
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 
+        glm::mat4 view = camera->getViewMatrix();
+        ubo->UBOSubBuffer(glm::value_ptr(view), sizeof(glm::mat4), sizeof(glm::mat4));
 
         float current_frame = static_cast<float>(glfwGetTime());
         delta_time = current_frame - last_frame;
         last_frame = current_frame;
 
-        glm::mat4 projection = camera->getPerspectiveMatrix(width, height);
-        glm::mat4 view = camera->getViewMatrix();
-
         // floor
         {
             shader->use();
-
-            shader->setMatrix4fv("projection", glm::value_ptr(projection));
-            shader->setMatrix4fv("view", glm::value_ptr(view));
 
             glm::mat4 model = glm::mat4(1.0f);
             model = glm::translate(model, glm::vec3(0.0f, -0.5f, 0.0f)); // translate it down so it's at the center of the scene
@@ -257,8 +266,6 @@ int run_020(const int width, const int height)
         // cubes
         {
             shader_cube->use();
-            shader_cube->setMatrix4fv("projection", glm::value_ptr(projection));
-            shader_cube->setMatrix4fv("view", glm::value_ptr(view));
             shader_cube->setUniform3fv("camera_pos", glm::value_ptr(camera->getCamPos()));
 
             float angle = 0.0f;
@@ -282,10 +289,8 @@ int run_020(const int width, const int height)
         {
             glDepthFunc(GL_LEQUAL);
 
-            glm::mat4 view_modify = glm::mat4(glm::mat3(camera->getViewMatrix()));
             shader_skybox->use();
-            shader_skybox->setMatrix4fv("projection", glm::value_ptr(projection));
-            shader_skybox->setMatrix4fv("view", glm::value_ptr(view_modify));
+            ubo->UBOSubBuffer(glm::value_ptr(glm::mat4(glm::mat3(camera->getViewMatrix()))), sizeof(glm::mat4), sizeof(glm::mat4));
 
             texture_cube_skybox->bind(GL_TEXTURE0);
             mesh_cube_skybox->draw(shader_skybox);
@@ -317,6 +322,8 @@ int run_020(const int width, const int height)
     delete shader_cube;
     delete shader_skybox;
     delete posprocessing_shader;
+
+    delete ubo;
 
     delete mesh_floor;
     delete mesh_cube;

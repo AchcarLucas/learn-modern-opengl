@@ -36,7 +36,7 @@ Shader::Shader(std::string vs_path, std::string fs_path)
         vs_code = vs_stream.str();
         fs_code = fs_stream.str();
     }
-    catch(std::ifstream::failure e) {
+    catch(std::ifstream::failure &e) {
         std::cout << "ERROR::SHADER::FILE_NOT_SUCCESFULLY_READ" << std::endl;
         return;
     }
@@ -86,6 +86,11 @@ void Shader::use()
 GLuint Shader::getShaderID()
 {
     return this->_id;
+}
+
+void Shader::setUniformBlockBinding(const std::string &name, const GLuint binding)
+{
+    glUniformBlockBinding(this->_id, glGetUniformBlockIndex(this->_id, name.c_str()), binding);
 }
 
 void Shader::setBool(const std::string &name, bool value) const
