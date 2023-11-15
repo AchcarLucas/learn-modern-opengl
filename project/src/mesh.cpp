@@ -17,7 +17,7 @@ Mesh::Mesh(std::vector<Vertex> vertices, std::vector<Texture2D*> textures, VERTE
     setupMesh(vt);
 }
 
-void Mesh::draw(Shader *shader)
+void Mesh::draw(Shader *shader, GLuint instances)
 {
     // vamos criar um array de contadores para cada tipo de textura
     std::map<TextureType, unsigned int> textures;
@@ -47,9 +47,17 @@ void Mesh::draw(Shader *shader)
 
     if(!this->indices.empty()) {
         this->ebo.bind();
-        glDrawElements(GL_TRIANGLES, this->indices.size(), GL_UNSIGNED_INT, 0);
+        if(instances == 1) {
+            glDrawElements(GL_TRIANGLES, this->indices.size(), GL_UNSIGNED_INT, 0);
+        } else {
+            glDrawElementsInstanced(GL_TRIANGLES, this->indices.size(), GL_UNSIGNED_INT, 0, instances);
+        }
     } else {
-        glDrawArrays(GL_TRIANGLES, 0, this->vertices.size());
+        if(instances == 1) {
+            glDrawArrays(GL_TRIANGLES, 0, this->vertices.size());
+        } else {
+            glDrawArraysInstanced(GL_TRIANGLES, 0, this->vertices.size(), instances);
+        }
     }
 
     glBindVertexArray(0);

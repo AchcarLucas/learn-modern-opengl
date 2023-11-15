@@ -80,7 +80,7 @@ class Mesh
         Mesh(std::vector<Vertex> vertices, std::vector<Texture2D*> textures, VERTEX_TYPE vt = VERTEX_TYPE::ATTRIB_PNT);
         virtual ~Mesh() { };
 
-        void draw(Shader *shader);
+        void draw(Shader *shader, GLuint instances = 1);
 
         std::vector<Vertex> vertices;
         std::vector<GLuint> indices;
