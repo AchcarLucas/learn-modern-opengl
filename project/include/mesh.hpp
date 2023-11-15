@@ -86,6 +86,10 @@ class Mesh
         std::vector<GLuint> indices;
         std::vector<Texture2D*> textures;
 
+        VAO *getVAO() { return &this->vao; }
+        VBO *getVBO() { return &this->vbo; }
+        EBO *getEBO() { return &this->ebo; }
+
     protected:
         VAO vao;
         VBO vbo;
