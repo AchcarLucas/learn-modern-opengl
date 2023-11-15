@@ -72,6 +72,18 @@ Texture2D::Texture2D(const int width, const int height, const TextureType type)
     glBindTexture(GL_TEXTURE_2D, 0);
 }
 
+Texture2D::Texture2D(const int width, const int height, unsigned int multisample) {
+    this->width = width;
+    this->height = height;
+    this->type = TextureType::FRAMEBUFFER_MULTISAMPLE;
+
+    glGenTextures(1, &this->texture);
+    glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, this->texture);
+
+    glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_RGB, width, height, GL_TRUE);
+    glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
+}
+
 Texture2D::~Texture2D()
 {
     glDeleteTextures(1, &this->texture);

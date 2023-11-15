@@ -1,5 +1,23 @@
 #include "framebuffer.hpp"
 
+FrameBuffer::FrameBuffer(const int width, const int height)
+{
+    glGenFramebuffers(1, &this->fbo);
+    glBindFramebuffer(GL_FRAMEBUFFER, this->fbo);
+
+    framebuffer_tex = new Texture2D(width, height);
+
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, framebuffer_tex->getGenTexture(), 0);
+
+    if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
+        std::cout << "ERROR::FRAMEBUFFER:: Framebuffer is not complete!" << std::endl;
+        delete this;
+        return;
+    }
+
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
 FrameBuffer::FrameBuffer(const int width, const int height, const GLenum gl_internalformat, const GLenum gl_attachment)
 {
     glGenFramebuffers(1, &this->fbo);
@@ -13,6 +31,26 @@ FrameBuffer::FrameBuffer(const int width, const int height, const GLenum gl_inte
 
     if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
         std::cout << "ERROR::FRAMEBUFFER:: Framebuffer is not complete!" << std::endl;
+        delete this;
+        return;
+    }
+
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, gl_attachment, GL_RENDERBUFFER, this->rbo->getRBO());
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+FrameBuffer::FrameBuffer(const int width, const int height, const GLenum gl_internalformat, const GLenum gl_attachment, unsigned int multisample) {
+    glGenFramebuffers(1, &this->fbo);
+    glBindFramebuffer(GL_FRAMEBUFFER, this->fbo);
+
+    framebuffer_tex = new Texture2D(width, height, multisample);
+
+    this->rbo = new RBO(width, height, gl_internalformat, multisample);
+
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, framebuffer_tex->getGenTexture(), 0);
+
+    if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
+        std::cout << "ERROR::FRAMEBUFFER_MULTISAMPLE:: Framebuffer is not complete!" << std::endl;
         delete this;
         return;
     }
