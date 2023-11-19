@@ -59,8 +59,8 @@ inline TextureTypeMap textureTypeMap = {
 class Texture2D
 {
     public:
-        Texture2D(const std::string file, const TextureType type = TextureType::ALBEDO, bool flip = true, bool sRGB = false);
-        Texture2D(const int width, const int height, const TextureType type = TextureType::FRAMEBUFFER, bool sRGB = false);
+        Texture2D(const std::string file, const TextureType type = TextureType::ALBEDO, bool flip = true, GLenum COLOR = GL_NONE);
+        Texture2D(const int width, const int height, const TextureType type = TextureType::FRAMEBUFFER, GLenum COLOR = GL_RGB);
         Texture2D(const int width, const int height, unsigned int multisample);
         virtual ~Texture2D();
 
