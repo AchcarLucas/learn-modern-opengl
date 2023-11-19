@@ -16,42 +16,42 @@
 
 using namespace std;
 
-inline void processInput(GLFWwindow *, float);
-inline void mouseCallback(GLFWwindow*, double, double);
-inline void scrollCallback(GLFWwindow*, double, double);
+static void processInput(GLFWwindow *, float);
+static void mouseCallback(GLFWwindow*, double, double);
+static void scrollCallback(GLFWwindow*, double, double);
 
 // camera class
-inline Camera *camera = new Camera(glm::vec3(0.0f, 0.0f, 5.0f));
+static Camera *camera = new Camera(glm::vec3(0.0f, 0.0f, 5.0f));
 
 // timing
-inline float delta_time = 0.0f;	// time between current frame and last frame
-inline float last_frame = 0.0f;
+static float delta_time = 0.0f;	// time between current frame and last frame
+static float last_frame = 0.0f;
 
-inline std::vector<Vertex> ex_20_quad_vertices = {
+static std::vector<Vertex> ex_20_quad_vertices = {
     Vertex(glm::vec3(1.0f,  1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(1.0f, 1.0f)),
     Vertex(glm::vec3(1.0f, -1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(1.0f, 0.0f)),
     Vertex(glm::vec3(-1.0f, -1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(0.0f, 0.0f)),
     Vertex(glm::vec3(-1.0f,  1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(0.0f, 1.0f))
 };
 
-inline std::vector<Vertex> ex_20_floor_vertices = {
+static std::vector<Vertex> ex_20_floor_vertices = {
     Vertex(glm::vec3(0.5f,  0.5f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(7.0f, 7.0f)),
     Vertex(glm::vec3(0.5f, -0.5f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(7.0f, 0.0f)),
     Vertex(glm::vec3(-0.5f, -0.5f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(0.0f, 0.0f)),
     Vertex(glm::vec3(-0.5f,  0.5f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(0.0f, 7.0f))
 };
 
-inline std::vector<GLuint> ex_20_indices = {
+static std::vector<GLuint> ex_20_indices = {
     0, 1, 3,
     1, 2, 3
 };
 
-inline std::vector<GLuint> ex_20_quad_indices = {
+static std::vector<GLuint> ex_20_quad_indices = {
     3, 1, 0,
     3, 2, 1
 };
 
-inline std::vector<Vertex> ex_20_cube_vertices = {
+static std::vector<Vertex> ex_20_cube_vertices = {
     // Back face
     Vertex(glm::vec3(-0.5f, -0.5f, -0.5f),  glm::vec2(0.0f, 0.0f), glm::vec3(0.0f,  0.0f, -1.0f)),
     Vertex(glm::vec3(0.5f,  0.5f, -0.5f),  glm::vec2(1.0f, 1.0f), glm::vec3(0.0f,  0.0f, -1.0f)),
@@ -96,7 +96,7 @@ inline std::vector<Vertex> ex_20_cube_vertices = {
     Vertex(glm::vec3(-0.5f,  0.5f, 0.5f),  glm::vec2(0.0f, 0.0f), glm::vec3(0.0f,  1.0f,  0.0f)),
 };
 
-inline std::vector<Vertex> ex_20_cube_vertices_skybox = {
+static std::vector<Vertex> ex_20_cube_vertices_skybox = {
     Vertex(glm::vec3(-1.0f,  1.0f, -1.0f)),
     Vertex(glm::vec3(-1.0f, -1.0f, -1.0f)),
     Vertex(glm::vec3( 1.0f, -1.0f, -1.0f)),
@@ -140,7 +140,7 @@ inline std::vector<Vertex> ex_20_cube_vertices_skybox = {
     Vertex(glm::vec3( 1.0f, -1.0f,  1.0f))
 };
 
-inline std::vector<GLuint> ex_20_cube_indices = {
+static std::vector<GLuint> ex_20_cube_indices = {
     0, 1, 2,
     5, 4, 3,
 
@@ -340,17 +340,17 @@ int run_021(const int width, const int height)
     return 0;
 }
 
-void processInput(GLFWwindow *window, float delta_time)
+static void processInput(GLFWwindow *window, float delta_time)
 {
     camera->processInput(window, delta_time);
 }
 
-void mouseCallback(GLFWwindow* window, double x_pos, double y_pos)
+static void mouseCallback(GLFWwindow* window, double x_pos, double y_pos)
 {
     camera->mouseCallback(window, x_pos, y_pos);
 }
 
-void scrollCallback(GLFWwindow* window, double x_offset, double y_offset)
+static void scrollCallback(GLFWwindow* window, double x_offset, double y_offset)
 {
     camera->scrollCallback(window, x_offset, y_offset);
 }

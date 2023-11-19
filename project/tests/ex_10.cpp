@@ -11,16 +11,16 @@
 
 using namespace std;
 
-inline void processInput(GLFWwindow *, float);
-inline void mouseCallback(GLFWwindow*, double, double);
-inline void scrollCallback(GLFWwindow*, double, double);
+static void processInput(GLFWwindow *, float);
+static void mouseCallback(GLFWwindow*, double, double);
+static void scrollCallback(GLFWwindow*, double, double);
 
 // camera class
-inline Camera *camera = new Camera(glm::vec3(0.0f, 0.0f, 5.0f));
+static Camera *camera = new Camera(glm::vec3(0.0f, 0.0f, 5.0f));
 
 // timing
-inline float delta_time = 0.0f;	// time between current frame and last frame
-inline float last_frame = 0.0f;
+static float delta_time = 0.0f;	// time between current frame and last frame
+static float last_frame = 0.0f;
 
 int run_010(const int width, const int height)
 {

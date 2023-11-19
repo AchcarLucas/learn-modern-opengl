@@ -11,14 +11,14 @@
 
 using namespace std;
 
-std::vector<Vertex> mesh_ex_23 = {
+static std::vector<Vertex> mesh_ex_23 = {
     Vertex(glm::vec3(-0.5f, 0.5f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f)),
     Vertex(glm::vec3(0.5f, 0.5f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f)),
     Vertex(glm::vec3(0.5f, -0.5f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f)),
     Vertex(glm::vec3(-0.5f, -0.5f, 0.0f), glm::vec3(1.0f, 1.0f, 0.0f)),
 };
 
-std::vector<unsigned int> indices_mesh_ex_23 = {0, 1, 2, 3};
+static std::vector<unsigned int> indices_mesh_ex_23 = {0, 1, 2, 3};
 
 int run_023(const int width, const int height)
 {

@@ -11,16 +11,16 @@
 
 using namespace std;
 
-inline void processInput(GLFWwindow *, float);
-inline void mouseCallback(GLFWwindow*, double, double);
-inline void scrollCallback(GLFWwindow*, double, double);
+static void processInput(GLFWwindow *, float);
+static void mouseCallback(GLFWwindow*, double, double);
+static void scrollCallback(GLFWwindow*, double, double);
 
 // camera class
-inline Camera *camera = new Camera();
+static Camera *camera = new Camera();
 
 // timing
-inline float delta_time = 0.0f;	// time between current frame and last frame
-inline float last_frame = 0.0f;
+static float delta_time = 0.0f;	// time between current frame and last frame
+static float last_frame = 0.0f;
 
 int run_004(const int width, const int height)
 {
@@ -108,17 +108,17 @@ int run_004(const int width, const int height)
     return 0;
 }
 
-void processInput(GLFWwindow *window, float delta_time)
+static void processInput(GLFWwindow *window, float delta_time)
 {
     camera->processInput(window, delta_time);
 }
 
-void mouseCallback(GLFWwindow* window, double x_pos, double y_pos)
+static void mouseCallback(GLFWwindow* window, double x_pos, double y_pos)
 {
     camera->mouseCallback(window, x_pos, y_pos);
 }
 
-void scrollCallback(GLFWwindow* window, double x_offset, double y_offset)
+static void scrollCallback(GLFWwindow* window, double x_offset, double y_offset)
 {
     camera->scrollCallback(window, x_offset, y_offset);
 }

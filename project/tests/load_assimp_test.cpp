@@ -13,12 +13,12 @@
 static std::string modelpath = "./resources/obj/rock/rock.obj";
 
 // the global Assimp scene object
-const aiScene* g_scene = nullptr;
+static const aiScene* g_scene = nullptr;
 
 // Create an instance of the Importer class
-Assimp::Importer importer;
+static Assimp::Importer importer;
 
-bool Import3DFromFile(const std::string &filename) {
+static bool Import3DFromFile(const std::string &filename) {
     // check if file exists
     std::ifstream fin(filename.c_str());
     if(fin.fail()) {

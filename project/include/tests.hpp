@@ -1,7 +1,7 @@
 #ifndef TESTS_HPP
 #define TESTS_HPP
 
-#define run(width, height) imgui_test(width, height)
+#define run(width, height) run_012(width, height)
 
 int load_assimp_test();
 
