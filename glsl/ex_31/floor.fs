@@ -40,7 +40,7 @@ layout (std140) uniform Camera {
 
 const int NR_LIGHTS = 16;
 
-uniform float gama;
+uniform float gamma = 2.2f;
 uniform lightSource lights[NR_LIGHTS];
 
 vec3 CalcDirectionalLight(lightSource light, vec3 light_dir, vec3 view_dir, vec3 normal)
@@ -90,10 +90,9 @@ vec3 CalcLight(lightSource light, vec3 light_dir, vec3 view_dir, vec3 normal)
 	}
 }
 
-float CalcAttenuation(vec3 light_position, vec3 frag_position)
+vec4 gammaCorrection(vec4 color)
 {
-	vec3 _length = frag_position - light_position;
-	return pow(1.0 / abs(length(_length)), gama);
+    return pow(color, 1.0 / vec4(gamma));
 }
 
 void main()
@@ -108,7 +107,6 @@ void main()
 		vec3 view_dir = normalize(camera.position - vs_in.position);
 	
 		result += CalcLight(lights[l], light_dir, view_dir, normalize(vs_in.normal));
-		result *= CalcAttenuation(vec3(lights[l].position), vec3(FragPos));
 	}
 
 	FragColor = vec4(texture(material.diffuse_1, vs_in.tex).rgb * result, 1.0f);

@@ -6,11 +6,11 @@ in VS_DATA {
 } vs_in;
 
 uniform sampler2D screen_texture;
-uniform float gama;
+uniform float gamma = 2.2f;
 
 vec4 gammaCorrection(vec4 color)
 {
-    return pow(color, 1.0 / vec4(gama));
+    return pow(color, 1.0 / vec4(gamma));
 }
 
 void main()

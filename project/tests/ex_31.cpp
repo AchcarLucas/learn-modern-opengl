@@ -71,8 +71,10 @@ int run_031(const int width, const int height)
     shader_light->setUniformBlockBinding(ubo_matrices->getName(), ubo_matrices->getBinding());
 
     shader_screen->use();
-    shader_screen->setFloat("gama", 2.2f);
-    shader_floor->setFloat("gama", 2.2f);
+    shader_screen->setFloat("gamma", 2.2f);
+
+    shader_floor->use();
+    shader_floor->setFloat("gamma", 2.2f);
 
     Texture2D *texture_wood = new Texture2D("./resources/textures/wood.png", TextureType::DIFFUSE, true, GL_SRGB);
 
