@@ -42,12 +42,14 @@
 			<Add directory="lib/std_image" />
 			<Add directory="lib/assimp-5.3.1" />
 			<Add directory="lib/imgui-1.90" />
+			<Add directory="lib/imgui-1.90/backends" />
 		</Compiler>
 		<Linker>
 			<Add option="-static-libstdc++" />
 			<Add option="-lglfw3 -lassimp -lX11" />
 			<Add library="/usr/local/lib/libglfw3.a" />
 			<Add library="/usr/local/lib/libassimp.so" />
+			<Add directory="lib/imgui-1.90" />
 		</Linker>
 		<Unit filename="lib/glad/include/KHR/khrplatform.h" />
 		<Unit filename="lib/glad/include/glad/glad.h" />
@@ -342,6 +344,21 @@
 		<Unit filename="lib/glm/vec3.hpp" />
 		<Unit filename="lib/glm/vec4.hpp" />
 		<Unit filename="lib/glm/vector_relational.hpp" />
+		<Unit filename="lib/imgui-1.90/backends/imgui_impl_glfw.cpp" />
+		<Unit filename="lib/imgui-1.90/backends/imgui_impl_glfw.h" />
+		<Unit filename="lib/imgui-1.90/backends/imgui_impl_opengl3.cpp" />
+		<Unit filename="lib/imgui-1.90/backends/imgui_impl_opengl3.h" />
+		<Unit filename="lib/imgui-1.90/imconfig.h" />
+		<Unit filename="lib/imgui-1.90/imgui.cpp" />
+		<Unit filename="lib/imgui-1.90/imgui.h" />
+		<Unit filename="lib/imgui-1.90/imgui_demo.cpp" />
+		<Unit filename="lib/imgui-1.90/imgui_draw.cpp" />
+		<Unit filename="lib/imgui-1.90/imgui_internal.h" />
+		<Unit filename="lib/imgui-1.90/imgui_tables.cpp" />
+		<Unit filename="lib/imgui-1.90/imgui_widgets.cpp" />
+		<Unit filename="lib/imgui-1.90/imstb_rectpack.h" />
+		<Unit filename="lib/imgui-1.90/imstb_textedit.h" />
+		<Unit filename="lib/imgui-1.90/imstb_truetype.h" />
 		<Unit filename="lib/std_image/stb_image.h" />
 		<Unit filename="project/include/camera.hpp" />
 		<Unit filename="project/include/ebo.hpp" />
