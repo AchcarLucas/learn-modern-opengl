@@ -15,16 +15,16 @@
 
 using namespace std;
 
-inline void glwfProcessInput(GLFWwindow *, float);
-inline void glwfMouseCallback(GLFWwindow*, double, double);
-inline void glwfScrollCallback(GLFWwindow*, double, double);
+static void processInput(GLFWwindow *, float);
+static void mouseCallback(GLFWwindow*, double, double);
+static void scrollCallback(GLFWwindow*, double, double);
 
 // camera class
-inline Camera *camera = new Camera();
+static Camera *camera = new Camera();
 
 // timing
-inline float delta_time = 0.0f;	// time between current frame and last frame
-inline float last_frame = 0.0f;
+static float delta_time = 0.0f;	// time between current frame and last frame
+static float last_frame = 0.0f;
 
 int imgui_test(const int width, const int height)
 {
@@ -32,8 +32,8 @@ int imgui_test(const int width, const int height)
 
     // glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-    glfwSetCursorPosCallback(window, glwfMouseCallback);
-    glfwSetScrollCallback(window, glwfScrollCallback);
+    glfwSetCursorPosCallback(window, mouseCallback);
+    glfwSetScrollCallback(window, scrollCallback);
 
     Shader *shader = new Shader("glsl/first_vertex_shader.vs", "glsl/first_fragment_shader.fs");
     SObject *quad = createQuad();
@@ -141,7 +141,7 @@ int imgui_test(const int width, const int height)
 
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
-        glwfProcessInput(window, delta_time);
+        processInput(window, delta_time);
         glfwSwapBuffers(window);
     }
 
@@ -152,17 +152,17 @@ int imgui_test(const int width, const int height)
     return 0;
 }
 
-void glwfProcessInput(GLFWwindow *window, float delta_time)
+static void processInput(GLFWwindow *window, float delta_time)
 {
     camera->processInput(window, delta_time);
 }
 
-void glwfMouseCallback(GLFWwindow* window, double x_pos, double y_pos)
+static void mouseCallback(GLFWwindow* window, double x_pos, double y_pos)
 {
     camera->mouseCallback(window, x_pos, y_pos);
 }
 
-void glwfScrollCallback(GLFWwindow* window, double x_offset, double y_offset)
+static void scrollCallback(GLFWwindow* window, double x_offset, double y_offset)
 {
     camera->scrollCallback(window, x_offset, y_offset);
 }
