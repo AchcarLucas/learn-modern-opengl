@@ -40,6 +40,7 @@ layout (std140) uniform Camera {
 
 const int NR_LIGHTS = 16;
 
+uniform float gama;
 uniform lightSource lights[NR_LIGHTS];
 
 vec3 CalcDirectionalLight(lightSource light, vec3 light_dir, vec3 view_dir, vec3 normal)
@@ -92,8 +93,10 @@ vec3 CalcLight(lightSource light, vec3 light_dir, vec3 view_dir, vec3 normal)
 float CalcAttenuation(vec3 light_position, vec3 frag_position)
 {
 	vec3 _length = frag_position - light_position;
-	return abs(length(_length));
+	return pow(1.0 / abs(length(_length)), gama);
 }
+
+
 
 void main()
 {

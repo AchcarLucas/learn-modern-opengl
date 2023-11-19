@@ -72,6 +72,7 @@ int run_031(const int width, const int height)
 
     shader_screen->use();
     shader_screen->setFloat("gama", 2.2f);
+    shader_floor->setFloat("gama", 2.2f);
 
     Texture2D *texture_wood = new Texture2D("./resources/textures/wood.png", TextureType::DIFFUSE, true, GL_SRGB);
 
