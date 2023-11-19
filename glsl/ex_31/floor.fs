@@ -89,6 +89,12 @@ vec3 CalcLight(lightSource light, vec3 light_dir, vec3 view_dir, vec3 normal)
 	}
 }
 
+float CalcAttenuation(vec3 light_position, vec3 frag_position)
+{
+	vec3 _length = frag_position - light_position;
+	return abs(length(_length));
+}
+
 void main()
 {
 	vec3 result = vec3(0.05f);
@@ -99,8 +105,9 @@ void main()
 
 		vec3 light_dir = normalize(vec3(lights[l].position) - vs_in.position);
 		vec3 view_dir = normalize(camera.position - vs_in.position);
-
+	
 		result += CalcLight(lights[l], light_dir, view_dir, normalize(vs_in.normal));
+		result *= CalcAttenuation(vec3(lights[l].position), vec3(FragPos));
 	}
 
 	FragColor = vec4(texture(material.diffuse_1, vs_in.tex).rgb * result, 1.0f);
