@@ -10,7 +10,7 @@
 #include <assimp/LogStream.hpp>
 
 // The default hard-coded path. Can be overridden by supplying a path through the command line.
-static std::string modelpath = "./models/OBJ/spider.obj";
+static std::string modelpath = "./resources/obj/rock/rock.obj";
 
 // the global Assimp scene object
 const aiScene* g_scene = nullptr;
