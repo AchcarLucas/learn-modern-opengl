@@ -8,10 +8,14 @@ in VS_DATA {
 uniform sampler2D screen_texture;
 uniform float gama;
 
+vec4 gammaCorrection(vec4 color)
+{
+    return pow(color, 1.0 / vec4(gama));
+}
+
 void main()
 {
     vec3 col = texture(screen_texture, vs_in.tex).rgb;
     vec4 color = vec4(vec3(col), 1.0);
-    color = pow(color, 1.0 / vec4(gama));
-    FragColor = color;
+    FragColor = gammaCorrection(color);
 } 

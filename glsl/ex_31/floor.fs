@@ -96,8 +96,6 @@ float CalcAttenuation(vec3 light_position, vec3 frag_position)
 	return pow(1.0 / abs(length(_length)), gama);
 }
 
-
-
 void main()
 {
 	vec3 result = vec3(0.05f);
