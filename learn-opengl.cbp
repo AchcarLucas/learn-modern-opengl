@@ -41,6 +41,7 @@
 			<Add directory="lib/glad/include" />
 			<Add directory="lib/std_image" />
 			<Add directory="lib/assimp-5.3.1" />
+			<Add directory="lib/imgui-1.90" />
 		</Compiler>
 		<Linker>
 			<Add option="-static-libstdc++" />
@@ -396,12 +397,14 @@
 		<Unit filename="project/tests/ex_28.cpp" />
 		<Unit filename="project/tests/ex_29.cpp" />
 		<Unit filename="project/tests/ex_3.cpp" />
+		<Unit filename="project/tests/ex_30.cpp" />
 		<Unit filename="project/tests/ex_4.cpp" />
 		<Unit filename="project/tests/ex_5.cpp" />
 		<Unit filename="project/tests/ex_6.cpp" />
 		<Unit filename="project/tests/ex_7.cpp" />
 		<Unit filename="project/tests/ex_8.cpp" />
 		<Unit filename="project/tests/ex_9.cpp" />
+		<Unit filename="project/tests/imgui_test.cpp" />
 		<Unit filename="project/tests/load_assimp_test.cpp" />
 		<Extensions />
 	</Project>
