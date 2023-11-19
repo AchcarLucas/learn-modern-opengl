@@ -25,21 +25,21 @@ static Camera *camera = new Camera(glm::vec3(0.0f, 0.0f, 5.0f));
 static float delta_time = 0.0f;	// time between current frame and last frame
 static float last_frame = 0.0f;
 
-inline std::vector<Vertex> ex_15_quad_vertices = {
+static std::vector<Vertex> ex_15_quad_vertices = {
     Vertex(glm::vec3(0.5f,  0.5f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(1.0f, 1.0f)),
     Vertex(glm::vec3(0.5f, -0.5f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(1.0f, 0.0f)),
     Vertex(glm::vec3(-0.5f, -0.5f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(0.0f, 0.0f)),
     Vertex(glm::vec3(-0.5f,  0.5f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(0.0f, 1.0f))
 };
 
-inline std::vector<Vertex> ex_15_floor_vertices = {
+static std::vector<Vertex> ex_15_floor_vertices = {
     Vertex(glm::vec3(0.5f,  0.5f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(7.0f, 7.0f)),
     Vertex(glm::vec3(0.5f, -0.5f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(7.0f, 0.0f)),
     Vertex(glm::vec3(-0.5f, -0.5f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(0.0f, 0.0f)),
     Vertex(glm::vec3(-0.5f,  0.5f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(0.0f, 7.0f))
 };
 
-inline std::vector<GLuint> ex_15_indices = {
+static std::vector<GLuint> ex_15_indices = {
     3, 1, 0,
     3, 2, 1
 };

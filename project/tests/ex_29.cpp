@@ -24,14 +24,14 @@ static Camera *camera = new Camera();
 static float delta_time = 0.0f;	// time between current frame and last frame
 static float last_frame = 0.0f;
 
-inline std::vector<Vertex> ex_29_quad_vertices = {
+static std::vector<Vertex> ex_29_quad_vertices = {
     Vertex(glm::vec3(1.0f,  1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(1.0f, 1.0f)),
     Vertex(glm::vec3(1.0f, -1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(1.0f, 0.0f)),
     Vertex(glm::vec3(-1.0f, -1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(0.0f, 0.0f)),
     Vertex(glm::vec3(-1.0f,  1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(0.0f, 1.0f))
 };
 
-inline std::vector<GLuint> ex_29_quad_indices = {
+static std::vector<GLuint> ex_29_quad_indices = {
     3, 1, 0,
     3, 2, 1
 };
