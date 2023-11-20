@@ -256,7 +256,7 @@ static void loadScene(GLFWwindow* window, const int width, const int height)
     // buffer de tela
     screen_buffer = new FrameBuffer(width, height);
     // buffer shadow mapping
-    shadow_buffer = new FrameBuffer(1024, 1024, GL_DEPTH_COMPONENT, GL_DEPTH_ATTACHMENT);
+    shadow_buffer = new FrameBuffer(1024, 1024, GL_DEPTH_COMPONENT, GL_DEPTH_ATTACHMENT, TextureType::FRAMEBUFFER_SHADOW_MAPPING);
 
     std::vector<Texture2D*> floor_textures = {
         texture_wood
