@@ -29,6 +29,7 @@ enum TextureType {
     LIGHTMAP,
     HEIGHT,
     FRAMEBUFFER,
+    FRAMEBUFFER_SHADOW_MAPPING,
     FRAMEBUFFER_MULTISAMPLE
 };
 
@@ -53,14 +54,15 @@ inline TextureTypeMap textureTypeMap = {
     {TextureType::LIGHTMAP, "lightmap"},
     {TextureType::HEIGHT, "height"},
     {TextureType::FRAMEBUFFER, "framebuffer"},
+    {TextureType::FRAMEBUFFER_SHADOW_MAPPING, "framebuffer_shadow_mapping"},
     {TextureType::FRAMEBUFFER_MULTISAMPLE, "framebuffer_multisample"},
 };
 
 class Texture2D
 {
     public:
-        Texture2D(const std::string file, const TextureType type = TextureType::ALBEDO, bool flip = true, GLenum COLOR = GL_NONE);
-        Texture2D(const int width, const int height, const TextureType type = TextureType::FRAMEBUFFER, GLenum COLOR = GL_RGB);
+        Texture2D(const std::string file, const TextureType type = TextureType::ALBEDO, bool flip = true, const GLenum gl_format = GL_NONE);
+        Texture2D(const int width, const int height, const TextureType type = TextureType::FRAMEBUFFER, const GLenum gl_internalformat = GL_RGB, const GLenum gl_format = GL_RGB);
         Texture2D(const int width, const int height, unsigned int multisample);
         virtual ~Texture2D();
 

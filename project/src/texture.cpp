@@ -17,7 +17,7 @@ static GLenum ImageTypeFormat(int format)
     return GL_NONE;
 }
 
-Texture2D::Texture2D(const std::string file, const TextureType type, bool flip, GLenum COLOR)
+Texture2D::Texture2D(const std::string file, const TextureType type, bool flip, const GLenum gl_format)
 {
     _stbi_set_flip_vertically_on_load(flip);
 
@@ -42,7 +42,7 @@ Texture2D::Texture2D(const std::string file, const TextureType type, bool flip, 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-    glTexImage2D(GL_TEXTURE_2D, 0, (COLOR != GL_NONE) ? COLOR : this->format, width, height, 0, this->format, GL_UNSIGNED_BYTE, image);
+    glTexImage2D(GL_TEXTURE_2D, 0, (gl_format != GL_NONE) ? gl_format : this->format, width, height, 0, this->format, GL_UNSIGNED_BYTE, image);
     glGenerateMipmap(GL_TEXTURE_2D);
 
     glBindTexture(GL_TEXTURE_2D, 0);
@@ -55,7 +55,7 @@ Texture2D::Texture2D(const std::string file, const TextureType type, bool flip, 
     _stbi_image_free(image);
 }
 
-Texture2D::Texture2D(const int width, const int height, const TextureType type, GLenum COLOR)
+Texture2D::Texture2D(const int width, const int height, const TextureType type, const GLenum gl_internalformat, const GLenum gl_format)
 {
     this->width = width;
     this->height = height;
@@ -64,10 +64,15 @@ Texture2D::Texture2D(const int width, const int height, const TextureType type, 
     glGenTextures(1, &this->texture);
     glBindTexture(GL_TEXTURE_2D, this->texture);
 
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, COLOR, GL_UNSIGNED_BYTE, NULL);
+    glTexImage2D(GL_TEXTURE_2D, 0, gl_internalformat, width, height, 0, gl_format, GL_UNSIGNED_BYTE, NULL);
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    if(type == TextureType::FRAMEBUFFER_SHADOW_MAPPING) {
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    }
 
     glBindTexture(GL_TEXTURE_2D, 0);
 }

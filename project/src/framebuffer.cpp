@@ -21,7 +21,7 @@ FrameBuffer::FrameBuffer(const int width, const int height)
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-FrameBuffer::FrameBuffer(const int width, const int height, const GLenum gl_internalformat, const GLenum gl_attachment)
+FrameBuffer::FrameBuffer(const int width, const int height, const GLenum gl_internalformat, const GLenum gl_attachment, TextureType type)
 {
     this->width = width;
     this->height = height;
@@ -29,11 +29,15 @@ FrameBuffer::FrameBuffer(const int width, const int height, const GLenum gl_inte
     glGenFramebuffers(1, &this->fbo);
     glBindFramebuffer(GL_FRAMEBUFFER, this->fbo);
 
-    framebuffer_tex = new Texture2D(width, height, TextureType::FRAMEBUFFER);
+    switch(type) {
+        case TextureType::FRAMEBUFFER_SHADOW_MAPPING:
+            framebuffer_tex = new Texture2D(width, height, type, GL_DEPTH_COMPONENT, GL_DEPTH_COMPONENT);
+            break;
+        default:
+            framebuffer_tex = new Texture2D(width, height, type);
+    }
 
-    this->rbo = new RBO(width, height, gl_internalformat);
-
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, framebuffer_tex->getGenTexture(), 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, gl_attachment, GL_TEXTURE_2D, framebuffer_tex->getGenTexture(), 0);
 
     if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
         std::cout << "ERROR::FRAMEBUFFER:: Framebuffer is not complete!" << std::endl;
@@ -41,7 +45,15 @@ FrameBuffer::FrameBuffer(const int width, const int height, const GLenum gl_inte
         return;
     }
 
-    glFramebufferRenderbuffer(GL_FRAMEBUFFER, gl_attachment, GL_RENDERBUFFER, this->rbo->getRBO());
+    switch(type) {
+        case TextureType::FRAMEBUFFER_SHADOW_MAPPING:
+            break;
+        case TextureType::FRAMEBUFFER:
+        default:
+            this->rbo = new RBO(width, height, gl_internalformat);
+            glFramebufferRenderbuffer(GL_FRAMEBUFFER, gl_attachment, GL_RENDERBUFFER, this->rbo->getRBO());
+    }
+
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
