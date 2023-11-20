@@ -432,7 +432,7 @@ static void renderProcessing(GLFWwindow* window, const int width, const int heig
     // copia o buffer da msaa para o buffer da tela
     msaa_buffer->bind(GL_READ_FRAMEBUFFER);
     screen_buffer->bind(GL_DRAW_FRAMEBUFFER);
-    glBlitFramebuffer(0, 0, msaa_buffer->getWidth(), msaa_buffer->getHeight(), 0, 0, screen_buffer->getWidth(), msaa_buffer->getHeight(), GL_COLOR_BUFFER_BIT, GL_NEAREST);
+    glBlitFramebuffer(0, 0, msaa_buffer->getWidth(), msaa_buffer->getHeight(), 0, 0, screen_buffer->getWidth(), screen_buffer->getHeight(), GL_COLOR_BUFFER_BIT, GL_NEAREST);
 
     msaa_buffer->unbind();
 
