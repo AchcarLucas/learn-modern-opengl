@@ -1,8 +1,19 @@
 #include "camera.hpp"
 
-Camera::Camera(glm::vec3 position)
+Camera::Camera(glm::vec3 position, glm::vec3 target)
 {
     this->setCamPos(position);
+    this->lookAt(target);
+}
+
+void Camera::lookAt(glm::vec3 target)
+{
+    glm::vec3 direction = glm::normalize(target - this->getCamPos());
+
+    /// calculate pitch (up - down)
+    this->pitch = glm::degrees(glm::asin(direction.y));
+    /// calculate yaw (right - left)
+    this->yaw = glm::degrees(std::atan2(direction.x, -direction.z)) - 90.0f;
 }
 
 Camera::~Camera()
