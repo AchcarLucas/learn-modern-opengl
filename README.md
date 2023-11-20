@@ -58,13 +58,13 @@ Pronto, o Codeblock está configurado
 
 Após finalizar a instalação das libs e a configuração do codeblock, no arquivo ```tests.hpp``` mude os exemplos pela definition ```#define run(width, height) run_XXX(width, height)``` , onde o ```XXX``` é o número do exemplo que você deseja.
 
-## Exemplo-1
+## Exemplo-1 (Draw Quad)
 ![ex_1](./images/ex_1.png)
 
-## Exemplo-2
+## Exemplo-2 (Draw Quad)
 ![ex_2](./images/ex_2.png)
 
-## Exemplo-3
+## Exemplo-3 (Draw Quad)
 ![ex_3](./images/ex_3.png)
 
 ## Exemplo-4 (Draw Cube)
@@ -76,7 +76,7 @@ Após finalizar a instalação das libs e a configuração do codeblock, no arqu
 ## Exemplo-6 (Material Shader)
 ![ex_6](./images/ex_6.gif)
 
-## Exemplo-7
+## Exemplo-7 (Material Shader)
 ![ex_7](./images/ex_7.gif)
 
 ## Exemplo-8 (Emit Shader)
@@ -85,7 +85,7 @@ Após finalizar a instalação das libs e a configuração do codeblock, no arqu
 ## Exemplo-9 (Light Shader)
 ![ex_9](./images/ex_9.gif)
 
-## Exemplo-10
+## Exemplo-10 (Light Shader)
 ![ex_10](./images/ex_10.gif)
 
 ## Exemplo-12 (Loading Model)
@@ -100,7 +100,7 @@ Após finalizar a instalação das libs e a configuração do codeblock, no arqu
 ## Exemplo-16 (Kernel Shader)
 ![ex_16](./images/ex_16.png)
 
-## Exemplo-17
+## Exemplo-17 (Kernel Shader)
 ![ex_17](./images/ex_17.png)
 
 ## Exemplo-18 (Skybox Mapping)
@@ -109,19 +109,19 @@ Após finalizar a instalação das libs e a configuração do codeblock, no arqu
 ## Exemplo-22 (Geometry Shader)
 ![ex_22](./images/ex_22.png)
 
-## Exemplo-23
+## Exemplo-23 (Geometry Shader)
 ![ex_23](./images/ex_23.png)
 
-## Exemplo-24 (Exploded Sgader)
+## Exemplo-24 (Exploded Shader)
 ![ex_24](./images/ex_24.gif)
 
 ## Exemplo-25 (Normal Vertex Shader)
 ![ex_25](./images/ex_25.png)
 
-## Exemplo-26
+## Exemplo-26 (Instances)
 ![ex_26](./images/ex_26.png)
 
-## Exemplo-27
+## Exemplo-27 (Instances)
 ![ex_27](./images/ex_27.png)
 
 ## Exemplo-28 (Instances)
@@ -136,5 +136,5 @@ Após finalizar a instalação das libs e a configuração do codeblock, no arqu
 ## Exemplo-31 (Gamma Correction)
 ![ex_31](./images/ex_31.png)
 
-## Exemplo-32 (Shadow Mapping)
+## Exemplo-32 (Camera Shadow Mapping)
 ![ex_32](./images/ex_32.gif)
