@@ -29,7 +29,7 @@ enum TextureType {
     LIGHTMAP,
     HEIGHT,
     FRAMEBUFFER,
-    FRAMEBUFFER_SHADOW_MAPPING,
+    FRAMEBUFFER_DEPTH_MAPPING,
     FRAMEBUFFER_MULTISAMPLE
 };
 
@@ -54,8 +54,8 @@ inline TextureTypeMap textureTypeMap = {
     {TextureType::LIGHTMAP, "lightmap"},
     {TextureType::HEIGHT, "height"},
     {TextureType::FRAMEBUFFER, "framebuffer"},
-    {TextureType::FRAMEBUFFER_SHADOW_MAPPING, "framebuffer_shadow_mapping"},
-    {TextureType::FRAMEBUFFER_MULTISAMPLE, "framebuffer_multisample"},
+    {TextureType::FRAMEBUFFER_DEPTH_MAPPING, "depth"},
+    {TextureType::FRAMEBUFFER_MULTISAMPLE, "multisample"},
 };
 
 class Texture2D

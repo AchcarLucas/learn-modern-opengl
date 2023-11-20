@@ -30,7 +30,7 @@ FrameBuffer::FrameBuffer(const int width, const int height, const GLenum gl_inte
     glBindFramebuffer(GL_FRAMEBUFFER, this->fbo);
 
     switch(type) {
-        case TextureType::FRAMEBUFFER_SHADOW_MAPPING:
+        case TextureType::FRAMEBUFFER_DEPTH_MAPPING:
             framebuffer_tex = new Texture2D(width, height, type, GL_DEPTH_COMPONENT, GL_DEPTH_COMPONENT);
             glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, framebuffer_tex->getGenTexture(), 0);
             break;
@@ -47,7 +47,7 @@ FrameBuffer::FrameBuffer(const int width, const int height, const GLenum gl_inte
     }
 
     switch(type) {
-        case TextureType::FRAMEBUFFER_SHADOW_MAPPING:
+        case TextureType::FRAMEBUFFER_DEPTH_MAPPING:
             break;
         case TextureType::FRAMEBUFFER:
         default:

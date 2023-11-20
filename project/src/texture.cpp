@@ -70,7 +70,7 @@ Texture2D::Texture2D(const int width, const int height, const TextureType type, 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
     switch(type) {
-        case TextureType::FRAMEBUFFER_SHADOW_MAPPING:
+        case TextureType::FRAMEBUFFER_DEPTH_MAPPING:
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
             break;
