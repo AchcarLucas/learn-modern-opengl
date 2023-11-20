@@ -32,13 +32,13 @@ FrameBuffer::FrameBuffer(const int width, const int height, const GLenum gl_inte
     switch(type) {
         case TextureType::FRAMEBUFFER_SHADOW_MAPPING:
             framebuffer_tex = new Texture2D(width, height, type, GL_DEPTH_COMPONENT, GL_DEPTH_COMPONENT);
+            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, framebuffer_tex->getGenTexture(), 0);
             break;
         default:
             framebuffer_tex = new Texture2D(width, height, type);
+            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, framebuffer_tex->getGenTexture(), 0);
             break;
     }
-
-    glFramebufferTexture2D(GL_FRAMEBUFFER, gl_attachment, GL_TEXTURE_2D, framebuffer_tex->getGenTexture(), 0);
 
     if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
         std::cout << "ERROR::FRAMEBUFFER:: Framebuffer is not complete!" << std::endl;
@@ -55,6 +55,7 @@ FrameBuffer::FrameBuffer(const int width, const int height, const GLenum gl_inte
             glFramebufferRenderbuffer(GL_FRAMEBUFFER, gl_attachment, GL_RENDERBUFFER, this->rbo->getRBO());
             break;
     }
+
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
