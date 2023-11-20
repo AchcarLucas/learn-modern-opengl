@@ -21,7 +21,7 @@ class Light
 class DirectionalLight : public Light
 {
     public:
-        DirectionalLight(const glm::vec3 position, const glm::vec3 direction, const float box_size, const float far, const float near);
+        DirectionalLight(const glm::vec3 position, const glm::vec3 direction, const float box_size, const float near, const float far);
         virtual ~DirectionalLight();
 
         void setPosition(glm::vec3 position) { this->position = position; }
