@@ -190,15 +190,15 @@ int run_032(const int width, const int height)
         renderScene(window, width, height, shader_shadow);
 
         /*
-        glViewport(0, 0, msaa_buffer->getWidth(), msaa_buffer->getWidth());
+        glViewport(0, 0, screen_buffer->getWidth(), screen_buffer->getHeight());
         msaa_buffer->bind();
         clearGL();
         renderScene(window, width, height);
+        renderLight(window, width, height);
         */
 
-        renderLight(window, width, height);
         renderProcessingDebug(window, width, height);
-        //renderProcessing(window, width, height);
+        // renderProcessing(window, width, height);
 
         processInput(window, delta_time);
 
@@ -270,20 +270,29 @@ static void loadScene(GLFWwindow* window, const int width, const int height)
     mesh_floor = new Mesh(ex_32_quad_vertices_floor, ex_32_quad_indices, floor_textures, VERTEX_TYPE::ATTRIB_PNT);
     mesh_cube = new Mesh(ex_32_cube_vertices, ex_32_cube_indices, cube_textures, VERTEX_TYPE::ATTRIB_PNT);
 
-    ubo_matrices = new UBO("Matrices", 3 * sizeof(glm::mat4), 0);
-    ubo_camera = new UBO("Camera", sizeof(glm::vec3), 1);
-    ubo_light = new UBO("Light", sizeof(glm::mat4), 2);
+    ubo_matrices = new UBO("Matrices", 2 * sizeof(glm::mat4), 0);
+    ubo_light = new UBO("Light", sizeof(glm::mat4), 1);
+    ubo_camera = new UBO("Camera", sizeof(glm::vec3), 2);
 
+    /// global matrices
     {
         glm::mat4 _projection = camera->getPerspectiveMatrix(width, height, 0.1f, 1000.0f);
         glm::mat4 _view = camera->getViewMatrix();
-        glm::mat4 _light = dir_light->getLightSpaceMatrix();
 
         ubo_matrices->UBOSubBuffer(glm::value_ptr(_projection), 0, sizeof(glm::mat4));
         ubo_matrices->UBOSubBuffer(glm::value_ptr(_view), sizeof(glm::mat4), sizeof(glm::mat4));
+    }
+
+    /// global light
+    {
+
+        glm::mat4 _light = dir_light->getLightSpaceMatrix();
 
         ubo_light->UBOSubBuffer(glm::value_ptr(_light), 0, sizeof(glm::mat4));
+    }
 
+    /// global camera
+    {
         ubo_camera->UBOSubBuffer(glm::value_ptr(camera->getCamPos()), 0, sizeof(glm::vec3));
     }
 
@@ -329,14 +338,14 @@ static void updateScene(GLFWwindow* window, const int width, const int height)
         ubo_matrices->UBOSubBuffer(glm::value_ptr(camera->getViewMatrix()), sizeof(glm::mat4), sizeof(glm::mat4));
     }
 
-    // global camera
-    {
-        ubo_camera->UBOSubBuffer(glm::value_ptr(camera->getCamPos()), 0, sizeof(glm::vec3));
-    }
-
     // global light
     {
         ubo_light->UBOSubBuffer(glm::value_ptr(dir_light->getLightSpaceMatrix()), 0, sizeof(glm::mat4));
+    }
+
+    // global camera
+    {
+        ubo_camera->UBOSubBuffer(glm::value_ptr(camera->getCamPos()), 0, sizeof(glm::vec3));
     }
 }
 
@@ -363,7 +372,6 @@ static void updateShader(GLFWwindow* window, const int width, const int height)
 
             shader->setBool("lights[0].enabled", light_enabled);
         }
-
     }
 }
 
@@ -424,7 +432,7 @@ static void renderProcessing(GLFWwindow* window, const int width, const int heig
     // copia o buffer da msaa para o buffer da tela
     msaa_buffer->bind(GL_READ_FRAMEBUFFER);
     screen_buffer->bind(GL_DRAW_FRAMEBUFFER);
-    glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+    glBlitFramebuffer(0, 0, msaa_buffer->getWidth(), msaa_buffer->getHeight(), 0, 0, screen_buffer->getWidth(), msaa_buffer->getHeight(), GL_COLOR_BUFFER_BIT, GL_NEAREST);
 
     msaa_buffer->unbind();
 
