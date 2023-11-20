@@ -365,6 +365,7 @@
 		<Unit filename="project/include/framebuffer.hpp" />
 		<Unit filename="project/include/image.hpp" />
 		<Unit filename="project/include/init.hpp" />
+		<Unit filename="project/include/light.hpp" />
 		<Unit filename="project/include/mesh.hpp" />
 		<Unit filename="project/include/model.hpp" />
 		<Unit filename="project/include/object.hpp" />
@@ -380,6 +381,7 @@
 		<Unit filename="project/src/framebuffer.cpp" />
 		<Unit filename="project/src/image.cpp" />
 		<Unit filename="project/src/init.cpp" />
+		<Unit filename="project/src/light.cpp" />
 		<Unit filename="project/src/main.cpp" />
 		<Unit filename="project/src/mesh.cpp" />
 		<Unit filename="project/src/model.cpp" />
