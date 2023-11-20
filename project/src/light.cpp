@@ -18,8 +18,6 @@ DirectionalLight::DirectionalLight(const glm::vec3 position, const glm::vec3 dir
     this->box_size = box_size;
 
     this->direction = direction;
-
-    this->update();
 }
 
 DirectionalLight::~DirectionalLight()
@@ -27,8 +25,12 @@ DirectionalLight::~DirectionalLight()
     //dtor
 }
 
-void DirectionalLight::update()
+glm::mat4 DirectionalLight::getViewMatrix()
 {
-    this->projection = glm::ortho(-1 * this->box_size, this->box_size, -1 * this->box_size, this->box_size, this->near_plane, this->far_plane);
-    this->view = glm::lookAt(this->position, this->direction, this->up);
+    return glm::lookAt(this->position, this->direction, this->up);;
+}
+
+glm::mat4 DirectionalLight::getProjectionMatrix()
+{
+    return glm::ortho(-1 * this->box_size, this->box_size, -1 * this->box_size, this->box_size, this->near_plane, this->far_plane);;
 }

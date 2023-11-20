@@ -11,8 +11,6 @@ class Light
         Light(glm::vec3 position);
         virtual ~Light();
 
-        virtual void update() { }
-
     protected:
         glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
         glm::vec3 position;
@@ -26,14 +24,12 @@ class DirectionalLight : public Light
         DirectionalLight(const glm::vec3 position, const glm::vec3 direction, const float box_size, const float far, const float near);
         virtual ~DirectionalLight();
 
-        virtual void update();
-
         void setPosition(glm::vec3 position) { this->position = position; }
         void setDirection(glm::vec3 direction) { this->direction = direction; }
 
-        glm::mat4 getViewMatrix() { return this->view; }
-        glm::mat4 getProjectionMatrix() { return this->projection; }
-        glm::mat4 getLightSpaceMatrix() { return this->projection * this->view; }
+        glm::mat4 getViewMatrix();
+        glm::mat4 getProjectionMatrix();
+        glm::mat4 getLightSpaceMatrix() { return this->getProjectionMatrix() * this->getViewMatrix(); }
 
         float getNearPlane() { return this->near_plane; }
         float getFarPlane() { return this->far_plane; }
