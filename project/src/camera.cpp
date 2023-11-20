@@ -6,6 +6,11 @@ Camera::Camera(glm::vec3 position, glm::vec3 target)
     this->lookAt(target);
 }
 
+Camera::~Camera()
+{
+    //dtor
+}
+
 void Camera::lookAt(glm::vec3 target)
 {
     glm::vec3 direction = glm::normalize(target - this->getCamPos());
@@ -16,9 +21,13 @@ void Camera::lookAt(glm::vec3 target)
     this->yaw = glm::degrees(std::atan2(direction.x, -direction.z)) - 90.0f;
 }
 
-Camera::~Camera()
+void Camera::update()
 {
-    //dtor
+    glm::vec3 direction;
+    direction.x = cos(glm::radians(this->yaw)) * cos(glm::radians(this->pitch));
+    direction.y = sin(glm::radians(this->pitch));
+    direction.z = sin(glm::radians(this->yaw)) * cos(glm::radians(this->pitch));
+    this->cam_front = glm::normalize(direction);
 }
 
 void Camera::processInput(GLFWwindow *window, float delta_time)
@@ -69,11 +78,7 @@ void Camera::mouseCallback(GLFWwindow* window, double x_pos, double y_pos)
     if(this->pitch < -MAX_ANGLE)
         this->pitch = -MAX_ANGLE;
 
-    glm::vec3 direction;
-    direction.x = cos(glm::radians(this->yaw)) * cos(glm::radians(this->pitch));
-    direction.y = sin(glm::radians(this->pitch));
-    direction.z = sin(glm::radians(this->yaw)) * cos(glm::radians(this->pitch));
-    this->cam_front = glm::normalize(direction);
+    this->update();
 }
 
 void Camera::scrollCallback(GLFWwindow* window, double x_offset, double y_offset)
