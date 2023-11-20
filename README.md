@@ -67,55 +67,55 @@ Após finalizar a instalação das libs e a configuração do codeblock, no arqu
 ## Exemplo-3
 ![ex_3](./images/ex_3.png)
 
-## Exemplo-4
+## Exemplo-4 (Draw Cube)
 ![ex_4](./images/ex_4.gif)
 
-## Exemplo-5
+## Exemplo-5 (Light Shader)
 ![ex_5](./images/ex_5.png)
 
-## Exemplo-6
+## Exemplo-6 (Material Shader)
 ![ex_6](./images/ex_6.gif)
 
 ## Exemplo-7
 ![ex_7](./images/ex_7.gif)
 
-## Exemplo-8
+## Exemplo-8 (Emit Shader)
 ![ex_8](./images/ex_8.gif)
 
-## Exemplo-9
+## Exemplo-9 (Light Shader)
 ![ex_9](./images/ex_9.gif)
 
 ## Exemplo-10
 ![ex_10](./images/ex_10.gif)
 
-## Exemplo-12
+## Exemplo-12 (Loading Model)
 ![ex_12](./images/ex_12.png)
 
-## Exemplo-14
+## Exemplo-14 (Outline Shader)
 ![ex_14](./images/ex_14.png)
 
-## Exemplo-15
+## Exemplo-15 (Transparent Shader)
 ![ex_15](./images/ex_15.png)
 
-## Exemplo-16
+## Exemplo-16 (Kernel Shader)
 ![ex_16](./images/ex_16.png)
 
 ## Exemplo-17
 ![ex_17](./images/ex_17.png)
 
-## Exemplo-18
+## Exemplo-18 (Skybox Mapping)
 ![ex_18](./images/ex_18.png)
 
-## Exemplo-22
+## Exemplo-22 (Geometry Shader)
 ![ex_22](./images/ex_22.png)
 
 ## Exemplo-23
 ![ex_23](./images/ex_23.png)
 
-## Exemplo-24
+## Exemplo-24 (Exploded Sgader)
 ![ex_24](./images/ex_24.gif)
 
-## Exemplo-25
+## Exemplo-25 (Normal Vertex Shader)
 ![ex_25](./images/ex_25.png)
 
 ## Exemplo-26
@@ -124,17 +124,17 @@ Após finalizar a instalação das libs e a configuração do codeblock, no arqu
 ## Exemplo-27
 ![ex_27](./images/ex_27.png)
 
-## Exemplo-28
+## Exemplo-28 (Instances)
 ![ex_28](./images/ex_28.png)
 
-## Exemplo-29
+## Exemplo-29 (MSAA)
 ![ex_29](./images/ex_29.png)
 
-## Exemplo-30
+## Exemplo-30 (Blinn-Phong)
 ![ex_30](./images/ex_30.png)
 
-## Exemplo-31
+## Exemplo-31 (Gamma Correction)
 ![ex_31](./images/ex_31.png)
 
-## Exemplo-32
+## Exemplo-32 (Shadow Mapping)
 ![ex_32](./images/ex_32.gif)
