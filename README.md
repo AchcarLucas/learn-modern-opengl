@@ -126,3 +126,15 @@ Após finalizar a instalação das libs e a configuração do codeblock, no arqu
 
 ## Exemplo-28
 ![ex_28](./images/ex_28.png)
+
+## Exemplo-29
+![ex_29](./images/ex_29.png)
+
+## Exemplo-30
+![ex_30](./images/ex_30.png)
+
+## Exemplo-31
+![ex_31](./images/ex_31.png)
+
+## Exemplo-32
+![ex_32](./images/ex_32.gif)
