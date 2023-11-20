@@ -15,10 +15,6 @@
 
 using namespace std;
 
-static void processInput(GLFWwindow *, float);
-static void mouseCallback(GLFWwindow*, double, double);
-static void scrollCallback(GLFWwindow*, double, double);
-
 static void loadScene(GLFWwindow*, const int, const int);
 
 static void updateShader(GLFWwindow*, const int, const int);
@@ -27,8 +23,12 @@ static void renderScene(GLFWwindow*, const int, const int);
 static void renderLight(GLFWwindow*, const int, const int);
 static void renderProcessing(GLFWwindow*, const int, const int);
 
+static void processInput(GLFWwindow *, float);
+static void mouseCallback(GLFWwindow*, double, double);
+static void scrollCallback(GLFWwindow*, double, double);
+
 // camera class
-static Camera *camera = new Camera();
+static Camera *camera = new Camera(glm::vec3(-20.0f, 20.0f, 20.0f), glm::vec3(0.0f, 0.0f, -2.0f));
 
 // timing
 static float delta_time = 0.0f;	// time between current frame and last frame
@@ -208,21 +208,6 @@ int run_032(const int width, const int height)
     return 0;
 }
 
-static void processInput(GLFWwindow *window, float delta_time)
-{
-    camera->processInput(window, delta_time);
-}
-
-static void mouseCallback(GLFWwindow* window, double x_pos, double y_pos)
-{
-    camera->mouseCallback(window, x_pos, y_pos);
-}
-
-static void scrollCallback(GLFWwindow* window, double x_offset, double y_offset)
-{
-    camera->scrollCallback(window, x_offset, y_offset);
-}
-
 static void loadScene(GLFWwindow* window, const int width, const int height)
 {
     _stbi_set_flip_vertically_on_load(true);
@@ -302,7 +287,7 @@ static void updateShader(GLFWwindow* window, const int width, const int height)
 {
     // global matrices
     {
-        glm::mat4 view = glm::lookAt(camera->getCamPos(), camera->getCamPos() + camera->getCamFront(), camera->getUpVector());
+        glm::mat4 view = camera->getViewMatrix();
         ubo_matrices->UBOSubBuffer(glm::value_ptr(view), sizeof(glm::mat4), sizeof(glm::mat4));
     }
 
@@ -411,3 +396,17 @@ static void renderProcessing(GLFWwindow* window, const int width, const int heig
     }
 }
 
+static void processInput(GLFWwindow *window, float delta_time)
+{
+    camera->processInput(window, delta_time);
+}
+
+static void mouseCallback(GLFWwindow* window, double x_pos, double y_pos)
+{
+    camera->mouseCallback(window, x_pos, y_pos);
+}
+
+static void scrollCallback(GLFWwindow* window, double x_offset, double y_offset)
+{
+    camera->scrollCallback(window, x_offset, y_offset);
+}
