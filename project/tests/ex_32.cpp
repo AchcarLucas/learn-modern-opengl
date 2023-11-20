@@ -20,6 +20,7 @@ static void clearGL();
 
 static void loadScene(GLFWwindow*, const int, const int);
 
+static void updateScene(GLFWwindow*, const int, const int);
 static void updateShader(GLFWwindow*, const int, const int);
 
 static void renderScene(GLFWwindow*, const int, const int, Shader *shader = nullptr);
@@ -180,6 +181,7 @@ int run_032(const int width, const int height)
         delta_time = current_frame - last_frame;
         last_frame = current_frame;
 
+        updateScene(window, width, height);
         updateShader(window, width, height);
 
         glViewport(0, 0, shadow_buffer->getWidth(), shadow_buffer->getHeight());
@@ -316,13 +318,11 @@ static void loadScene(GLFWwindow* window, const int width, const int height)
     obj_light = createCube();
 }
 
-static void updateShader(GLFWwindow* window, const int width, const int height)
+static void updateScene(GLFWwindow* window, const int width, const int height)
 {
     // glm::vec4 light_position = glm::vec4(camera->getCamPos() + (camera->getCamFront() * 3.0f), 0.0f);
     light_position = light_position * glm::rotate(glm::mat4(1.0f), glm::radians(delta_time) * 100.0f, glm::vec3(0.0f, 1.0f, 0.0f));
     dir_light->setPosition(light_position);
-
-    dir_light->update();
 
     // global matrices
     {
@@ -338,7 +338,10 @@ static void updateShader(GLFWwindow* window, const int width, const int height)
     {
         ubo_light->UBOSubBuffer(glm::value_ptr(dir_light->getLightSpaceMatrix()), 0, sizeof(glm::mat4));
     }
+}
 
+static void updateShader(GLFWwindow* window, const int width, const int height)
+{
     /// Global lights
     {
         for(auto *shader : config_shader) {
