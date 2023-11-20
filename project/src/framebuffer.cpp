@@ -35,6 +35,7 @@ FrameBuffer::FrameBuffer(const int width, const int height, const GLenum gl_inte
             break;
         default:
             framebuffer_tex = new Texture2D(width, height, type);
+            break;
     }
 
     glFramebufferTexture2D(GL_FRAMEBUFFER, gl_attachment, GL_TEXTURE_2D, framebuffer_tex->getGenTexture(), 0);
@@ -52,6 +53,7 @@ FrameBuffer::FrameBuffer(const int width, const int height, const GLenum gl_inte
         default:
             this->rbo = new RBO(width, height, gl_internalformat);
             glFramebufferRenderbuffer(GL_FRAMEBUFFER, gl_attachment, GL_RENDERBUFFER, this->rbo->getRBO());
+            break;
     }
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
