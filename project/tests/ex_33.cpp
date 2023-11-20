@@ -244,10 +244,10 @@ static void loadScene(GLFWwindow* window, const int width, const int height)
 
     camera->setCamSpeed(25.0f);
 
-    float near_light = 0.1f;
+    float near_light = 1.0f;
     float far_light = 10.0f;
 
-    dir_light = new DirectionalLight(light_position, glm::vec3(0.0, 0.0, 0.0), 10.0f, 0.1f, 10.0f);
+    dir_light = new DirectionalLight(light_position, glm::vec3(0.0, -2.0, 0.0), 4.0f, near_light, far_light);
 
     shader_screen = new Shader("glsl/ex_33/posprocessing.vs", "glsl/ex_33/posprocessing.fs");
     shader_floor = new Shader("glsl/ex_33/object.vs", "glsl/ex_33/object.fs");
