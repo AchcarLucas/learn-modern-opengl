@@ -136,5 +136,8 @@ Após finalizar a instalação das libs e a configuração do codeblock, no arqu
 ## Exemplo-31 (Gamma Correction)
 ![ex_31](./images/ex_31.png)
 
-## Exemplo-32 (Camera Shadow Mapping)
+## Exemplo-32 (Camera Depth Mapping)
 ![ex_32](./images/ex_32.gif)
+
+## Exemplo-33 (Shadow Mapping)
+![ex_32](./images/ex_33.gif)
