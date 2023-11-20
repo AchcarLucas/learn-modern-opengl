@@ -8,6 +8,7 @@
 #include "framebuffer.hpp"
 #include "ubo.hpp"
 #include "object.hpp"
+#include "light.hpp"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -15,13 +16,16 @@
 
 using namespace std;
 
+static void clearGL();
+
 static void loadScene(GLFWwindow*, const int, const int);
 
 static void updateShader(GLFWwindow*, const int, const int);
 
-static void renderScene(GLFWwindow*, const int, const int);
+static void renderScene(GLFWwindow*, const int, const int, Shader *shader = nullptr);
 static void renderLight(GLFWwindow*, const int, const int);
 static void renderProcessing(GLFWwindow*, const int, const int);
+static void renderProcessingDebug(GLFWwindow*, const int, const int);
 
 static void processInput(GLFWwindow *, float);
 static void mouseCallback(GLFWwindow*, double, double);
@@ -125,6 +129,8 @@ static Shader *shader_screen;
 static Shader *shader_floor;
 static Shader *shader_cube;
 static Shader *shader_light;
+static Shader *shader_shadow;
+static Shader *shader_debug;
 
 // msaa com multisample 4
 static FrameBuffer *msaa_buffer;
@@ -135,12 +141,14 @@ static FrameBuffer *shadow_buffer;
 
 static UBO *ubo_matrices;
 static UBO *ubo_camera;
+static UBO *ubo_light;
 
 static Mesh *mesh_screen;
 static Mesh *mesh_floor;
 static Mesh *mesh_cube;
 
-static SObject *light;
+static DirectionalLight *dir_light;
+static SObject *obj_light;
 
 static std::vector<Shader*> config_shader;
 
@@ -172,18 +180,23 @@ int run_032(const int width, const int height)
         delta_time = current_frame - last_frame;
         last_frame = current_frame;
 
-        msaa_buffer->bind();
-
-        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        glEnable(GL_DEPTH_TEST);
-
-
         updateShader(window, width, height);
 
+        glViewport(0, 0, shadow_buffer->getWidth(), shadow_buffer->getHeight());
+        shadow_buffer->bind();
+        clearGL();
+        renderScene(window, width, height, shader_shadow);
+
+        /*
+        glViewport(0, 0, msaa_buffer->getWidth(), msaa_buffer->getWidth());
+        msaa_buffer->bind();
+        clearGL();
         renderScene(window, width, height);
+        */
+
         renderLight(window, width, height);
-        renderProcessing(window, width, height);
+        renderProcessingDebug(window, width, height);
+        //renderProcessing(window, width, height);
 
         processInput(window, delta_time);
 
@@ -208,16 +221,27 @@ int run_032(const int width, const int height)
     return 0;
 }
 
+static void clearGL()
+{
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glEnable(GL_DEPTH_TEST);
+}
+
 static void loadScene(GLFWwindow* window, const int width, const int height)
 {
     _stbi_set_flip_vertically_on_load(true);
 
     camera->setCamSpeed(25.0f);
 
+    dir_light = new DirectionalLight(light_position, glm::vec3(0.0f, 0.0f, 0.0f), 10.0f, 0.1f, 100.0f);
+
     shader_screen = new Shader("glsl/ex_32/posprocessing.vs", "glsl/ex_32/posprocessing.fs");
     shader_floor = new Shader("glsl/ex_32/floor.vs", "glsl/ex_32/floor.fs");
     shader_cube = new Shader("glsl/ex_32/cube.vs", "glsl/ex_32/cube.fs");
     shader_light = new Shader("glsl/ex_32/light.vs", "glsl/ex_32/light.fs");
+    shader_shadow = new Shader("glsl/ex_32/depth.vs", "glsl/ex_32/depth.fs");
+    shader_debug = new Shader("glsl/ex_32/debug_depth.vs", "glsl/ex_32/debug_depth.fs");
 
     config_shader.push_back(shader_cube);
     config_shader.push_back(shader_floor);
@@ -230,7 +254,7 @@ static void loadScene(GLFWwindow* window, const int width, const int height)
     // buffer de tela
     screen_buffer = new FrameBuffer(width, height);
     // buffer shadow mapping
-    shadow_buffer = new FrameBuffer(width, height, GL_DEPTH_COMPONENT, GL_DEPTH_ATTACHMENT);
+    shadow_buffer = new FrameBuffer(1024, 1024, GL_DEPTH_COMPONENT, GL_DEPTH_ATTACHMENT);
 
     std::vector<Texture2D*> floor_textures = {
         texture_wood
@@ -244,15 +268,19 @@ static void loadScene(GLFWwindow* window, const int width, const int height)
     mesh_floor = new Mesh(ex_32_quad_vertices_floor, ex_32_quad_indices, floor_textures, VERTEX_TYPE::ATTRIB_PNT);
     mesh_cube = new Mesh(ex_32_cube_vertices, ex_32_cube_indices, cube_textures, VERTEX_TYPE::ATTRIB_PNT);
 
-    ubo_matrices = new UBO("Matrices", 2 * sizeof(glm::mat4), 0);
+    ubo_matrices = new UBO("Matrices", 3 * sizeof(glm::mat4), 0);
     ubo_camera = new UBO("Camera", sizeof(glm::vec3), 1);
+    ubo_light = new UBO("Light", sizeof(glm::mat4), 2);
 
     {
-        glm::mat4 projection = glm::perspective(glm::radians(camera->getFov()), (float)width / (float)height, 0.1f, 1000.0f);
-        glm::mat4 view = glm::lookAt(camera->getCamPos(), camera->getCamPos() + camera->getCamFront(), camera->getUpVector());
+        glm::mat4 _projection = camera->getPerspectiveMatrix(width, height, 0.1f, 1000.0f);
+        glm::mat4 _view = camera->getViewMatrix();
+        glm::mat4 _light = dir_light->getLightSpaceMatrix();
 
-        ubo_matrices->UBOSubBuffer(glm::value_ptr(projection), 0, sizeof(glm::mat4));
-        ubo_matrices->UBOSubBuffer(glm::value_ptr(view), sizeof(glm::mat4), sizeof(glm::mat4));
+        ubo_matrices->UBOSubBuffer(glm::value_ptr(_projection), 0, sizeof(glm::mat4));
+        ubo_matrices->UBOSubBuffer(glm::value_ptr(_view), sizeof(glm::mat4), sizeof(glm::mat4));
+
+        ubo_light->UBOSubBuffer(glm::value_ptr(_light), 0, sizeof(glm::mat4));
 
         ubo_camera->UBOSubBuffer(glm::value_ptr(camera->getCamPos()), 0, sizeof(glm::vec3));
     }
@@ -265,6 +293,8 @@ static void loadScene(GLFWwindow* window, const int width, const int height)
         shader_cube->setUniformBlockBinding(ubo_camera->getName(), ubo_camera->getBinding());
 
         shader_light->setUniformBlockBinding(ubo_matrices->getName(), ubo_matrices->getBinding());
+
+        shader_shadow->setUniformBlockBinding(ubo_light->getName(), ubo_light->getBinding());
     }
 
     {
@@ -278,17 +308,25 @@ static void loadScene(GLFWwindow* window, const int width, const int height)
 
         shader_floor->use();
         shader_floor->setFloat("gama", 2.2f);
+
+        shader_debug->use();
+        shader_debug->setInt("depth_map", 0);
     }
 
-    light = createCube();
+    obj_light = createCube();
 }
 
 static void updateShader(GLFWwindow* window, const int width, const int height)
 {
+    // glm::vec4 light_position = glm::vec4(camera->getCamPos() + (camera->getCamFront() * 3.0f), 0.0f);
+    light_position = light_position * glm::rotate(glm::mat4(1.0f), glm::radians(delta_time) * 100.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+    dir_light->setPosition(light_position);
+
+    dir_light->update();
+
     // global matrices
     {
-        glm::mat4 view = camera->getViewMatrix();
-        ubo_matrices->UBOSubBuffer(glm::value_ptr(view), sizeof(glm::mat4), sizeof(glm::mat4));
+        ubo_matrices->UBOSubBuffer(glm::value_ptr(camera->getViewMatrix()), sizeof(glm::mat4), sizeof(glm::mat4));
     }
 
     // global camera
@@ -296,11 +334,10 @@ static void updateShader(GLFWwindow* window, const int width, const int height)
         ubo_camera->UBOSubBuffer(glm::value_ptr(camera->getCamPos()), 0, sizeof(glm::vec3));
     }
 
-    // glm::vec4 light_position = glm::vec4(camera->getCamPos() + (camera->getCamFront() * 3.0f), 0.0f);
-
-
-    light_position = light_position * glm::rotate(glm::mat4(1.0f), glm::radians(delta_time) * 100.0f, glm::vec3(0.0f, 1.0f, 0.0f));
-
+    // global light
+    {
+        ubo_light->UBOSubBuffer(glm::value_ptr(dir_light->getLightSpaceMatrix()), 0, sizeof(glm::mat4));
+    }
 
     /// Global lights
     {
@@ -327,7 +364,7 @@ static void updateShader(GLFWwindow* window, const int width, const int height)
     }
 }
 
-static void renderScene(GLFWwindow* window, const int width, const int height)
+static void renderScene(GLFWwindow* window, const int width, const int height, Shader *_shader)
 {
     /// Draw floor
     {
@@ -336,10 +373,12 @@ static void renderScene(GLFWwindow* window, const int width, const int height)
         model = glm::scale(model, glm::vec3(100.0f, 100.0f, 100.0f));
         model = glm::rotate(model, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 
-        shader_floor->use();
-        shader_floor->setMatrix4fv("model", glm::value_ptr(model));
+        Shader *used = _shader ? _shader : shader_floor;
 
-        mesh_floor->draw(shader_floor);
+        used->use();
+        used->setMatrix4fv("model", glm::value_ptr(model));
+
+        mesh_floor->draw(used);
     }
 
     /// Draw Cube
@@ -349,10 +388,12 @@ static void renderScene(GLFWwindow* window, const int width, const int height)
             model = glm::translate(model, cube_positions[i]);
             model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
 
-            shader_cube->use();
-            shader_cube->setMatrix4fv("model", glm::value_ptr(model));
+            Shader *used = _shader ? _shader : shader_cube;
 
-            mesh_cube->draw(shader_cube);
+            used->use();
+            used->setMatrix4fv("model", glm::value_ptr(model));
+
+            mesh_cube->draw(used);
         }
     }
 }
@@ -360,8 +401,8 @@ static void renderScene(GLFWwindow* window, const int width, const int height)
 static void renderLight(GLFWwindow* window, const int width, const int height)
 {
     if(light_enabled) {
-        light->_vao->bind();
-        light->_ebo->bind();
+        obj_light->_vao->bind();
+        obj_light->_ebo->bind();
 
         glm::mat4 model(1.0f);
 
@@ -394,6 +435,21 @@ static void renderProcessing(GLFWwindow* window, const int width, const int heig
         screen_buffer->getTexture2D()->bind(GL_TEXTURE0);
         mesh_screen->draw(shader_screen);
     }
+}
+
+static void renderProcessingDebug(GLFWwindow* window, const int width, const int height)
+{
+    msaa_buffer->unbind();
+
+    glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    glDisable(GL_DEPTH_TEST);
+
+    shader_debug->use();
+    shader_debug->setFloat("near_plane", dir_light->getNearPlane());
+    shader_debug->setFloat("far_plane", dir_light->getFarPlane());
+    shadow_buffer->getTexture2D()->bind(GL_TEXTURE0);
+    mesh_screen->draw(shader_debug);
 }
 
 static void processInput(GLFWwindow *window, float delta_time)
