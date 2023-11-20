@@ -2,6 +2,9 @@
 
 FrameBuffer::FrameBuffer(const int width, const int height)
 {
+    this->width = width;
+    this->height = height;
+
     glGenFramebuffers(1, &this->fbo);
     glBindFramebuffer(GL_FRAMEBUFFER, this->fbo);
 
@@ -20,6 +23,9 @@ FrameBuffer::FrameBuffer(const int width, const int height)
 
 FrameBuffer::FrameBuffer(const int width, const int height, const GLenum gl_internalformat, const GLenum gl_attachment)
 {
+    this->width = width;
+    this->height = height;
+
     glGenFramebuffers(1, &this->fbo);
     glBindFramebuffer(GL_FRAMEBUFFER, this->fbo);
 
@@ -39,7 +45,11 @@ FrameBuffer::FrameBuffer(const int width, const int height, const GLenum gl_inte
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-FrameBuffer::FrameBuffer(const int width, const int height, const GLenum gl_internalformat, const GLenum gl_attachment, unsigned int multisample) {
+FrameBuffer::FrameBuffer(const int width, const int height, const GLenum gl_internalformat, const GLenum gl_attachment, unsigned int multisample)
+{
+    this->width = width;
+    this->height = height;
+
     glGenFramebuffers(1, &this->fbo);
     glBindFramebuffer(GL_FRAMEBUFFER, this->fbo);
 
