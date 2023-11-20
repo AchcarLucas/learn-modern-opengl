@@ -222,7 +222,6 @@ int run_018(const int width, const int height)
     // Framebuffer
     FrameBuffer *framebuffer = new FrameBuffer(width, height, GL_DEPTH24_STENCIL8, GL_DEPTH_STENCIL_ATTACHMENT);
 
-
     while(!glfwWindowShouldClose(window)) {
         framebuffer->bind();
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
