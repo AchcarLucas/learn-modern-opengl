@@ -102,6 +102,7 @@ class TextureCube
 
         void bind(GLenum);
 
+        TextureType getType() { return this->type; }
         GLuint getGenTexture() { return texture; }
         std::vector<std::string> getFiles() { return this->files; }
         GLenum getFormat() { return this->format; }
