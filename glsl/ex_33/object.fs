@@ -59,12 +59,12 @@ float LinearDepth(float depth)
     return (2.0 * light.near_plane * light.far_plane) / (light.far_plane + light.near_plane - z * (light.far_plane - light.near_plane));	
 }
 
-vec3 CalcDirectionalLight(lightSource light, vec3 light_dir, vec3 view_dir, vec3 normal, float shadow)
+vec3 CalcPointLight(lightSource light, vec3 light_dir, vec3 view_dir, vec3 normal, float shadow)
 {
 	return vec3(0.0, 0.0, 0.0);
 }
 
-vec3 CalcPointLight(lightSource light, vec3 light_dir, vec3 view_dir, vec3 normal, float shadow)
+vec3 CalcDirectionalLight(lightSource light, vec3 light_dir, vec3 view_dir, vec3 normal, float shadow)
 {
 	vec3 ambient = vec3(light.ambient);
 	vec3 diffuse = vec3(light.diffuse);
@@ -101,11 +101,11 @@ vec3 CalcLight(lightSource light, vec3 light_dir, vec3 view_dir, vec3 normal)
 	float shadow = ShadowCalculationPCF(vs_in.frag_shadow_position, light_dir, normal);
 
 	if(light.position.w == 1.0f) {
-		// directional
-		return CalcDirectionalLight(light, light_dir, view_dir, normal, shadow);
-	} else {
 		// point
 		return CalcPointLight(light, light_dir, view_dir, normal, shadow);
+	} else {
+		// directional
+		return CalcDirectionalLight(light, light_dir, view_dir, normal, shadow);
 	}
 }
 
