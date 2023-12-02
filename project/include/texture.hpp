@@ -30,7 +30,9 @@ enum TextureType {
     HEIGHT,
     FRAMEBUFFER,
     FRAMEBUFFER_DEPTH_MAPPING,
-    FRAMEBUFFER_MULTISAMPLE
+    FRAMEBUFFER_DEPTH_CUBEMAP,
+    FRAMEBUFFER_CUBEMAP,
+    FRAMEBUFFER_MULTISAMPLE,
 };
 
 typedef std::map<TextureType, std::string> TextureTypeMap;
@@ -55,6 +57,8 @@ inline TextureTypeMap textureTypeMap = {
     {TextureType::HEIGHT, "height"},
     {TextureType::FRAMEBUFFER, "framebuffer"},
     {TextureType::FRAMEBUFFER_DEPTH_MAPPING, "depth"},
+    {TextureType::FRAMEBUFFER_DEPTH_CUBEMAP, "depth_cubemap"},
+    {TextureType::FRAMEBUFFER_CUBEMAP, "cubemap"},
     {TextureType::FRAMEBUFFER_MULTISAMPLE, "multisample"},
 };
 
@@ -90,6 +94,7 @@ class TextureCube
 {
     public:
         TextureCube(std::vector<std::string> files, bool flip = true);
+        TextureCube(const int width, const int height);
         virtual ~TextureCube();
 
         unsigned int getWidth() { return this->width; }
@@ -103,6 +108,7 @@ class TextureCube
 
     protected:
         GLuint texture;
+        TextureType type;
         GLenum format;
         unsigned int width, height;
 

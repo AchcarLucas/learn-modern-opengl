@@ -220,7 +220,7 @@ int run_020(const int width, const int height)
     };
 
     // Framebuffer
-    FrameBuffer *framebuffer = new FrameBuffer(width, height, GL_DEPTH24_STENCIL8, GL_DEPTH_STENCIL_ATTACHMENT);
+    FrameBuffer<Texture2D> *framebuffer = new FrameBuffer<Texture2D>(width, height, GL_DEPTH24_STENCIL8, GL_DEPTH_STENCIL_ATTACHMENT);
 
     while(!glfwWindowShouldClose(window)) {
         framebuffer->bind();
@@ -303,7 +303,7 @@ int run_020(const int width, const int height)
 
             posprocessing_shader->use();
             posprocessing_shader->setInt("screenTexture", 0);
-            framebuffer->getTexture2D()->bind(GL_TEXTURE0);
+            framebuffer->getTexture()->bind(GL_TEXTURE0);
             mesh_posprocessing->draw(posprocessing_shader);
         }
 

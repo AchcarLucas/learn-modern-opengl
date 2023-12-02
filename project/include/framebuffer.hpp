@@ -4,6 +4,7 @@
 #include "rbo.hpp"
 #include "texture.hpp"
 
+template <typename T>
 class FrameBuffer
 {
     public:
@@ -15,15 +16,15 @@ class FrameBuffer
         void bind(GLenum target = GL_FRAMEBUFFER);
         void unbind();
 
-        Texture2D *getTexture2D() { return framebuffer_tex; }
+        T *getTexture() { return framebuffer_tex; }
         RBO *getRBO() { return this->rbo; }
 
         int getWidth() { return this->width; }
         int getHeight() { return this->height; }
 
     protected:
+        T *framebuffer_tex;
         GLuint fbo;
-        Texture2D *framebuffer_tex;
         RBO *rbo;
 
         int width, height;

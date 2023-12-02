@@ -140,9 +140,35 @@ TextureCube::TextureCube(std::vector<std::string> files, bool flip)
     this->files = files;
     this->width = width;
     this->height = height;
+    this->type = TextureType::FRAMEBUFFER_CUBEMAP;
 
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+}
+
+TextureCube::TextureCube(const int width, const int height)
+{
+    glGenTextures(1, &this->texture);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, this->texture);
+
+    std::string logger = "CREATE::TEXTURE_CUBEMAP <POSITION_X> = {";
+    for (unsigned int i = 0; i < 6; ++i) {
+        glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_DEPTH_COMPONENT, width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+         if(i != 0) logger += ", ";
+         logger = logger + std::to_string(i);
+    }
+    logger += "}";
+    std::cout << logger << std::endl;
+
+    this->width = width;
+    this->height = height;
+    this->type = TextureType::FRAMEBUFFER_DEPTH_CUBEMAP;
+
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);

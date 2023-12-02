@@ -55,9 +55,9 @@ int run_029(const int width, const int height)
     };
 
     // msaa com multisample 4
-    FrameBuffer *msaa_buffer = new FrameBuffer(width, height, GL_DEPTH24_STENCIL8, GL_DEPTH_STENCIL_ATTACHMENT, 4);
+    FrameBuffer<Texture2D> *msaa_buffer = new FrameBuffer<Texture2D>(width, height, GL_DEPTH24_STENCIL8, GL_DEPTH_STENCIL_ATTACHMENT, 4);
     // buffer de tela
-    FrameBuffer *screen_buffer = new FrameBuffer(width, height);
+    FrameBuffer<Texture2D> *screen_buffer = new FrameBuffer<Texture2D>(width, height);
 
     shader_screen->use();
     shader_screen->setInt("screen_texture", 0);
@@ -116,7 +116,7 @@ int run_029(const int width, const int height)
             glDisable(GL_DEPTH_TEST);
 
             shader_screen->use();
-            screen_buffer->getTexture2D()->bind(GL_TEXTURE0);
+            screen_buffer->getTexture()->bind(GL_TEXTURE0);
             mesh_screen->draw(shader_screen);
         }
 

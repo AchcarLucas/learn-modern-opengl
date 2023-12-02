@@ -142,11 +142,11 @@ static Shader *shader_shadow;
 static Shader *shader_debug;
 
 // msaa com multisample 4
-static FrameBuffer *msaa_buffer;
+static FrameBuffer<Texture2D> *msaa_buffer;
 // buffer de tela
-static FrameBuffer *screen_buffer;
+static FrameBuffer<Texture2D> *screen_buffer;
 // buffer shadow mapping
-static FrameBuffer *shadow_buffer;
+static FrameBuffer<Texture2D> *shadow_buffer;
 
 static UBO *ubo_matrices;
 static UBO *ubo_camera;
@@ -263,20 +263,20 @@ static void loadScene(GLFWwindow* window, const int width, const int height)
     texture_cube = new Texture2D("./resources/textures/container2.png", TextureType::DIFFUSE, true, GL_SRGB);
 
     // msaa com multisample 4
-    msaa_buffer = new FrameBuffer(width, height, GL_DEPTH24_STENCIL8, GL_DEPTH_STENCIL_ATTACHMENT, 4);
+    msaa_buffer = new FrameBuffer<Texture2D>(width, height, GL_DEPTH24_STENCIL8, GL_DEPTH_STENCIL_ATTACHMENT, 4);
     // buffer de tela
-    screen_buffer = new FrameBuffer(width, height);
+    screen_buffer = new FrameBuffer<Texture2D>(width, height);
     // buffer shadow mapping
-    shadow_buffer = new FrameBuffer(2048, 2048, GL_DEPTH_COMPONENT, GL_DEPTH_ATTACHMENT, TextureType::FRAMEBUFFER_DEPTH_MAPPING);
+    shadow_buffer = new FrameBuffer<Texture2D>(2048, 2048, GL_DEPTH_COMPONENT, GL_DEPTH_ATTACHMENT, TextureType::FRAMEBUFFER_DEPTH_MAPPING);
 
     std::vector<Texture2D*> floor_textures = {
         texture_wood,
-        shadow_buffer->getTexture2D()
+        shadow_buffer->getTexture()
     };
 
     std::vector<Texture2D*> cube_textures {
         texture_cube,
-        shadow_buffer->getTexture2D()
+        shadow_buffer->getTexture()
     };
 
     mesh_screen = new Mesh(ex_32_quad_vertices_screen, ex_32_quad_indices, std::vector<Texture2D*>(), VERTEX_TYPE::ATTRIB_PNT);
@@ -456,7 +456,7 @@ static void renderProcessing(GLFWwindow* window, const int width, const int heig
         glDisable(GL_DEPTH_TEST);
 
         shader_screen->use();
-        screen_buffer->getTexture2D()->bind(GL_TEXTURE0);
+        screen_buffer->getTexture()->bind(GL_TEXTURE0);
         mesh_screen->draw(shader_screen);
     }
 }
@@ -468,7 +468,7 @@ static void renderProcessingDebug(GLFWwindow* window, const int width, const int
     shader_debug->use();
     shader_debug->setFloat("near_plane", dir_light->getNearPlane());
     shader_debug->setFloat("far_plane", dir_light->getFarPlane());
-    shadow_buffer->getTexture2D()->bind(GL_TEXTURE0);
+    shadow_buffer->getTexture()->bind(GL_TEXTURE0);
     mesh_screen_debug->draw(shader_debug);
 }
 
