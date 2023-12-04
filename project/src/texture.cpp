@@ -157,8 +157,8 @@ TextureCube::TextureCube(const int width, const int height)
     std::string logger = "CREATE::TEXTURE_CUBEMAP <POSITION_X> = {";
     for (unsigned int i = 0; i < 6; ++i) {
         glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_DEPTH_COMPONENT, width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
-         if(i != 0) logger += ", ";
-         logger = logger + std::to_string(i);
+        if(i != 0) logger += ", ";
+            logger = logger + std::to_string(i);
     }
     logger += "}";
     std::cout << logger << std::endl;
