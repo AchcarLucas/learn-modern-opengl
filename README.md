@@ -139,5 +139,8 @@ Após finalizar a instalação das libs e a configuração do codeblock, no arqu
 ## Exemplo-32 (Camera Depth Mapping)
 ![ex_32](./images/ex_32.gif)
 
-## Exemplo-33 (Shadow Mapping)
-![ex_32](./images/ex_33.gif)
+## Exemplo-33 (Directional Shadow Mapping)
+![ex_33](./images/ex_33.gif)
+
+## Exemplo-34 (Point Shadow Mapping)
+![ex_34](./images/ex_34.gif)
