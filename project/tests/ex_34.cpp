@@ -334,6 +334,7 @@ static void updateShader(GLFWwindow* window, const int width, const int height)
     /// shader shadow casting
     {
         p_light->settingShader(shader_shadow);
+        p_light->settingShader(shader_debug);
     }
 }
 
