@@ -1,8 +1,10 @@
 #include "light.hpp"
 
-Light::Light(glm::vec3 position)
+Light::Light(glm::vec3 position, const float near_plane, const float far_plane)
 {
     this->position = position;
+    this->near_plane = near_plane;
+    this->far_plane = far_plane;
 }
 
 Light::~Light()
@@ -10,19 +12,27 @@ Light::~Light()
     //dtor
 }
 
-DirectionalLight::DirectionalLight(const glm::vec3 position, const glm::vec3 direction, const float box_size, const float near, const float far) : Light(position)
+DirectionalLight::DirectionalLight(const glm::vec3 position, const glm::vec3 direction, const float box_size, const float near, const float far) : Light(position, near, far)
 {
-    this->near_plane = near;
-    this->far_plane = far;
-
     this->box_size = box_size;
-
     this->direction = direction;
 }
 
 DirectionalLight::~DirectionalLight()
 {
     //dtor
+}
+
+void DirectionalLight::settingShader(Shader *_shader)
+{
+    _shader->use();
+
+    _shader->setUniform3fv("light.position", glm::value_ptr(this->getPosition()));
+
+    _shader->setMatrix4fv("light.view", glm::value_ptr(this->getLightSpaceMatrix()));
+
+    _shader->setFloat("light.near_plane", this->getNearPlane());
+    _shader->setFloat("light.far_plane", this->getFarPlane());
 }
 
 glm::mat4 DirectionalLight::getViewMatrix()
@@ -35,10 +45,8 @@ glm::mat4 DirectionalLight::getProjectionMatrix()
     return glm::ortho(-1 * this->box_size, this->box_size, -1 * this->box_size, this->box_size, this->near_plane, this->far_plane);;
 }
 
-PointLight::PointLight(const glm::vec3 position, const int width, const int height, const float near, const float far) : Light(position)
+PointLight::PointLight(const glm::vec3 position, const int width, const int height, const float near, const float far) : Light(position, near, far)
 {
-    this->near_plane = near;
-    this->far_plane = far;
     this->width = width;
     this->height = width;
 }
@@ -46,6 +54,22 @@ PointLight::PointLight(const glm::vec3 position, const int width, const int heig
 PointLight::~PointLight()
 {
     //dtor
+}
+
+void PointLight::settingShader(Shader *_shader)
+{
+    _shader->use();
+
+    _shader->setUniform3fv("light.position", glm::value_ptr(this->getPosition()));
+
+    std::vector<glm::mat4> light_transform = this->getTransformMatrix();
+
+    for(unsigned i = 0; i < light_transform.size(); ++i) {
+        _shader->setMatrix4fv("light.views[" + std::to_string(i) + "]", glm::value_ptr(light_transform[i]));
+    }
+
+    _shader->setFloat("light.near_plane", this->getNearPlane());
+    _shader->setFloat("light.far_plane", this->getFarPlane());
 }
 
 glm::mat4 PointLight::getProjectionMatrix()
