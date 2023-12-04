@@ -22,7 +22,8 @@ class Camera
         void scrollCallback(GLFWwindow* window, double xoffset, double yoffset);
 
         void setCamPos(glm::vec3 position) { this->cam_pos = position; }
-        void setCamSpeed(float _speed) { this->speed= _speed; }
+        void setCamSpeed(float _speed) { this->speed = _speed; }
+        void setFov(float _fov) { this->fov = _fov; }
 
         glm::vec3 getCamPos() { return this->cam_pos; }
         glm::vec3 getCamFront() { return this->cam_front; }
