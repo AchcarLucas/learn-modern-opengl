@@ -32,18 +32,15 @@ struct lightSource {
   float spot_cutoff;
   float spot_exponent;
   
+  float near_plane;
+  float far_plane;
+  
   bool enabled;
 };
 
 layout (std140) uniform Camera {
     vec3 position;
 } camera;
-
-layout (std140) uniform Light {
-    mat4 space;
-	float near_plane;
-	float far_plane;
-} light;
 
 const int NR_LIGHTS = 16;
 
@@ -53,10 +50,10 @@ uniform lightSource lights[NR_LIGHTS];
 float ShadowCalculation(vec4 frag_shadow_position, vec3 light_dir, vec3 normal);
 float ShadowCalculationPCF(vec4 frag_shadow_position, vec3 light_dir, vec3 normal);
 
-float LinearDepth(float depth)
+float LinearDepth(float depth, float near_plane, float far_plane)
 {
     float z = depth * 2.0 - 1.0; // Back to NDC 
-    return (2.0 * light.near_plane * light.far_plane) / (light.far_plane + light.near_plane - z * (light.far_plane - light.near_plane));	
+    return (2.0 * near_plane * far_plane) / (far_plane + near_plane - z * (far_plane - near_plane));	
 }
 
 vec3 CalcPointLight(lightSource light, vec3 light_dir, vec3 view_dir, vec3 normal, float shadow)
@@ -97,14 +94,13 @@ vec3 CalcSpotLight(lightSource light, vec3 light_dir, vec3 view_dir, vec3 normal
 
 vec3 CalcLight(lightSource light, vec3 light_dir, vec3 view_dir, vec3 normal)
 {
-	// float shadow = ShadowCalculation(vs_in.frag_shadow_position, light_dir, normal);
-	float shadow = ShadowCalculationPCF(vs_in.frag_shadow_position, light_dir, normal);
-
+	float shadow = 0.0f;
 	if(light.position.w == 1.0f) {
 		// point
 		return CalcPointLight(light, light_dir, view_dir, normal, shadow);
 	} else {
 		// directional
+		shadow = ShadowCalculationPCF(vs_in.frag_shadow_position, light_dir, normal);
 		return CalcDirectionalLight(light, light_dir, view_dir, normal, shadow);
 	}
 }

@@ -150,7 +150,6 @@ static FrameBuffer<Texture2D> *shadow_buffer;
 
 static UBO *ubo_matrices;
 static UBO *ubo_camera;
-static UBO *ubo_light;
 
 static Mesh *mesh_screen;
 static Mesh *mesh_screen_debug;
@@ -171,6 +170,7 @@ static std::vector<ModelTransform> cube_models = {
 static glm::vec4 light_position = glm::vec4(3.0f, 3.0f, 3.0f, 0.0f);
 
 static bool light_enabled = true;
+static float _gamma = 2.2f;
 
 int run_033(const int width, const int height)
 {
@@ -244,10 +244,7 @@ static void loadScene(GLFWwindow* window, const int width, const int height)
 
     camera->setCamSpeed(25.0f);
 
-    float near_light = 1.0f;
-    float far_light = 10.0f;
-
-    dir_light = new DirectionalLight(light_position, glm::vec3(0.0, -2.0, 0.0), 4.0f, near_light, far_light);
+    dir_light = new DirectionalLight(light_position, glm::vec3(0.0, -2.0, 0.0), 4.0f, 1.0f, 10.0f);
 
     shader_screen = new Shader("glsl/ex_33/posprocessing.vs", "glsl/ex_33/posprocessing.fs");
     shader_floor = new Shader("glsl/ex_33/object.vs", "glsl/ex_33/object.fs");
@@ -285,7 +282,6 @@ static void loadScene(GLFWwindow* window, const int width, const int height)
     mesh_cube = new Mesh(ex_32_cube_vertices, ex_32_cube_indices, cube_textures, VERTEX_TYPE::ATTRIB_PNT);
 
     ubo_matrices = new UBO("Matrices", 2 * sizeof(glm::mat4), 0);
-    ubo_light = new UBO("Light", 2 * sizeof(float) + sizeof(glm::mat4), 1);
     ubo_camera = new UBO("Camera", sizeof(glm::vec3), 2);
 
     /// global matrices
@@ -297,49 +293,20 @@ static void loadScene(GLFWwindow* window, const int width, const int height)
         ubo_matrices->UBOSubBuffer(glm::value_ptr(_view), sizeof(glm::mat4), sizeof(glm::mat4));
     }
 
-    /// global light
-    {
-
-        glm::mat4 _light = dir_light->getLightSpaceMatrix();
-
-        ubo_light->UBOSubBuffer(glm::value_ptr(_light), 0, sizeof(glm::mat4));
-        ubo_light->UBOSubBuffer(&near_light, sizeof(glm::mat4), sizeof(float));
-        ubo_light->UBOSubBuffer(&far_light, sizeof(glm::mat4) + sizeof(float), sizeof(float));
-    }
-
     /// global camera
     {
         ubo_camera->UBOSubBuffer(glm::value_ptr(camera->getCamPos()), 0, sizeof(glm::vec3));
     }
 
+    /// ubo attribute
     {
         shader_floor->setUniformBlockBinding(ubo_matrices->getName(), ubo_matrices->getBinding());
         shader_floor->setUniformBlockBinding(ubo_camera->getName(), ubo_camera->getBinding());
-        shader_floor->setUniformBlockBinding(ubo_light->getName(), ubo_light->getBinding());
 
         shader_cube->setUniformBlockBinding(ubo_matrices->getName(), ubo_matrices->getBinding());
         shader_cube->setUniformBlockBinding(ubo_camera->getName(), ubo_camera->getBinding());
-        shader_cube->setUniformBlockBinding(ubo_light->getName(), ubo_light->getBinding());
 
         shader_light->setUniformBlockBinding(ubo_matrices->getName(), ubo_matrices->getBinding());
-
-        shader_shadow->setUniformBlockBinding(ubo_light->getName(), ubo_light->getBinding());
-    }
-
-    {
-        shader_screen->use();
-        shader_cube->setFloat("gama", 2.2f);
-        shader_screen->setInt("screen_texture", 0);
-
-
-        shader_cube->use();
-        shader_cube->setFloat("gama", 2.2f);
-
-        shader_floor->use();
-        shader_floor->setFloat("gama", 2.2f);
-
-        shader_debug->use();
-        shader_debug->setInt("depth_map", 0);
     }
 
     obj_light = createCube();
@@ -356,11 +323,6 @@ static void updateScene(GLFWwindow* window, const int width, const int height)
         ubo_matrices->UBOSubBuffer(glm::value_ptr(camera->getViewMatrix()), sizeof(glm::mat4), sizeof(glm::mat4));
     }
 
-    // global light
-    {
-        ubo_light->UBOSubBuffer(glm::value_ptr(dir_light->getLightSpaceMatrix()), 0, sizeof(glm::mat4));
-    }
-
     // global camera
     {
         ubo_camera->UBOSubBuffer(glm::value_ptr(camera->getCamPos()), 0, sizeof(glm::vec3));
@@ -369,6 +331,26 @@ static void updateScene(GLFWwindow* window, const int width, const int height)
 
 static void updateShader(GLFWwindow* window, const int width, const int height)
 {
+    static bool first = true;
+
+    if(first) {
+        shader_screen->use();
+        shader_cube->setFloat("gama", _gamma);
+        shader_screen->setInt("screen_texture", 0);
+
+        shader_cube->use();
+        shader_cube->setFloat("gama", _gamma);
+
+        shader_floor->use();
+        shader_floor->setFloat("gama", _gamma);
+
+        shader_debug->use();
+        shader_debug->setInt("depth_map", 0);
+
+
+        first = false;
+    }
+
     /// Global lights
     {
         for(auto *shader : config_shader) {
@@ -388,8 +370,18 @@ static void updateShader(GLFWwindow* window, const int width, const int height)
             shader->setFloat("lights[0].spot_cutoff", 0.0f);
             shader->setFloat("lights[0].spot_exponent", 0.0f);
 
+            shader->setFloat("lights[0].near_plane", dir_light->getNearPlane());
+            shader->setFloat("lights[0].far_plane", dir_light->getFarPlane());
+
             shader->setBool("lights[0].enabled", light_enabled);
         }
+    }
+
+    {
+        dir_light->settingShader(shader_shadow);
+        dir_light->settingShader(shader_debug);
+        dir_light->settingShader(shader_cube);
+        dir_light->settingShader(shader_floor);
     }
 }
 
@@ -466,8 +458,6 @@ static void renderProcessingDebug(GLFWwindow* window, const int width, const int
     msaa_buffer->unbind();
 
     shader_debug->use();
-    shader_debug->setFloat("near_plane", dir_light->getNearPlane());
-    shader_debug->setFloat("far_plane", dir_light->getFarPlane());
     shadow_buffer->getTexture()->bind(GL_TEXTURE0);
     mesh_screen_debug->draw(shader_debug);
 }
