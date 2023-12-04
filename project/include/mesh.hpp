@@ -77,6 +77,7 @@ class Mesh
 {
     public:
         Mesh(std::vector<Vertex> vertices, std::vector<GLuint> indices, std::vector<Texture2D*> textures, VERTEX_TYPE vt = VERTEX_TYPE::ATTRIB_PNT);
+        Mesh(std::vector<Vertex> vertices, std::vector<GLuint> indices, std::vector<Texture2D*> textures, std::vector<TextureCube*> textures_cube, VERTEX_TYPE vt = VERTEX_TYPE::ATTRIB_PNT);
         Mesh(std::vector<Vertex> vertices, std::vector<Texture2D*> textures, VERTEX_TYPE vt = VERTEX_TYPE::ATTRIB_PNT);
         virtual ~Mesh() { };
 
@@ -85,6 +86,7 @@ class Mesh
         std::vector<Vertex> vertices;
         std::vector<GLuint> indices;
         std::vector<Texture2D*> textures;
+        std::vector<TextureCube*> textures_cube;
 
         VAO *getVAO() { return &this->vao; }
         VBO *getVBO() { return &this->vbo; }

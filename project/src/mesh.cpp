@@ -9,6 +9,16 @@ Mesh::Mesh(std::vector<Vertex> vertices, std::vector<GLuint> indices, std::vecto
     setupMesh(vt);
 }
 
+Mesh::Mesh(std::vector<Vertex> vertices, std::vector<GLuint> indices, std::vector<Texture2D*> textures, std::vector<TextureCube*> textures_cube, VERTEX_TYPE vt)
+{
+    this->vertices = vertices;
+    this->indices = indices;
+    this->textures = textures;
+    this->textures_cube = textures_cube;
+
+    setupMesh(vt);
+}
+
 Mesh::Mesh(std::vector<Vertex> vertices, std::vector<Texture2D*> textures, VERTEX_TYPE vt)
 {
     this->vertices = vertices;
@@ -42,6 +52,16 @@ void Mesh::draw(Shader *shader, GLuint instances)
         texture->bind(GL_TEXTURE0 + (i_texture++));
     }
 
+    for (auto& texture : this->textures_cube) {
+        // obtemos o tipo de textura
+        TextureType type = texture->getType();
+        // vamos mapear ele (obter o nome) e já criar o seu index do tipo
+        std::string texture_name = textureTypeMap[type] + "_" + std::to_string(++textures[type]);
+        // será a estrutura interna do nosso shader
+        shader->setInt(("material." + texture_name).c_str(), i_texture);
+        // vamos já criar o bind para a nossa textura
+        texture->bind(GL_TEXTURE0 + (i_texture++));
+    }
 
     this->vao.bind();
 
