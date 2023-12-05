@@ -46,10 +46,14 @@ const int NR_LIGHTS = 16;
 uniform float gamma;
 uniform lightSource lights[NR_LIGHTS];
 
+
 float ShadowCalculationDir(vec4 frag_shadow_position, vec3 light_dir, vec3 normal);
+// PCF Percentual closer-filtering
 float ShadowCalculationDirPCF(vec4 frag_shadow_position, vec3 light_dir, vec3 normal);
 
 float ShadowCalculationPoint(lightSource light, vec4 frag_model_position, vec3 light_pos);
+// PCF Percentual closer-filtering
+float ShadowCalculationPointPCF(lightSource light, vec4 frag_model_position, vec3 light_pos, vec3 view_dir);
 
 vec3 CalcPointLight(lightSource light, vec3 light_dir, vec3 view_dir, vec3 normal, float shadow)
 {
@@ -112,7 +116,8 @@ vec3 CalcLight(lightSource light, vec3 light_dir, vec3 view_dir, vec3 normal)
 {
 	if(light.position.w == 1.0f) {
 		// point
-		float shadow = ShadowCalculationPoint(light, vs_in.frag_model_position, light.position.xyz);
+		// float shadow = ShadowCalculationPoint(light, vs_in.frag_model_position, light.position.xyz);
+		float shadow = ShadowCalculationPointPCF(light, vs_in.frag_model_position, light.position.xyz, view_dir);
 		return CalcPointLight(light, light_dir, view_dir, normal, shadow);
 	} else {
 		// directional
@@ -187,6 +192,40 @@ float ShadowCalculationPoint(lightSource light, vec4 frag_model_position, vec3 l
     float shadow = current_depth -  bias > closest_depth ? 1.0 : 0.0;
 
     return shadow;
+}
+
+// array of offset direction for sampling
+vec3 grid_sampling_disk[20] = vec3[]
+(
+   vec3(1, 1,  1), vec3( 1, -1,  1), vec3(-1, -1,  1), vec3(-1, 1,  1), 
+   vec3(1, 1, -1), vec3( 1, -1, -1), vec3(-1, -1, -1), vec3(-1, 1, -1),
+   vec3(1, 1,  0), vec3( 1, -1,  0), vec3(-1, -1,  0), vec3(-1, 1,  0),
+   vec3(1, 0,  1), vec3(-1,  0,  1), vec3( 1,  0, -1), vec3(-1, 0, -1),
+   vec3(0, 1,  1), vec3( 0, -1,  1), vec3( 0, -1, -1), vec3( 0, 1, -1)
+);
+
+float ShadowCalculationPointPCF(lightSource light, vec4 frag_model_position, vec3 light_pos, vec3 view_dir)
+{
+	vec3 frag_to_light = frag_model_position.xyz - light_pos;
+
+	float current_depth = length(frag_to_light);
+    float shadow = 0.0;
+	float bias = 0.15;
+
+	int samples = 20;
+
+    float view_distance = length(view_dir);
+    float disk_radius = (1.0 + (view_distance / light.far_plane)) / 25.0;
+
+    for(int i = 0; i < samples; ++i)
+    {
+        float closest_depth = texture(material.depth_cubemap_1, frag_to_light + grid_sampling_disk[i] * disk_radius).r;
+        closest_depth *= light.far_plane;   // undo mapping [0;1]
+        if(current_depth - bias > closest_depth)
+            shadow += 1.0;
+    }
+
+    return shadow / float(samples);
 }
 
 void main()
