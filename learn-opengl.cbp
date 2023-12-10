@@ -421,6 +421,9 @@
 		<Unit filename="project/tests/ex_32.cpp" />
 		<Unit filename="project/tests/ex_33.cpp" />
 		<Unit filename="project/tests/ex_34.cpp" />
+		<Unit filename="project/tests/ex_35.cpp" />
+		<Unit filename="project/tests/ex_36.cpp" />
+		<Unit filename="project/tests/ex_37.cpp" />
 		<Unit filename="project/tests/ex_4.cpp" />
 		<Unit filename="project/tests/ex_5.cpp" />
 		<Unit filename="project/tests/ex_6.cpp" />
