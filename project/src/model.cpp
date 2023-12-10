@@ -3,7 +3,7 @@
 Model::Model(std::string path)
 {
     Assimp::Importer importer;
-    const aiScene *scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
+    const aiScene *scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
 
     std::cout << "LOAD::MODEL <" << path << ">" << std::endl;
 
@@ -55,6 +55,8 @@ Mesh *Model::processMesh(aiMesh *mesh, const aiScene *scene)
         Vertex vertex;
         vertex.position = glm::vec3(mesh->mVertices[i].x, mesh->mVertices[i].y, mesh->mVertices[i].z);
         vertex.normal = glm::vec3(mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z);
+        vertex.tangent = glm::vec3(mesh->mTangents[i].x, mesh->mTangents[i].y, mesh->mTangents[i].z);
+        vertex.bitangent = glm::cross(vertex.normal, vertex.tangent);
 
         if(mesh->mTextureCoords[0]) {
             vertex.tex = glm::vec2(mesh->mTextureCoords[0][i].x, mesh->mTextureCoords[0][i].y);
@@ -91,7 +93,7 @@ Mesh *Model::processMesh(aiMesh *mesh, const aiScene *scene)
     std::vector<Texture2D *> displacement_maps = loadMaterialTextures(material, aiTextureType_DISPLACEMENT, TextureType::DISPLACEMENT);
     mesh_textures.insert(mesh_textures.end(), displacement_maps.begin(), displacement_maps.end());
 
-    return new Mesh(mesh_vertices, mesh_indices, mesh_textures);
+    return new Mesh(mesh_vertices, mesh_indices, mesh_textures, VERTEX_TYPE::ATTRIB_PNTBT);
 }
 
 std::vector<Texture2D*> Model::loadMaterialTextures(aiMaterial *material, aiTextureType ai_type, TextureType texture_type)
