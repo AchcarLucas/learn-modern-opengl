@@ -49,7 +49,7 @@ struct ModelTransform {
 class Model
 {
     public:
-        Model(std::string path);
+        Model(std::string path, bool flip = true);
         virtual ~Model();
 
         void draw(Shader *shader, GLuint instances = 1);
@@ -60,6 +60,7 @@ class Model
         std::vector<Mesh *> meshes;
         std::vector<Texture2D *> textures;
         std::string directory;
+        bool flip;
 
     private:
         void loadModel(std::string path);

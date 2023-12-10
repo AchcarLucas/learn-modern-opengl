@@ -1,9 +1,15 @@
 #include "model.hpp"
 
-Model::Model(std::string path)
+Model::Model(std::string path, bool flip)
 {
     Assimp::Importer importer;
-    const aiScene *scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
+
+    unsigned flag = aiProcess_Triangulate | aiProcess_CalcTangentSpace;
+    if(flip) flag |= aiProcess_FlipUVs;
+
+    const aiScene *scene = importer.ReadFile(path, flag);
+
+    this->flip = flip;
 
     std::cout << "LOAD::MODEL <" << path << ">" << std::endl;
 
@@ -121,7 +127,7 @@ std::vector<Texture2D*> Model::loadMaterialTextures(aiMaterial *material, aiText
         // se a textura já existe, ela já foi carregada e associada, não precisamos recarregar
         if(!skip) {
             // carrega a nova textura
-            Texture2D *texture_loaded = new Texture2D(this->directory + '/' + str.data, texture_type);
+            Texture2D *texture_loaded = new Texture2D(this->directory + '/' + str.data, texture_type, true, GL_SRGB);
             mesh_textures.push_back(texture_loaded);
             this->textures.push_back(texture_loaded);
         }
