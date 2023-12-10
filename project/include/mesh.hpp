@@ -9,6 +9,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include <glm/gtx/string_cast.hpp>
 
 #include "texture.hpp"
 #include "shader.hpp"
@@ -22,6 +23,8 @@ struct Vertex {
     glm::vec3 color;
     glm::vec3 normal;
     glm::vec2 tex;
+    glm::vec3 tangent;
+    glm::vec3 bitangent;
 
     Vertex() { };
 
@@ -62,6 +65,15 @@ struct Vertex {
         this->position = position;
         this->tex = tex;
     }
+
+    Vertex(glm::vec3 position, glm::vec2 tex, glm::vec3 normal, glm::vec3 tangent, glm::vec3 bitangent)
+    {
+        this->position = position;
+        this->normal = normal;
+        this->tex = tex;
+        this->tangent = tangent;
+        this->bitangent = bitangent;
+    }
 };
 
 enum VERTEX_TYPE
@@ -70,7 +82,8 @@ enum VERTEX_TYPE
     ATTRIB_PC,      // POSITION, COLOR
     ATTRIB_PCN,     // POSITION, COLOR, NORMAL
     ATTRIB_PNT,     // POSITION, NORMAL, TEX
-    ATTRIB_PT       // POSITION, TEX
+    ATTRIB_PT,      // POSITION, TEX
+    ATTRIB_PNTBT    // POSITION, NORMAL, TEX, BITANGENT, TANGENT
 };
 
 class Mesh
@@ -92,6 +105,9 @@ class Mesh
         VBO *getVBO() { return &this->vbo; }
         EBO *getEBO() { return &this->ebo; }
 
+        glm::vec3 calcTangent(glm::vec3 p_1, glm::vec3 p_2, glm::vec3 p_3, glm::vec2 uv_1, glm::vec2 uv_2, glm::vec2 uv_3);
+        glm::vec3 calcBitangent(glm::vec3 p_1, glm::vec3 p_2, glm::vec3 p_3, glm::vec2 uv_1, glm::vec2 uv_2, glm::vec2 uv_3);
+
     protected:
         VAO vao;
         VBO vbo;
@@ -99,6 +115,7 @@ class Mesh
 
     private:
         void setupMesh(VERTEX_TYPE vt);
+        void setupMeshBTN(VERTEX_TYPE vt);
 };
 
 #endif // MESH_HPP
