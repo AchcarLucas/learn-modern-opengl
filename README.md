@@ -144,3 +144,9 @@ Após finalizar a instalação das libs e a configuração do codeblock, no arqu
 
 ## Exemplo-34 (Point Shadow Mapping)
 ![ex_34](./images/ex_34.gif)
+
+## Exemplo-35 (Normal Mapping)
+![ex_34](./images/ex_35.png)
+
+## Exemplo-37 (Model Normal Mapping)
+![ex_34](./images/ex_37.png)
