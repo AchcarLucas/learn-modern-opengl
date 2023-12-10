@@ -123,7 +123,7 @@ void Mesh::setupMesh(VERTEX_TYPE vt)
     }
 
     // para ter tangent e bitangent tem que ter tex_coord
-    if((vt == ATTRIB_PNT || vt == ATTRIB_PT || vt == ATTRIB_PNTBT) && indices.empty()) {
+    if((vt == ATTRIB_PNT || vt == ATTRIB_PT || vt == ATTRIB_PNTBT)) {
         // vertex tangent
         glVertexAttribPointer(index, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, tangent));
         glEnableVertexAttribArray(index++);
