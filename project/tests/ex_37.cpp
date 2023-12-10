@@ -87,7 +87,7 @@ int run_037(const int width, const int height)
     };
 
     Mesh *floor = new Mesh(ex_36_quad_vertices, std::vector<GLuint>(), floor_textures);
-    Model *nanosuit = new Model("./resources/obj/cyborg/cyborg.obj", false);
+    Model *nanosuit = new Model("./resources/obj/cyborg/cyborg.obj", true, false);
 
     SObject *light = createCube();
 
