@@ -467,6 +467,7 @@
 		<Unit filename="lib/std_image/stb_image.h" />
 		<Unit filename="project/include/camera.hpp" />
 		<Unit filename="project/include/ebo.hpp" />
+		<Unit filename="project/include/exception.hpp" />
 		<Unit filename="project/include/framebuffer.hpp" />
 		<Unit filename="project/include/image.hpp" />
 		<Unit filename="project/include/init.hpp" />
@@ -475,6 +476,7 @@
 		<Unit filename="project/include/model.hpp" />
 		<Unit filename="project/include/object.hpp" />
 		<Unit filename="project/include/rbo.hpp" />
+		<Unit filename="project/include/rendertext.hpp" />
 		<Unit filename="project/include/shader.hpp" />
 		<Unit filename="project/include/tests.hpp" />
 		<Unit filename="project/include/texture.hpp" />
@@ -492,6 +494,7 @@
 		<Unit filename="project/src/model.cpp" />
 		<Unit filename="project/src/object.cpp" />
 		<Unit filename="project/src/rbo.cpp" />
+		<Unit filename="project/src/rendertext.cpp" />
 		<Unit filename="project/src/shader.cpp" />
 		<Unit filename="project/src/texture.cpp" />
 		<Unit filename="project/src/ubo.cpp" />
