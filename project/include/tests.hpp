@@ -2,12 +2,12 @@
 #define TESTS_HPP
 
 // #define run(width, height) load_assimp_test()
-#define run(width, height) freetype_test()
+// #define run(width, height) freetype_test()
 
 // #define run(width, height) run_default(width, height)
 // #define run(width, height) imgui_test(width, height)
 
-// #define run(width, height) run_037(width, height)
+#define run(width, height) run_038(width, height)
 
 int load_assimp_test();
 int freetype_test();
@@ -52,5 +52,6 @@ int run_034(const int, const int);
 int run_035(const int, const int);
 int run_036(const int, const int);
 int run_037(const int, const int);
+int run_038(const int, const int);
 
 #endif // INIT_HPP
