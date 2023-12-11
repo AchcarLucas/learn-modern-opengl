@@ -43,6 +43,22 @@ cmake --build .
 após fazer a build, copie os arquivos ```.so``` para a pasta ```/usr/local/lib``` e crie um atalho do ```libassimp.so.5``` para a 
 pasta principal do projeto clonado
 
+### Instalação do FreeType 2 (freetype-2.13.2)
+
+Baixe o freetype [freetype-2.13.2](https://freetype.org/)
+
+Após baixar, extrai e faça a build
+
+```
+cd freetype-2.13.2
+./configure --enable-static
+make
+```
+
+O arquivo ```.a```  deverá estar em uma pasta oculta chamada ```.lib``` dentro de objs
+
+PS: O projeto já consta com a lib compilada e configurada para linux (Ubuntu 24.04 - 6.2.0-37-generic)
+
 ## 🔧 Configuração do CodeBlock
 
 Verifique se a configuração do seu codeblock como segue as imagens a seguir:
