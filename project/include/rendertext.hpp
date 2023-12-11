@@ -39,7 +39,7 @@ class RenderText
         glm::mat4 getProjectionMatrix() { return projection; }
 
         bool loadCharacter(FT_Face &face, unsigned int c);
-        void renderText(Shader *shader, std::string text, float x, float y, float scale, glm::vec3 color);
+        void draw(Shader *shader, std::string text, float x, float y, float scale, glm::vec3 color);
 
         std::map<char, Character> &getCharacters() { return characters; }
 

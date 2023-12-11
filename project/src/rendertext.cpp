@@ -98,7 +98,7 @@ bool RenderText::loadCharacter(FT_Face &face, unsigned int c)
     return true;
 }
 
-void RenderText::renderText(Shader *shader, std::string text, float x, float y, float scale, glm::vec3 color)
+void RenderText::draw(Shader *shader, std::string text, float x, float y, float scale, glm::vec3 color)
 {
     shader->use();
     shader->setUniform3fv("text_color", glm::value_ptr(color));
