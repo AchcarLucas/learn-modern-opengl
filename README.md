@@ -166,3 +166,7 @@ Após finalizar a instalação das libs e a configuração do codeblock, no arqu
 
 ## Exemplo-37 (Model Normal Mapping)
 ![ex_37](./images/ex_37.png)
+
+## Exemplo-38 (Render Text)
+![ex_38](./images/ex_38.png)
+

@@ -17,7 +17,7 @@ static void mouseCallback(GLFWwindow*, double, double);
 static void scrollCallback(GLFWwindow*, double, double);
 
 // camera class
-static Camera *camera = new Camera(glm::vec3(0.0f, 0.0f, 5.0f), glm::vec3(0, 0, 0));
+static Camera *camera = new Camera(glm::vec3(8.0f, 0.0f, 5.0f), glm::vec3(4, 0, 0));
 
 // timing
 static float delta_time = 0.0f;	// time between current frame and last frame
