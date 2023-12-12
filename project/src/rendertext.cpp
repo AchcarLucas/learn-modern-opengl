@@ -63,6 +63,7 @@ void RenderText::setOrthoCanvas(const float &canvas_width, const float &canvas_h
             this->mvp = glm::ortho(0.0f, canvas_width, 0.0f, canvas_height);
             break;
         case TextType::DRAW_TO_WORLD:
+            this->mvp = glm::mat4(1.0);
             break;
     }
 }

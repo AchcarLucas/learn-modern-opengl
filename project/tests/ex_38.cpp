@@ -53,14 +53,18 @@ int run_038(const int width, const int height)
         glm::mat4 view = glm::lookAt(camera->getCamPos(), camera->getCamPos() + camera->getCamFront(), camera->getUpVector());
 
 
+        // world text render
         {
             glm::mat4 model(1.0f);
-            model = glm::scale(model, glm::vec3(0.05f, 0.05f, 0.05f));
+            model = glm::scale(model, glm::vec3(0.01f, 0.01f, 0.01f));
             model = glm::translate(model, glm::vec3(glm::vec3(0.0, 0.0, 2.0)));
             render_text_world->setMVP(projection * view * model);
 
             render_text_world->draw(shader_text, "This is sample text into world", 1.0f, glm::vec3(0.5, 0.8f, 0.2f));
+        }
 
+        // screen text render
+        {
             render_text_screen->draw(shader_text, "This is sample text into screen", 25.0f, 25.0f, 1.0f, glm::vec3(0.5, 0.8f, 0.2f));
             render_text_screen->draw(shader_text, "(C) LearnOpenGL.com", 540.0f, 570.0f, 0.5f, glm::vec3(0.3, 0.7f, 0.9f));
         }
