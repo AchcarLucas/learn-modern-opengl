@@ -28,18 +28,27 @@ struct Character
     unsigned int advance;    // Offset to advance to next glyph
 };
 
+enum TextType {
+    DRAW_TO_SCREEN = 0,
+    DRAW_TO_WORLD
+};
+
 class RenderText
 {
     public:
-        RenderText(const std::string &, const float &, const float &, const unsigned &, const unsigned &);
+        RenderText(const std::string &, const float &, const float &, const unsigned &, const unsigned &, const TextType &type = TextType::DRAW_TO_SCREEN);
         virtual ~RenderText();
 
-        void setCanvas(const float &canvas_width, const float &canvas_height);
+        void setOrthoCanvas(const float &canvas_width, const float &canvas_height);
 
-        glm::mat4 getProjectionMatrix() { return projection; }
+        void setMVP(glm::mat4 mvp) { type == TextType::DRAW_TO_WORLD ? this->mvp = mvp : this->mvp = this->mvp; }
+
+        glm::mat4 getMVP() { return mvp; }
 
         bool loadCharacter(FT_Face &face, unsigned int c);
+
         void draw(Shader *shader, std::string text, float x, float y, float scale, glm::vec3 color);
+        void draw(Shader *shader, std::string text, float scale, glm::vec3 color);
 
         std::map<char, Character> &getCharacters() { return characters; }
 
@@ -48,10 +57,13 @@ class RenderText
 
     protected:
         std::map<char, Character> characters;
-        glm::mat4 projection;
+
+        glm::mat4 mvp;
 
         float canvas_width;
         float canvas_height;
+
+        TextType type;
 
         VBO vbo;
         VAO vao;

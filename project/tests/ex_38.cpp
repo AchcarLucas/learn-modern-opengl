@@ -1,8 +1,8 @@
 #include "init.hpp"
 #include "image.hpp"
 #include "texture.hpp"
-#include "object.hpp"
 #include "shader.hpp"
+#include "object.hpp"
 #include "camera.hpp"
 #include "rendertext.hpp"
 
@@ -17,7 +17,7 @@ static void mouseCallback(GLFWwindow*, double, double);
 static void scrollCallback(GLFWwindow*, double, double);
 
 // camera class
-static Camera *camera = new Camera();
+static Camera *camera = new Camera(glm::vec3(0.0f, 0.0f, 5.0f), glm::vec3(0, 0, 0));
 
 // timing
 static float delta_time = 0.0f;	// time between current frame and last frame
@@ -27,12 +27,10 @@ int run_038(const int width, const int height)
 {
     _stbi_set_flip_vertically_on_load(true);
 
-    Shader *shader = new Shader("glsl/first_vertex_shader.vs", "glsl/first_fragment_shader.fs");
     Shader *shader_text = new Shader("glsl/text/text.vs", "glsl/text/text.fs");
 
-    SObject *quad = createQuad();
-
-    RenderText *renderText = new RenderText("fonts/arial.ttf", width, height, 0, 48);
+    RenderText *render_text_screen = new RenderText("fonts/arial.ttf", width, height, 0, 48, TextType::DRAW_TO_SCREEN);
+    RenderText *render_text_world = new RenderText("fonts/arial.ttf", width, height, 0, 48, TextType::DRAW_TO_WORLD);
 
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     glfwSetCursorPosCallback(window, mouseCallback);
@@ -42,6 +40,8 @@ int run_038(const int width, const int height)
     glEnable(GL_DEPTH_TEST);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+    glm::mat4 projection = glm::perspective(glm::radians(camera->getFov()), (float)width / (float)height, 0.1f, 100.0f);
+
     while(!glfwWindowShouldClose(window)) {
         float current_frame = static_cast<float>(glfwGetTime());
         delta_time = current_frame - last_frame;
@@ -50,13 +50,20 @@ int run_038(const int width, const int height)
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 
-        shader->use();
-        quad->_vao->bind();
-        quad->_ebo->bind();
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        glm::mat4 view = glm::lookAt(camera->getCamPos(), camera->getCamPos() + camera->getCamFront(), camera->getUpVector());
 
-        renderText->draw(shader_text, "This is sample text", 25.0f, 25.0f, 1.0f, glm::vec3(0.5, 0.8f, 0.2f));
-        renderText->draw(shader_text, "(C) LearnOpenGL.com", 540.0f, 570.0f, 0.5f, glm::vec3(0.3, 0.7f, 0.9f));
+
+        {
+            glm::mat4 model(1.0f);
+            model = glm::scale(model, glm::vec3(0.05f, 0.05f, 0.05f));
+            model = glm::translate(model, glm::vec3(glm::vec3(0.0, 0.0, 2.0)));
+            render_text_world->setMVP(projection * view * model);
+
+            render_text_world->draw(shader_text, "This is sample text into world", 1.0f, glm::vec3(0.5, 0.8f, 0.2f));
+
+            render_text_screen->draw(shader_text, "This is sample text into screen", 25.0f, 25.0f, 1.0f, glm::vec3(0.5, 0.8f, 0.2f));
+            render_text_screen->draw(shader_text, "(C) LearnOpenGL.com", 540.0f, 570.0f, 0.5f, glm::vec3(0.3, 0.7f, 0.9f));
+        }
 
         processInput(window, delta_time);
 
@@ -64,10 +71,10 @@ int run_038(const int width, const int height)
         glfwSwapBuffers(window);
     }
 
-    delete shader;
-    delete quad;
+    delete render_text_screen;
+    delete render_text_world;
 
-    delete renderText;
+    delete shader_text;
 
     glfwTerminate();
     return 0;

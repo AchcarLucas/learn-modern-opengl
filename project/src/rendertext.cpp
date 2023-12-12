@@ -1,6 +1,6 @@
 #include "rendertext.hpp"
 
-RenderText::RenderText(const std::string &file, const float &canvas_width, const float &canvas_height, const unsigned &font_width, const unsigned &font_height)
+RenderText::RenderText(const std::string &file, const float &canvas_width, const float &canvas_height, const unsigned &font_width, const unsigned &font_height, const TextType &type)
 {
     FT_Library ft;
 
@@ -24,8 +24,12 @@ RenderText::RenderText(const std::string &file, const float &canvas_width, const
     FT_Done_Face(face);
     FT_Done_FreeType(ft);
 
+    this->type = type;
+
+    this->mvp = glm::mat4(1);
+
     // cria a matrix de projeção indicada no construtor
-    setCanvas(canvas_width, canvas_height);
+    setOrthoCanvas(canvas_width, canvas_height);
 
     vao.bind();
     vbo.bind();
@@ -48,11 +52,19 @@ RenderText::~RenderText()
     }
 }
 
-void RenderText::setCanvas(const float &canvas_width, const float &canvas_height)
+void RenderText::setOrthoCanvas(const float &canvas_width, const float &canvas_height)
 {
     this->canvas_width = canvas_width;
     this->canvas_height = canvas_height;
-    this->projection = glm::ortho(0.0f, canvas_width, 0.0f, canvas_height);
+
+    switch(type)
+    {
+        case TextType::DRAW_TO_SCREEN:
+            this->mvp = glm::ortho(0.0f, canvas_width, 0.0f, canvas_height);
+            break;
+        case TextType::DRAW_TO_WORLD:
+            break;
+    }
 }
 
 bool RenderText::loadCharacter(FT_Face &face, unsigned int c)
@@ -101,9 +113,9 @@ bool RenderText::loadCharacter(FT_Face &face, unsigned int c)
 void RenderText::draw(Shader *shader, std::string text, float x, float y, float scale, glm::vec3 color)
 {
     shader->use();
-    shader->setUniform3fv("text_color", glm::value_ptr(color));
-    shader->setMatrix4fv("projection", glm::value_ptr(getProjectionMatrix()));
     shader->setInt("text_sampler", 0);
+    shader->setUniform3fv("text_color", glm::value_ptr(color));
+    shader->setMatrix4fv("mvp", glm::value_ptr(this->mvp));
 
     glActiveTexture(GL_TEXTURE0);
 
@@ -143,4 +155,9 @@ void RenderText::draw(Shader *shader, std::string text, float x, float y, float 
 
     vao.unbind();
     glBindTexture(GL_TEXTURE_2D, 0);
+}
+
+void RenderText::draw(Shader *shader, std::string text, float scale, glm::vec3 color)
+{
+    this->draw(shader, text, 0, 0, scale, color);
 }
