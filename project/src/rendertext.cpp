@@ -1,8 +1,10 @@
 #include "rendertext.hpp"
 
-RenderText::RenderText(const std::string &file, const float &canvas_width, const float &canvas_height, const unsigned &font_width, const unsigned &font_height, const TextType &type)
+RenderText::RenderText(const std::string &file, const float &canvas_width, const float &canvas_height, const unsigned &font_width, const unsigned &font_height, const TextType &type, bool SDF)
 {
     FT_Library ft;
+
+    this->SDF = SDF;
 
     if (FT_Init_FreeType(&ft)) {
         throw Exception("ERROR::RENDERTEXT::FREETYPE: Could not init FreeType Library");
@@ -75,6 +77,8 @@ bool RenderText::loadCharacter(FT_Face &face, unsigned int c)
         std::cout << "ERROR::FREETYTPE: Failed to load Glyph" << std::endl;
         return false;
     }
+
+    if(SDF) FT_Render_Glyph(face->glyph, FT_RENDER_MODE_SDF);
 
     GLuint texture_id;
     glGenTextures(1, &texture_id);

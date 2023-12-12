@@ -36,7 +36,7 @@ enum TextType {
 class RenderText
 {
     public:
-        RenderText(const std::string &, const float &, const float &, const unsigned &, const unsigned &, const TextType &type = TextType::DRAW_TO_SCREEN);
+        RenderText(const std::string &, const float &, const float &, const unsigned &, const unsigned &, const TextType &type = TextType::DRAW_TO_SCREEN, bool SDF = false);
         virtual ~RenderText();
 
         void setOrthoCanvas(const float &canvas_width, const float &canvas_height);
@@ -62,6 +62,8 @@ class RenderText
 
         float canvas_width;
         float canvas_height;
+
+        bool SDF;
 
         TextType type;
 
