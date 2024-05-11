@@ -8,6 +8,7 @@
 #include "framebuffer.hpp"
 #include "ubo.hpp"
 #include "object.hpp"
+#include "rendertext.hpp"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -65,6 +66,7 @@ int run_035(const int width, const int height)
         ubo_camera->UBOSubBuffer(glm::value_ptr(camera->getCamPos()), 0, sizeof(glm::vec3));
     }
 
+    Shader *shader_text = new Shader("glsl/text_sdf/text_sdf.vs", "glsl/text_sdf/text_sdf.fs");
     Shader *shader_screen = new Shader("glsl/ex_35/posprocessing.vs", "glsl/ex_35/posprocessing.fs");
     Shader *shader_floor = new Shader("glsl/ex_35/floor.vs", "glsl/ex_35/floor.fs");
     Shader *shader_light = new Shader("glsl/ex_35/light.vs", "glsl/ex_35/light.fs");
@@ -78,6 +80,8 @@ int run_035(const int width, const int height)
 
     shader_floor->use();
     shader_floor->setFloat("gamma", 2.2f);
+
+    RenderText *render_text_screen = new RenderText("fonts/arial.ttf", width, height, 0, 32, TextType::DRAW_TO_SCREEN, true);
 
     Texture2D *texture_brick = new Texture2D("./resources/textures/brickwall.jpg", TextureType::DIFFUSE, true, GL_SRGB);
     Texture2D *texture_brick_normal = new Texture2D("./resources/textures/brickwall_normal.jpg", TextureType::NORMAL, true, GL_SRGB);
@@ -191,6 +195,24 @@ int run_035(const int width, const int height)
             floor->draw(shader_floor);
         }
 
+        // screen text render
+        {
+            render_text_screen->draw(shader_text,
+                string("Press L to ") +
+                            (light_enabled ? string("Disabled") : string("Enabled")) +
+                            string(" Light "),
+                580.0f, 530.0f, 0.5f,
+                glm::vec3(0.5, 0.8f, 0.2f));
+
+            render_text_screen->draw(shader_text,
+                string("Press M to ") +
+                            (mapping_enabled ? string("Disabled") : string("Enabled")) +
+                            string(" Mapping "),
+                580.0f, 500.0f, 0.5f,
+                glm::vec3(0.5, 0.8f, 0.2f));
+
+        }
+
         // copia o buffer da msaa para o buffer da tela
         msaa_buffer->bind(GL_READ_FRAMEBUFFER);
         screen_buffer->bind(GL_DRAW_FRAMEBUFFER);
@@ -214,6 +236,8 @@ int run_035(const int width, const int height)
         glfwPollEvents();
         glfwSwapBuffers(window);
     }
+
+    delete render_text_screen;
 
     delete shader_floor;
     delete shader_screen;

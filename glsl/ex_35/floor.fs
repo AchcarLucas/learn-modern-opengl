@@ -113,7 +113,7 @@ void main()
 		vec3 light_dir = normalize(vec3(lights[l].position) - vs_in.position);
 		vec3 view_dir = normalize(camera.position - vs_in.position);
 	
-		if(mapping_enabled) {
+		if(!mapping_enabled) {
 			result += CalcLight(lights[l], light_dir, view_dir, normalize(vs_in.normal));
 		} else {
 			result += CalcLight(lights[l], light_dir, view_dir, normalize(normal_mapping));

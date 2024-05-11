@@ -98,4 +98,3 @@ static void scrollCallback(GLFWwindow* window, double x_offset, double y_offset)
 {
     camera->scrollCallback(window, x_offset, y_offset);
 }
-
