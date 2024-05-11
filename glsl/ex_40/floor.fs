@@ -3,16 +3,21 @@
 out vec4 FragColor;
 out vec4 FragPos;
 
+const int NR_LIGHTS = 16;
+
 in VS_DATA {
 	vec3 position;
 	vec2 tex;
 	mat3 TBN;
+	vec3 tangent_light_pos[NR_LIGHTS];
+	vec3 tangent_view_pos;
+	vec3 tangent_frag_pos;
 } vs_in;
 
 struct Material {
     sampler2D diffuse_1;
     sampler2D normal_1;
-    sampler2D specular_1;
+    sampler2D displacement_1;
 };
 
 uniform Material material;
@@ -38,9 +43,11 @@ layout (std140) uniform Camera {
     vec3 position;
 } camera;
 
-const int NR_LIGHTS = 16;
 
 uniform bool mapping_enabled;
+uniform bool parallax_enabled;
+uniform bool discard_edge;
+uniform float height_scale = 0.1f;
 uniform float gamma = 2.2f;
 uniform lightSource lights[NR_LIGHTS];
 
@@ -95,6 +102,13 @@ vec3 CalcLight(lightSource light, vec3 light_dir, vec3 view_dir, vec3 normal)
 	}
 }
 
+vec2 ParallaxMapping(vec2 tex_coord, vec3 view_dir)
+{
+	float height = texture(material.displacement_1, tex_coord).r;
+	vec2 p = view_dir.xy / view_dir.z * (height * height_scale);
+	return tex_coord - p;
+}
+
 vec4 gammaCorrection(vec4 color)
 {
     return pow(color, 1.0 / vec4(gamma));
@@ -104,8 +118,23 @@ void main()
 {
 	vec3 result = vec3(0.05);
 
-	vec3 normal_mapping = texture(material.normal_1, vs_in.tex).rgb * 2.0 - 0.5;
-	normal_mapping = normalize(vs_in.TBN * normal_mapping);
+	vec3 normal_mapping = vec3(0, 0, 0);
+	vec3 diffuse = vec3(0, 0, 0);
+
+	if(parallax_enabled) {
+		vec3 view_dir = normalize(vs_in.tangent_view_pos - vs_in.tangent_frag_pos);
+		vec2 tex_coord = ParallaxMapping(vs_in.tex, view_dir);
+
+		if(discard_edge && (tex_coord.x > 1.0 || tex_coord.y > 1.0 || tex_coord.x < 0.0 || tex_coord.y < 0.0))
+    		discard;
+
+		normal_mapping = texture(material.normal_1, tex_coord).rgb * 2.0 - 0.5;
+		normal_mapping = normalize(normal_mapping);
+	} else {
+		normal_mapping = texture(material.normal_1, vs_in.tex).rgb * 2.0 - 0.5;
+		normal_mapping = normalize(vs_in.TBN * normal_mapping);
+	}
+
 
 	for(int l = 0; l < NR_LIGHTS; ++l) {
 		if(!lights[l].enabled)
@@ -113,7 +142,7 @@ void main()
 
 		vec3 light_dir = normalize(vec3(lights[l].position) - vs_in.position);
 		vec3 view_dir = normalize(camera.position - vs_in.position);
-	
+
 		if(mapping_enabled) {
 			result += CalcLight(lights[l], light_dir, view_dir, normalize(normal_mapping));
 		} else {

@@ -44,6 +44,8 @@ static std::vector<GLuint> ex_30_quad_indices = {
 
 static bool light_enabled = true;
 static bool mapping_enabled = true;
+static bool parallax_enabled = true;
+static bool discard_edge = true;
 
 int run_040(const int width, const int height)
 {
@@ -88,10 +90,12 @@ int run_040(const int width, const int height)
 
     Texture2D *texture_brick = new Texture2D("./resources/textures/bricks2.jpg", TextureType::DIFFUSE, true, GL_SRGB);
     Texture2D *texture_brick_normal = new Texture2D("./resources/textures/bricks2_normal.jpg", TextureType::NORMAL, true, GL_SRGB);
+    Texture2D *texture_brick_displacement = new Texture2D("./resources/textures/bricks2_disp.jpg", TextureType::DISPLACEMENT, true, GL_SRGB);
 
     std::vector<Texture2D*> floor_textures = {
         texture_brick,
-        texture_brick_normal
+        texture_brick_normal,
+        texture_brick_displacement
     };
 
     Mesh *floor = new Mesh(ex_36_quad_vertices, std::vector<GLuint>(), floor_textures, VERTEX_TYPE::ATTRIB_PNT);
@@ -114,7 +118,7 @@ int run_040(const int width, const int height)
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    glm::vec4 light_position = glm::vec4(0.0f, -5.0f, 0.0f, 0.0f);
+    glm::vec4 light_position = glm::vec4(0.0f, -5.0f, 5.0f, 0.0f);
 
     while(!glfwWindowShouldClose(window)) {
         float current_frame = static_cast<float>(glfwGetTime());
@@ -158,9 +162,13 @@ int run_040(const int width, const int height)
             shader_floor->setFloat("lights[0].spot_cutoff", 0.0f);
             shader_floor->setFloat("lights[0].spot_exponent", 0.0f);
 
+            shader_floor->setFloat("height_scale", 0.1f);
+
             shader_floor->setBool("lights[0].enabled", light_enabled);
 
             shader_floor->setBool("mapping_enabled", mapping_enabled);
+            shader_floor->setBool("parallax_enabled", parallax_enabled);
+            shader_floor->setBool("discard_edge", discard_edge);
         }
 
         // draw lights
@@ -189,7 +197,7 @@ int run_040(const int width, const int height)
 
             model = glm::translate(model, glm::vec3(0.0f, -1.0f, -1.0f));
             model = glm::scale(model, glm::vec3(10.0f, 10.0f, 10.0f));
-            // model = glm::rotate(model, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+            model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 0.0f, 1.0f));
             model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 
             shader_floor->use();
@@ -204,16 +212,29 @@ int run_040(const int width, const int height)
                 string("Press L to ") +
                             (light_enabled ? string("Disabled") : string("Enabled")) +
                             string(" Light "),
-                580.0f, 530.0f, 0.5f,
+                530.0f, 530.0f, 0.5f,
                 glm::vec3(0.5, 0.8f, 0.2f));
 
             render_text_screen->draw(shader_text,
                 string("Press M to ") +
                             (mapping_enabled ? string("Disabled") : string("Enabled")) +
                             string(" Mapping "),
-                580.0f, 500.0f, 0.5f,
+                530.0f, 500.0f, 0.5f,
                 glm::vec3(0.5, 0.8f, 0.2f));
 
+            render_text_screen->draw(shader_text,
+                string("Press P to ") +
+                            (parallax_enabled ? string("Disabled") : string("Enabled")) +
+                            string(" Parallax "),
+                530.0f, 470.0f, 0.5f,
+                glm::vec3(0.5, 0.8f, 0.2f));
+
+            render_text_screen->draw(shader_text,
+                string("Press E to ") +
+                            (discard_edge ? string("Disabled") : string("Enabled")) +
+                            string(" Edge Discard"),
+                530.0f, 440.0f, 0.5f,
+                glm::vec3(0.5, 0.8f, 0.2f));
         }
 
         // copia o buffer da msaa para o buffer da tela
@@ -272,6 +293,18 @@ static void processInput(GLFWwindow *window, float delta_time)
         if (glfwGetKey(window, GLFW_KEY_M) == GLFW_PRESS) {
             mapping_enabled = !mapping_enabled;
             std::cout << "mapping [" << (mapping_enabled ? "ON" : "OFF") << "]" << std::endl;
+            waiting_time = 0.0f;
+        }
+
+        if (glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS) {
+            parallax_enabled = !parallax_enabled;
+            std::cout << "parallax [" << (parallax_enabled ? "ON" : "OFF") << "]" << std::endl;
+            waiting_time = 0.0f;
+        }
+
+        if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS) {
+            discard_edge = !discard_edge;
+            std::cout << "edge [" << (discard_edge ? "ON" : "OFF") << "]" << std::endl;
             waiting_time = 0.0f;
         }
     }
