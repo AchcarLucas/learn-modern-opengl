@@ -170,3 +170,10 @@ Após finalizar a instalação das libs e a configuração do codeblock, no arqu
 ## Exemplo-38 (Render Text)
 ![ex_38](./images/ex_38.png)
 
+## Exemplo-41 (Parallax Mapping)
+![ex_40](./images/ex_40.png)
+
+## Exemplo-41 (Parallax Mapping Occlusion)
+![ex_41_1](./images/ex_41_1.png)
+![ex_41_2](./images/ex_41_2.png)
+
