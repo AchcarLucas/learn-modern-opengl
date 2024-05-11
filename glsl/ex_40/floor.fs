@@ -128,9 +128,13 @@ void main()
 		if(discard_edge && (tex_coord.x > 1.0 || tex_coord.y > 1.0 || tex_coord.x < 0.0 || tex_coord.y < 0.0))
     		discard;
 
+		diffuse = texture(material.diffuse_1, tex_coord).rgb;
+
 		normal_mapping = texture(material.normal_1, tex_coord).rgb * 2.0 - 0.5;
 		normal_mapping = normalize(normal_mapping);
 	} else {
+		diffuse = texture(material.diffuse_1, vs_in.tex).rgb;
+
 		normal_mapping = texture(material.normal_1, vs_in.tex).rgb * 2.0 - 0.5;
 		normal_mapping = normalize(vs_in.TBN * normal_mapping);
 	}
@@ -150,5 +154,5 @@ void main()
 		}
 	}
 
-	FragColor = vec4(texture(material.diffuse_1, vs_in.tex).rgb * result, 1.0f);
+	FragColor = vec4(diffuse * result, 1.0f);
 }
