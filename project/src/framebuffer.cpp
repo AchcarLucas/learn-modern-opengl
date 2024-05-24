@@ -4,7 +4,7 @@ template class FrameBuffer<Texture2D>;
 template class FrameBuffer<TextureCube>;
 
 template <typename T>
-FrameBuffer<T>::FrameBuffer(const int width, const int height)
+FrameBuffer<T>::FrameBuffer(const int width, const int height, unsigned num_attachment)
 {
     this->width = width;
     this->height = height;
@@ -12,9 +12,10 @@ FrameBuffer<T>::FrameBuffer(const int width, const int height)
     glGenFramebuffers(1, &this->fbo);
     glBindFramebuffer(GL_FRAMEBUFFER, this->fbo);
 
-    framebuffer_tex = dynamic_cast<T*>(new Texture2D(width, height));
-
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, framebuffer_tex->getGenTexture(), 0);
+    for(unsigned i = 0; i < num_attachment; ++i) {
+        framebuffer_tex = dynamic_cast<T*>(new Texture2D(width, height));
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D, framebuffer_tex->getGenTexture(), 0);
+    }
 
     if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
         std::cout << "ERROR::FRAMEBUFFER:: Framebuffer is not complete!" << std::endl;
@@ -26,7 +27,7 @@ FrameBuffer<T>::FrameBuffer(const int width, const int height)
 }
 
 template <typename T>
-FrameBuffer<T>::FrameBuffer(const int width, const int height, const GLenum gl_internalformat, const GLenum gl_attachment, TextureType type)
+FrameBuffer<T>::FrameBuffer(const int width, const int height, const GLenum gl_internalformat, const GLenum gl_attachment, TextureType type, unsigned num_attachment)
 {
     this->width = width;
     this->height = height;
@@ -44,8 +45,10 @@ FrameBuffer<T>::FrameBuffer(const int width, const int height, const GLenum gl_i
             glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, framebuffer_tex->getGenTexture(), 0);
             break;
         default:
-            framebuffer_tex = dynamic_cast<T*>(new Texture2D(width, height, type));
-            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, framebuffer_tex->getGenTexture(), 0);
+            for(unsigned i = 0; i < num_attachment; ++i) {
+                framebuffer_tex = dynamic_cast<T*>(new Texture2D(width, height, type));
+                glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D, framebuffer_tex->getGenTexture(), 0);
+            }
             break;
     }
 
@@ -70,7 +73,7 @@ FrameBuffer<T>::FrameBuffer(const int width, const int height, const GLenum gl_i
 }
 
 template <typename T>
-FrameBuffer<T>::FrameBuffer(const int width, const int height, const GLenum gl_internalformat, const GLenum gl_attachment, unsigned int multisample)
+FrameBuffer<T>::FrameBuffer(const int width, const int height, const GLenum gl_internalformat, const GLenum gl_attachment, unsigned int multisample, unsigned num_attachment)
 {
     this->width = width;
     this->height = height;
@@ -78,11 +81,12 @@ FrameBuffer<T>::FrameBuffer(const int width, const int height, const GLenum gl_i
     glGenFramebuffers(1, &this->fbo);
     glBindFramebuffer(GL_FRAMEBUFFER, this->fbo);
 
-    framebuffer_tex = dynamic_cast<T*>(new Texture2D(width, height, multisample));
-
     this->rbo = new RBO(width, height, gl_internalformat, multisample);
 
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, framebuffer_tex->getGenTexture(), 0);
+    for(unsigned i = 0; i < num_attachment; ++i) {
+        framebuffer_tex = dynamic_cast<T*>(new Texture2D(width, height, multisample));
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D_MULTISAMPLE, framebuffer_tex->getGenTexture(), 0);
+    }
 
     if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
         std::cout << "ERROR::FRAMEBUFFER_MULTISAMPLE:: Framebuffer is not complete!" << std::endl;
