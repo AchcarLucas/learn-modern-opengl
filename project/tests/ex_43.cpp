@@ -228,7 +228,7 @@ static void loadScene(GLFWwindow* window, const int width, const int height)
     // msaa com multisample 4
     msaa_buffer = new FrameBuffer<Texture2D>(width, height, GL_DEPTH24_STENCIL8, GL_DEPTH_STENCIL_ATTACHMENT, 4);
     // buffer de tela
-    screen_buffer = new FrameBuffer<Texture2D>(width, height, TextureType::FRAMEBUFFER, GL_RGBA16F);
+    screen_buffer = new FrameBuffer<Texture2D>(width, height, GL_RGBA, GL_RGBA16F);
 
     // buffers shadow mapping
     for(unsigned i = 0; i < MAX_DEPTH_CUBEMAP; ++i) {
