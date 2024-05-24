@@ -48,6 +48,8 @@ void initOpenGL(const int width, const int height)
         exit(-1);
     }
 
+    glDisable(GL_FRAMEBUFFER_SRGB);
+
     glViewport(0, 0, width, height);
 
     glfwSetFramebufferSizeCallback(window, changeFrameBufferSizeCallback);
