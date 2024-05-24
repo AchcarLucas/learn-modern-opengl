@@ -13,8 +13,19 @@ FrameBuffer<T>::FrameBuffer(const int width, const int height, unsigned num_atta
     glBindFramebuffer(GL_FRAMEBUFFER, this->fbo);
 
     for(unsigned i = 0; i < num_attachment; ++i) {
-        framebuffer_tex = dynamic_cast<T*>(new Texture2D(width, height));
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D, framebuffer_tex->getGenTexture(), 0);
+        T *_texture = dynamic_cast<T*>(new Texture2D(width, height));
+        framebuffer_tex.push_back(_texture);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D, _texture->getGenTexture(), 0);
+    }
+
+    {
+        unsigned int attachments[num_attachment];
+
+        for(unsigned index = 0; index < num_attachment; ++index) {
+            attachments[index] = GL_COLOR_ATTACHMENT0 + index;
+        }
+
+        glDrawBuffers(num_attachment, attachments);
     }
 
     if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
@@ -35,19 +46,34 @@ FrameBuffer<T>::FrameBuffer(const int width, const int height, const GLenum gl_i
     glGenFramebuffers(1, &this->fbo);
     glBindFramebuffer(GL_FRAMEBUFFER, this->fbo);
 
+    T *_texture;
+
     switch(type) {
         case TextureType::FRAMEBUFFER_DEPTH_MAPPING:
-            framebuffer_tex = dynamic_cast<T*>(new Texture2D(width, height, type, GL_DEPTH_COMPONENT, GL_DEPTH_COMPONENT));
-            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, framebuffer_tex->getGenTexture(), 0);
+            _texture = dynamic_cast<T*>(new Texture2D(width, height, type, GL_DEPTH_COMPONENT, GL_DEPTH_COMPONENT));
+            framebuffer_tex.push_back(_texture);
+            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, _texture->getGenTexture(), 0);
             break;
         case TextureType::FRAMEBUFFER_DEPTH_CUBEMAP:
-            framebuffer_tex = dynamic_cast<T*>(new TextureCube(width, height));
-            glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, framebuffer_tex->getGenTexture(), 0);
+            _texture = dynamic_cast<T*>(new TextureCube(width, height));
+            framebuffer_tex.push_back(_texture);
+            glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, _texture->getGenTexture(), 0);
             break;
         default:
             for(unsigned i = 0; i < num_attachment; ++i) {
-                framebuffer_tex = dynamic_cast<T*>(new Texture2D(width, height, type));
-                glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D, framebuffer_tex->getGenTexture(), 0);
+                _texture = dynamic_cast<T*>(new Texture2D(width, height, type));
+                framebuffer_tex.push_back(_texture);
+                glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D, _texture->getGenTexture(), 0);
+            }
+
+            {
+                unsigned int attachments[num_attachment];
+
+                for(unsigned index = 0; index < num_attachment; ++index) {
+                    attachments[index] = GL_COLOR_ATTACHMENT0 + index;
+                }
+
+                glDrawBuffers(num_attachment, attachments);
             }
             break;
     }
@@ -84,8 +110,19 @@ FrameBuffer<T>::FrameBuffer(const int width, const int height, const GLenum gl_i
     this->rbo = new RBO(width, height, gl_internalformat, multisample);
 
     for(unsigned i = 0; i < num_attachment; ++i) {
-        framebuffer_tex = dynamic_cast<T*>(new Texture2D(width, height, multisample));
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D_MULTISAMPLE, framebuffer_tex->getGenTexture(), 0);
+        T *_texture = dynamic_cast<T*>(new Texture2D(width, height, multisample));
+        framebuffer_tex.push_back(_texture);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D_MULTISAMPLE, _texture->getGenTexture(), 0);
+    }
+
+    {
+        unsigned int attachments[num_attachment];
+
+        for(unsigned index = 0; index < num_attachment; ++index) {
+            attachments[index] = GL_COLOR_ATTACHMENT0 + index;
+        }
+
+        glDrawBuffers(num_attachment, attachments);
     }
 
     if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
@@ -101,7 +138,11 @@ FrameBuffer<T>::FrameBuffer(const int width, const int height, const GLenum gl_i
 template <typename T>
 FrameBuffer<T>::~FrameBuffer()
 {
-    delete framebuffer_tex;
+    typename std::vector<T *>::iterator it;
+    for(it = framebuffer_tex.end(); it != framebuffer_tex.begin(); --it) {
+        delete *it;
+        it = framebuffer_tex.erase(it);
+    }
     delete rbo;
 
     glDeleteFramebuffers(1, &this->fbo);

@@ -16,14 +16,14 @@ class FrameBuffer
         void bind(GLenum target = GL_FRAMEBUFFER);
         void unbind();
 
-        T *getTexture() { return framebuffer_tex; }
+        T *getTexture(unsigned index = 0) { return framebuffer_tex[index]; }
         RBO *getRBO() { return this->rbo; }
 
         int getWidth() { return this->width; }
         int getHeight() { return this->height; }
 
     protected:
-        T *framebuffer_tex;
+        std::vector<T *> framebuffer_tex;
         GLuint fbo;
         RBO *rbo;
 
