@@ -177,3 +177,9 @@ Após finalizar a instalação das libs e a configuração do codeblock, no arqu
 ![ex_41_1](./images/ex_41_1.png)
 ![ex_41_2](./images/ex_41_2.png)
 
+## Exemplo-42 (Multi Shadow and Light)
+![ex_42](./images/ex_42.png)
+
+## Exemplo-43 (HDR with Multi Light)
+![ex_43](./images/ex_43.png)
+
