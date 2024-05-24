@@ -40,7 +40,7 @@ static Camera *camera = new Camera(glm::vec3(5.0f, 5.0f, -5.0f), glm::vec3(0.0f,
 static float delta_time = 0.0f;	// time between current frame and last frame
 static float last_frame = 0.0f;
 
-static float _gamma = 2.2f;
+static float _gamma = 2.0f;
 
 static std::vector<Vertex> ex_43_quad_vertices_screen = {
     Vertex(glm::vec3(1.0f,  1.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec2(1.0f, 1.0f)),
@@ -147,7 +147,6 @@ static UBO *ubo_camera;
 
 static Mesh *mesh_screen;
 static Mesh *mesh_plane;
-static Mesh *mesh_cube;
 static Mesh *mesh_light;
 
 static std::vector<PointLight *> p_light;
@@ -168,12 +167,22 @@ static std::vector<ModelTransform> cube_models = {
 };
 
 static std::vector<glm::vec4> light_position = {
-    glm::vec4(0.0f, 0.0f, 1.0f, 1.0f),
-    glm::vec4(-0.5f, 0.0f, -0.5f, 1.0f),
-    glm::vec4(0.5f, 1.0f, 0.5f, 1.0f)
+    glm::vec4(0.0f,  0.0f, 49.5f, 1.0f),
+    glm::vec4(-1.4f, -1.9f, 9.0f, 1.0f),
+    glm::vec4(0.0f, -1.8f, 4.0f, 1.0f),
+    glm::vec4(0.8f, -1.7f, 6.0f, 1.0f)
+};
+
+static std::vector<glm::vec3> light_color = {
+    glm::vec3(200.0f, 200.0f, 200.0f),
+    glm::vec3(0.1f, 0.0f, 0.0f),
+    glm::vec3(0.0f, 0.0f, 0.2f),
+    glm::vec3(0.0f, 0.1f, 0.0f),
 };
 
 static bool light_enabled = true;
+
+#define MAX_DEPTH_CUBEMAP 7
 
 static void clearGL()
 {
@@ -190,7 +199,7 @@ static void loadScene(GLFWwindow* window, const int width, const int height)
     camera->setCamSpeed(25.0f);
 
     float near_light = 1.0f;
-    float far_light = 25.0f;
+    float far_light = 100.0f;
 
     for(std::vector<glm::vec4>::iterator it = light_position.begin(); it != light_position.end(); ++it) {
         p_light.push_back(new PointLight(*it, width, height, near_light, far_light));
@@ -205,16 +214,15 @@ static void loadScene(GLFWwindow* window, const int width, const int height)
     config_shader.push_back(shader_cube);
     config_shader.push_back(shader_plane);
 
-    texture_wood = new Texture2D("./resources/textures/wood.png", TextureType::DIFFUSE, true, GL_SRGB);
-    texture_cube = new Texture2D("./resources/textures/container2.png", TextureType::DIFFUSE, true, GL_SRGB);
+    texture_wood = new Texture2D("./resources/textures/wood.png", TextureType::DIFFUSE, true, GL_RGBA);
 
     // msaa com multisample 4
     msaa_buffer = new FrameBuffer<Texture2D>(width, height, GL_DEPTH24_STENCIL8, GL_DEPTH_STENCIL_ATTACHMENT, 4);
     // buffer de tela
-    screen_buffer = new FrameBuffer<Texture2D>(width, height);
+    screen_buffer = new FrameBuffer<Texture2D>(width, height, TextureType::FRAMEBUFFER, GL_RGBA16F);
 
     // buffers shadow mapping
-    for(unsigned i = 0; i < p_light.size(); ++i) {
+    for(unsigned i = 0; i < MAX_DEPTH_CUBEMAP; ++i) {
         shadow_buffer.push_back(new FrameBuffer<TextureCube>(1024, 1024, GL_NONE, GL_NONE, TextureType::FRAMEBUFFER_DEPTH_CUBEMAP));
     }
 
@@ -235,7 +243,6 @@ static void loadScene(GLFWwindow* window, const int width, const int height)
     mesh_screen = new Mesh(ex_43_quad_vertices_screen, ex_43_quad_indices, std::vector<Texture2D*>(), VERTEX_TYPE::ATTRIB_PNT);
 
     mesh_plane = new Mesh(ex_43_quad_vertices_plane, ex_43_quad_indices, plane_textures, shadow_textures, VERTEX_TYPE::ATTRIB_PNT);
-    mesh_cube = new Mesh(ex_43_cube_vertices, ex_43_cube_indices, cube_textures, shadow_textures, VERTEX_TYPE::ATTRIB_PNT);
     mesh_light = new Mesh(ex_43_cube_vertices, ex_43_cube_indices, std::vector<Texture2D*>(), VERTEX_TYPE::ATTRIB_PNT);
 
     ubo_matrices = new UBO("Matrices", 2 * sizeof(glm::mat4), 0);
@@ -268,9 +275,7 @@ static void loadScene(GLFWwindow* window, const int width, const int height)
 
 static void updateScene(GLFWwindow* window, const int width, const int height)
 {
-    for(unsigned i = 0; i < p_light.size(); ++i)
-    {
-        light_position[i] = light_position[i] * glm::rotate(glm::mat4(1.0f), glm::radians(delta_time) * 100.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+    for(unsigned i = 0; i < p_light.size(); ++i) {
         p_light[i]->setPosition(light_position[i]);
     }
 
@@ -291,14 +296,14 @@ static void updateShader(GLFWwindow* window, const int width, const int height)
 
     if(first) {
         shader_screen->use();
-        shader_screen->setFloat("gama", _gamma);
+        shader_screen->setFloat("gamma", _gamma);
         shader_screen->setInt("screen_texture", 0);
 
         shader_cube->use();
-        shader_cube->setFloat("gama", _gamma);
+        shader_cube->setFloat("gamma", _gamma);
 
         shader_plane->use();
-        shader_plane->setFloat("gama", _gamma);
+        shader_plane->setFloat("gamma", _gamma);
 
         first = false;
     }
@@ -308,86 +313,45 @@ static void updateShader(GLFWwindow* window, const int width, const int height)
         for(auto *shader : config_shader) {
             shader->use();
 
-            // Light 1
-            shader->setUniform4fv("lights[0].position", glm::value_ptr(light_position[0]));
-            shader->setUniform4fv("lights[0].ambient", glm::value_ptr(glm::vec3(1.0f, 1.0f, 1.0f) * 0.05f));
-            shader->setUniform4fv("lights[0].diffuse", glm::value_ptr(glm::vec3(1.0f, 1.0f, 1.0f)));
-            shader->setUniform4fv("lights[0].specular", glm::value_ptr(glm::vec3(1.0f, 1.0f, 1.0f)));
+            for(unsigned i = 0; i < light_position.size(); ++i) {
+                string s_lights = "lights[" + std::to_string(i) + "].";
+                shader->setUniform4fv(s_lights + "position", glm::value_ptr(light_position[i]));
+                shader->setUniform4fv(s_lights + "ambient", glm::value_ptr(light_color[i]));
+                shader->setUniform4fv(s_lights + "diffuse", glm::value_ptr(light_color[i]));
+                shader->setUniform4fv(s_lights + "specular", glm::value_ptr(glm::vec3(0.0, 0.0, 0.0)));
 
-            shader->setUniform3fv("lights[0].spot_direction", glm::value_ptr(glm::vec3(0.0f, 0.0f, 0.0f)));
+                shader->setUniform3fv(s_lights + "spot_direction", glm::value_ptr(glm::vec3(0.0f, 0.0f, 0.0f)));
 
-            shader->setFloat("lights[0].constant_attenuation", 0.0f);
-            shader->setFloat("lights[0].linear_attenuation", 0.0f);
-            shader->setFloat("lights[0].quadratic_attenuation", 0.0f);
+                shader->setFloat(s_lights + "constant_attenuation", 0.0f);
+                shader->setFloat(s_lights + "linear_attenuation", 0.0f);
+                shader->setFloat(s_lights + "quadratic_attenuation", 0.0f);
 
-            shader->setFloat("lights[0].spot_cutoff", 0.0f);
-            shader->setFloat("lights[0].spot_exponent", 0.0f);
+                shader->setFloat(s_lights + "spot_cutoff", 0.0f);
+                shader->setFloat(s_lights + "spot_exponent", 0.0f);
 
-            shader->setFloat("lights[0].near_plane", p_light[0]->getNearPlane());
-            shader->setFloat("lights[0].far_plane", p_light[0]->getFarPlane());
+                shader->setFloat(s_lights + "near_plane", p_light[i]->getNearPlane());
+                shader->setFloat(s_lights + "far_plane", p_light[i]->getFarPlane());
 
-            shader->setInt("lights[0].cubemap_index", 1);
+                shader->setInt(s_lights + "cubemap_index", i + 1);
 
-            shader->setBool("lights[0].enabled", light_enabled);
-
-            // Light 2
-            shader->setUniform4fv("lights[1].position", glm::value_ptr(light_position[1]));
-            shader->setUniform4fv("lights[1].ambient", glm::value_ptr(glm::vec3(1.0f, 1.0f, 1.0f) * 0.05f));
-            shader->setUniform4fv("lights[1].diffuse", glm::value_ptr(glm::vec3(1.0f, 1.0f, 1.0f)));
-            shader->setUniform4fv("lights[1].specular", glm::value_ptr(glm::vec3(1.0f, 1.0f, 1.0f)));
-
-            shader->setUniform3fv("lights[1].spot_direction", glm::value_ptr(glm::vec3(0.0f, 0.0f, 0.0f)));
-
-            shader->setFloat("lights[1].constant_attenuation", 0.0f);
-            shader->setFloat("lights[1].linear_attenuation", 0.0f);
-            shader->setFloat("lights[1].quadratic_attenuation", 0.0f);
-
-            shader->setFloat("lights[1].spot_cutoff", 0.0f);
-            shader->setFloat("lights[1].spot_exponent", 0.0f);
-
-            shader->setFloat("lights[1].near_plane", p_light[1]->getNearPlane());
-            shader->setFloat("lights[1].far_plane", p_light[1]->getFarPlane());
-
-            shader->setInt("lights[1].cubemap_index", 2);
-
-            shader->setBool("lights[1].enabled", light_enabled);
-
-            // Light 3
-            shader->setUniform4fv("lights[2].position", glm::value_ptr(light_position[2]));
-            shader->setUniform4fv("lights[2].ambient", glm::value_ptr(glm::vec3(1.0f, 1.0f, 1.0f) * 0.05f));
-            shader->setUniform4fv("lights[2].diffuse", glm::value_ptr(glm::vec3(1.0f, 1.0f, 1.0f)));
-            shader->setUniform4fv("lights[2].specular", glm::value_ptr(glm::vec3(1.0f, 1.0f, 1.0f)));
-
-            shader->setUniform3fv("lights[2].spot_direction", glm::value_ptr(glm::vec3(0.0f, 0.0f, 0.0f)));
-
-            shader->setFloat("lights[2].constant_attenuation", 0.0f);
-            shader->setFloat("lights[2].linear_attenuation", 0.0f);
-            shader->setFloat("lights[2].quadratic_attenuation", 0.0f);
-
-            shader->setFloat("lights[2].spot_cutoff", 0.0f);
-            shader->setFloat("lights[2].spot_exponent", 0.0f);
-
-            shader->setFloat("lights[2].near_plane", p_light[2]->getNearPlane());
-            shader->setFloat("lights[2].far_plane", p_light[2]->getFarPlane());
-
-            shader->setInt("lights[2].cubemap_index", 3);
-
-            shader->setBool("lights[2].enabled", light_enabled);
+                shader->setBool(s_lights + "enabled", light_enabled);
+            }
         }
     }
 }
 
 static void renderScene(GLFWwindow* window, const int width, const int height, Shader *_shader)
 {
-    float size_room = 8.0f;
+    float size_room[] = {2.5f, 2.5f, 27.5f};
 
     Shader *used = _shader ? _shader : shader_plane;
 
     /// Draw floor
     {
         glm::mat4 model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(0.0f, -size_room, 0.0f));
-        model = glm::scale(model, glm::vec3(size_room, size_room, size_room));
+        model = glm::translate(model, glm::vec3(0.0f, 0.0f, 25.0));
+        model = glm::translate(model, glm::vec3(0.0f, -size_room[1], 0.0f));
+        model = glm::scale(model, glm::vec3(size_room[0], size_room[1], size_room[2]));
         model = glm::rotate(model, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
         model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 
@@ -400,8 +364,9 @@ static void renderScene(GLFWwindow* window, const int width, const int height, S
     /// Draw roof
     {
         glm::mat4 model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(0.0f, size_room, 0.0f));
-        model = glm::scale(model, glm::vec3(size_room, size_room, size_room));
+        model = glm::translate(model, glm::vec3(0.0f, 0.0f, 25.0));
+        model = glm::translate(model, glm::vec3(0.0f, size_room[1], 0.0f));
+        model = glm::scale(model, glm::vec3(size_room[0], size_room[1], size_room[2]));
         model = glm::rotate(model, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 
         used->use();
@@ -415,8 +380,9 @@ static void renderScene(GLFWwindow* window, const int width, const int height, S
         // left
 
         glm::mat4 model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(0.0f, 0.0f, size_room));
-        model = glm::scale(model, glm::vec3(size_room, size_room, size_room));
+        model = glm::translate(model, glm::vec3(0.0f, 0.0f, 25.0));
+        model = glm::translate(model, glm::vec3(0.0f, 0.0f, size_room[2]));
+        model = glm::scale(model, glm::vec3(size_room[0], size_room[1], size_room[2]));
         model = glm::rotate(model, glm::radians(180.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 
         used->use();
@@ -427,8 +393,9 @@ static void renderScene(GLFWwindow* window, const int width, const int height, S
         // right
 
         model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(0.0f, 0.0f, -size_room));
-        model = glm::scale(model, glm::vec3(size_room, size_room, size_room));
+        model = glm::translate(model, glm::vec3(0.0f, 0.0f, 25.0));
+        model = glm::translate(model, glm::vec3(0.0f, 0.0f, -size_room[2]));
+        model = glm::scale(model, glm::vec3(size_room[0], size_room[1], size_room[2]));
 
         used->use();
         used->setMatrix4fv("model", glm::value_ptr(model));
@@ -438,8 +405,9 @@ static void renderScene(GLFWwindow* window, const int width, const int height, S
         // front
 
         model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(size_room, 0.0f, 0.0f));
-        model = glm::scale(model, glm::vec3(size_room, size_room, size_room));
+        model = glm::translate(model, glm::vec3(0.0f, 0.0f, 25.0));
+        model = glm::translate(model, glm::vec3(size_room[0], 0.0f, 0.0f));
+        model = glm::scale(model, glm::vec3(size_room[0], size_room[1], size_room[2]));
         model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
         model = glm::rotate(model, glm::radians(90.0f), glm::vec3(-1.0f, 0.0f, 0.0f));
 
@@ -451,8 +419,9 @@ static void renderScene(GLFWwindow* window, const int width, const int height, S
         // back
 
         model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(-size_room, 0.0f, 0.0f));
-        model = glm::scale(model, glm::vec3(size_room, size_room, size_room));
+        model = glm::translate(model, glm::vec3(0.0f, 0.0f, 25.0));
+        model = glm::translate(model, glm::vec3(-size_room[0], 0.0f, 0.0f));
+        model = glm::scale(model, glm::vec3(size_room[0], size_room[1], size_room[2]));
         model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
         model = glm::rotate(model, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 
@@ -460,18 +429,6 @@ static void renderScene(GLFWwindow* window, const int width, const int height, S
         used->setMatrix4fv("model", glm::value_ptr(model));
 
         mesh_plane->draw(used);
-    }
-
-    /// Draw Cube
-    {
-        for(auto &model : cube_models) {
-            Shader *used = _shader ? _shader : shader_cube;
-
-            used->use();
-            used->setMatrix4fv("model", glm::value_ptr(model.getModel()));
-
-            mesh_cube->draw(used);
-        }
     }
 }
 
@@ -597,7 +554,6 @@ int run_043(const int width, const int height)
     delete shader_light;
 
     delete mesh_screen;
-    delete mesh_cube;
     delete mesh_plane;
 
     delete camera;

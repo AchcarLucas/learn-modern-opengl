@@ -16,6 +16,7 @@ vec4 gammaCorrection(vec4 color)
 void main()
 {
     vec3 col = texture(screen_texture, vs_in.tex).rgb;
-    vec4 color = vec4(vec3(col), 1.0);
-    FragColor = gammaCorrection(color);
+    //vec4 color = vec4(vec3(col), 1.0);
+    //FragColor = gammaCorrection(color);
+    FragColor = vec4(col, 1.0);
 } 

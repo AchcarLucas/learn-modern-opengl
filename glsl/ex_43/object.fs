@@ -15,6 +15,10 @@ struct Material {
 	samplerCube depth_cubemap_1;
 	samplerCube depth_cubemap_2;
 	samplerCube depth_cubemap_3;
+	samplerCube depth_cubemap_4;
+	samplerCube depth_cubemap_5;
+	samplerCube depth_cubemap_6;
+	samplerCube depth_cubemap_7;
 };
 
 uniform Material material;
@@ -133,8 +137,8 @@ vec3 CalcLight(lightSource light, vec3 light_dir, vec3 view_dir, vec3 normal)
 
 float CalcAttenuation(vec3 light_position, vec3 frag_position)
 {
-	vec3 _length = frag_position - light_position;
-	return pow(1.0 / abs(length(_length)), gamma);
+	float _distance = length(frag_position - light_position);
+	return 1.0 / pow(abs(_distance), gamma);
 }
 
 float ShadowCalculationDir(vec4 frag_shadow_position, vec3 light_dir, vec3 normal)
@@ -190,11 +194,19 @@ float ShadowCalculationPoint(lightSource light, vec4 frag_model_position, vec3 l
 	float closest_depth = 0;
 
 	if(light.cubemap_index == 1)
-    	closest_depth = texture(material.depth_cubemap_1, frag_to_light).r;
+    	closest_depth = texture(material.depth_cubemap_3, frag_to_light).r;
 	else if(light.cubemap_index == 2)
 		closest_depth = texture(material.depth_cubemap_2, frag_to_light).r;
 	else if(light.cubemap_index == 3)
 		closest_depth = texture(material.depth_cubemap_3, frag_to_light).r;
+	else if(light.cubemap_index == 4)
+		closest_depth = texture(material.depth_cubemap_4, frag_to_light).r;
+	else if(light.cubemap_index == 5)
+		closest_depth = texture(material.depth_cubemap_5, frag_to_light).r;
+	else if(light.cubemap_index == 6)
+		closest_depth = texture(material.depth_cubemap_6, frag_to_light).r;
+	else if(light.cubemap_index == 7)
+		closest_depth = texture(material.depth_cubemap_7, frag_to_light).r;
 
     // it is currently in linear range between [0,1], let's re-transform it back to original depth value
     closest_depth *= light.far_plane;
@@ -240,6 +252,14 @@ float ShadowCalculationPointPCF(lightSource light, vec4 frag_model_position, vec
         	closest_depth = texture(material.depth_cubemap_2, frag_to_light + grid_sampling_disk[i] * disk_radius).r;
 		if(light.cubemap_index == 3)
         	closest_depth = texture(material.depth_cubemap_3, frag_to_light + grid_sampling_disk[i] * disk_radius).r;
+		if(light.cubemap_index == 4)
+        	closest_depth = texture(material.depth_cubemap_3, frag_to_light + grid_sampling_disk[i] * disk_radius).r;
+		if(light.cubemap_index == 5)
+        	closest_depth = texture(material.depth_cubemap_3, frag_to_light + grid_sampling_disk[i] * disk_radius).r;
+		if(light.cubemap_index == 6)
+        	closest_depth = texture(material.depth_cubemap_3, frag_to_light + grid_sampling_disk[i] * disk_radius).r;
+		if(light.cubemap_index == 7)
+        	closest_depth = texture(material.depth_cubemap_3, frag_to_light + grid_sampling_disk[i] * disk_radius).r;
 
         closest_depth *= light.far_plane;   // undo mapping [0;1]
         if(current_depth - bias > closest_depth)
@@ -252,6 +272,7 @@ float ShadowCalculationPointPCF(lightSource light, vec4 frag_model_position, vec
 void main()
 {
 	vec3 result = vec3(0.05);
+	vec3 lighting = vec3(0.0);
 
 	for(int l = 0; l < NR_LIGHTS; ++l) {
 		if(!lights[l].enabled)
@@ -262,7 +283,9 @@ void main()
 	
 		result += CalcLight(lights[l], light_dir, view_dir, normalize(vs_in.normal));
 		result *= CalcAttenuation(vec3(lights[l].position), vec3(vs_in.frag_model_position));
+
+		lighting += result;
 	}
 
-	FragColor = vec4(texture(material.diffuse_1, vs_in.tex).rgb * result, 1.0f);
+	FragColor = vec4(texture(material.diffuse_1, vs_in.tex).rgb * lighting, 1.0f);
 }
