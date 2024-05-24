@@ -244,7 +244,7 @@ static void loadScene(GLFWwindow* window, const int width, const int height)
 
     camera->setCamSpeed(25.0f);
 
-    dir_light = new DirectionalLight(light_position, glm::vec3(0.0, -2.0, 0.0), 4.0f, 1.0f, 25.0f);
+    dir_light = new DirectionalLight(light_position, glm::vec3(0.0, -2.0, 0.0), 4.0f, 1.0f, 20.0f);
 
     shader_screen = new Shader("glsl/ex_33/posprocessing.vs", "glsl/ex_33/posprocessing.fs");
     shader_floor = new Shader("glsl/ex_33/object.vs", "glsl/ex_33/object.fs");
@@ -357,9 +357,9 @@ static void updateShader(GLFWwindow* window, const int width, const int height)
             shader->use();
 
             shader->setUniform4fv("lights[0].position", glm::value_ptr(light_position));
-            shader->setUniform4fv("lights[0].ambient", glm::value_ptr(glm::vec3(1.0f, 1.0f, 1.0f) * 10.0f));
-            shader->setUniform4fv("lights[0].diffuse", glm::value_ptr(glm::vec3(1.0f, 1.0f, 1.0f) * 10.0f));
-            shader->setUniform4fv("lights[0].specular", glm::value_ptr(glm::vec3(1.0f, 1.0f, 1.0f) * 10.0f));
+            shader->setUniform4fv("lights[0].ambient", glm::value_ptr(glm::vec3(1.0f, 1.0f, 1.0f) * 20.0f));
+            shader->setUniform4fv("lights[0].diffuse", glm::value_ptr(glm::vec3(1.0f, 1.0f, 1.0f) * 20.0f));
+            shader->setUniform4fv("lights[0].specular", glm::value_ptr(glm::vec3(1.0f, 1.0f, 1.0f) * 20.0f));
 
             shader->setUniform3fv("lights[0].spot_direction", glm::value_ptr(glm::vec3(0.0f, 0.0f, 0.0f)));
 
