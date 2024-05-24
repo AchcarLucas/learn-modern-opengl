@@ -183,3 +183,8 @@ Após finalizar a instalação das libs e a configuração do codeblock, no arqu
 ## Exemplo-43 (HDR with Multi Light)
 ![ex_43](./images/ex_43.png)
 
+## Exemplo-44 (Bloom Without HDR)
+![ex_44_1](./images/ex_44_1.png)
+
+## Exemplo-44 (Bloom With HDR)
+![ex_44_1](./images/ex_44_2.png)
