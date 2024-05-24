@@ -17,7 +17,7 @@ static GLenum ImageTypeFormat(int format)
     return GL_NONE;
 }
 
-Texture2D::Texture2D(const std::string file, const TextureType type, bool flip, const GLenum gl_format)
+Texture2D::Texture2D(const std::string file, const TextureType type, bool flip, const GLenum gl_format, const GLenum texture_wrap_s, const GLenum texture_wrap_t)
 {
     _stbi_set_flip_vertically_on_load(flip);
 
@@ -37,8 +37,8 @@ Texture2D::Texture2D(const std::string file, const TextureType type, bool flip, 
     glGenTextures(1, &this->texture);
     glBindTexture(GL_TEXTURE_2D, this->texture);
 
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, this->format == GL_RGBA ? GL_CLAMP_TO_EDGE : GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, this->format == GL_RGBA ? GL_CLAMP_TO_EDGE : GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, texture_wrap_s);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, texture_wrap_t);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
