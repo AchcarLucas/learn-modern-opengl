@@ -27,5 +27,5 @@ void main()
 {
 	vec3 r = vec3(vs_in.tex - 0.5, 1.0f);
 	float depth = texture(depth_cubemap, r / light.far_plane).r;
-    FragColor = vec4(vec3(depth), 1.0);
+  FragColor = vec4(vec3(depth), 1.0);
 }

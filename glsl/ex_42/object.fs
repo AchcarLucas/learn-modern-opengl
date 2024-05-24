@@ -13,6 +13,8 @@ struct Material {
 	sampler2D diffuse_1;
 	sampler2D depth_1;
 	samplerCube depth_cubemap_1;
+	samplerCube depth_cubemap_2;
+	samplerCube depth_cubemap_3;
 };
 
 uniform Material material;
@@ -33,7 +35,9 @@ struct lightSource {
 
   float near_plane;
   float far_plane;
-  
+
+  int cubemap_index;
+
   bool enabled;
 };
 
@@ -181,8 +185,17 @@ float ShadowCalculationPoint(lightSource light, vec4 frag_model_position, vec3 l
 {
     // get vector between fragment position and light position
     vec3 frag_to_light = frag_model_position.xyz - light_pos;
-    // ise the fragment to light vector to sample from the depth map    
-    float closest_depth = texture(material.depth_cubemap_1, frag_to_light).r;
+    // ise the fragment to light vector to sample from the depth map
+
+	float closest_depth = 0;
+
+	if(light.cubemap_index == 1)
+    	closest_depth = texture(material.depth_cubemap_1, frag_to_light).r;
+	else if(light.cubemap_index == 2)
+		closest_depth = texture(material.depth_cubemap_2, frag_to_light).r;
+	else if(light.cubemap_index == 3)
+		closest_depth = texture(material.depth_cubemap_3, frag_to_light).r;
+
     // it is currently in linear range between [0,1], let's re-transform it back to original depth value
     closest_depth *= light.far_plane;
     // now get current linear depth as the length between the fragment and light position
@@ -217,9 +230,17 @@ float ShadowCalculationPointPCF(lightSource light, vec4 frag_model_position, vec
     float view_distance = length(view_dir);
     float disk_radius = (1.0 + (view_distance / light.far_plane)) / 25.0;
 
+	float closest_depth = 0;
+
     for(int i = 0; i < samples; ++i)
     {
-        float closest_depth = texture(material.depth_cubemap_1, frag_to_light + grid_sampling_disk[i] * disk_radius).r;
+		if(light.cubemap_index == 1)
+        	closest_depth = texture(material.depth_cubemap_1, frag_to_light + grid_sampling_disk[i] * disk_radius).r;
+		if(light.cubemap_index == 2)
+        	closest_depth = texture(material.depth_cubemap_2, frag_to_light + grid_sampling_disk[i] * disk_radius).r;
+		if(light.cubemap_index == 3)
+        	closest_depth = texture(material.depth_cubemap_3, frag_to_light + grid_sampling_disk[i] * disk_radius).r;
+
         closest_depth *= light.far_plane;   // undo mapping [0;1]
         if(current_depth - bias > closest_depth)
             shadow += 1.0;
@@ -230,7 +251,7 @@ float ShadowCalculationPointPCF(lightSource light, vec4 frag_model_position, vec
 
 void main()
 {
-	vec3 result = vec3(0.05f);
+	vec3 result = vec3(0.05);
 
 	for(int l = 0; l < NR_LIGHTS; ++l) {
 		if(!lights[l].enabled)

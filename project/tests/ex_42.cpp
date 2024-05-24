@@ -49,13 +49,6 @@ static std::vector<Vertex> ex_42_quad_vertices_screen = {
     Vertex(glm::vec3(-1.0f,  1.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec2(0.0f, 1.0f))
 };
 
-static std::vector<Vertex> ex_42_quad_vertices_screen_debug = {
-    Vertex(glm::vec3(1.0f,  1.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec2(1.0f, 1.0f)),
-    Vertex(glm::vec3(1.0f, 0.5f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec2(1.0f, 0.0f)),
-    Vertex(glm::vec3(0.5f, 0.5f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec2(0.0f, 0.0f)),
-    Vertex(glm::vec3(0.5f,  1.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec2(0.0f, 1.0f))
-};
-
 static std::vector<Vertex> ex_42_quad_vertices_plane = {
     Vertex(glm::vec3(1.0f,  1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec2(10.0f, 10.0f)),
     Vertex(glm::vec3(1.0f, -1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec2(10.0f, 0.0f)),
@@ -141,25 +134,23 @@ static Shader *shader_plane;
 static Shader *shader_cube;
 static Shader *shader_light;
 static Shader *shader_shadow;
-static Shader *shader_debug;
 
 // msaa com multisample 4
 static FrameBuffer<Texture2D> *msaa_buffer;
 // buffer de tela
 static FrameBuffer<Texture2D> *screen_buffer;
 // buffer shadow mapping
-static FrameBuffer<TextureCube> *shadow_buffer;
+static std::vector< FrameBuffer<TextureCube> * > shadow_buffer;
 
 static UBO *ubo_matrices;
 static UBO *ubo_camera;
 
 static Mesh *mesh_screen;
-static Mesh *mesh_screen_debug;
 static Mesh *mesh_plane;
 static Mesh *mesh_cube;
 static Mesh *mesh_light;
 
-static PointLight *p_light;
+static std::vector<PointLight *> p_light;
 
 static std::vector<Shader*> config_shader;
 
@@ -176,7 +167,11 @@ static std::vector<ModelTransform> cube_models = {
     ModelTransform(glm::vec3( 3.5f, 3.5f, 2.5), glm::vec3(0.9), glm::vec3(1.0, 0.0, 1.0), 60.0f)
 };
 
-static glm::vec4 light_position = glm::vec4(0.0f, 0.0f, 1.0f, 1.0f);
+static std::vector<glm::vec4> light_position = {
+    glm::vec4(0.0f, 0.0f, 1.0f, 1.0f),
+    glm::vec4(-0.5f, 0.0f, -0.5f, 1.0f),
+    glm::vec4(0.5f, 1.0f, 0.5f, 1.0f)
+};
 
 static bool light_enabled = true;
 
@@ -197,14 +192,15 @@ static void loadScene(GLFWwindow* window, const int width, const int height)
     float near_light = 1.0f;
     float far_light = 25.0f;
 
-    p_light = new PointLight(light_position, width, height, near_light, far_light);
+    for(std::vector<glm::vec4>::iterator it = light_position.begin(); it != light_position.end(); ++it) {
+        p_light.push_back(new PointLight(*it, width, height, near_light, far_light));
+    }
 
     shader_screen = new Shader("glsl/ex_42/posprocessing.vs", "glsl/ex_42/posprocessing.fs");
     shader_plane = new Shader("glsl/ex_42/object.vs", "glsl/ex_42/object.fs");
     shader_cube = new Shader("glsl/ex_42/object.vs", "glsl/ex_42/object.fs");
     shader_light = new Shader("glsl/ex_42/light.vs", "glsl/ex_42/light.fs");
     shader_shadow = new Shader("glsl/ex_42/depth.vs", "glsl/ex_42/depth.fs", "glsl/ex_42/depth.gs");
-    shader_debug = new Shader("glsl/ex_42/debug_depth.vs", "glsl/ex_42/debug_depth.fs");
 
     config_shader.push_back(shader_cube);
     config_shader.push_back(shader_plane);
@@ -216,8 +212,11 @@ static void loadScene(GLFWwindow* window, const int width, const int height)
     msaa_buffer = new FrameBuffer<Texture2D>(width, height, GL_DEPTH24_STENCIL8, GL_DEPTH_STENCIL_ATTACHMENT, 4);
     // buffer de tela
     screen_buffer = new FrameBuffer<Texture2D>(width, height);
-    // buffer shadow mapping
-    shadow_buffer = new FrameBuffer<TextureCube>(1024, 1024, GL_NONE, GL_NONE, TextureType::FRAMEBUFFER_DEPTH_CUBEMAP);
+
+    // buffers shadow mapping
+    for(unsigned i = 0; i < p_light.size(); ++i) {
+        shadow_buffer.push_back(new FrameBuffer<TextureCube>(1024, 1024, GL_NONE, GL_NONE, TextureType::FRAMEBUFFER_DEPTH_CUBEMAP));
+    }
 
     std::vector<Texture2D*> plane_textures = {
         texture_wood
@@ -227,12 +226,13 @@ static void loadScene(GLFWwindow* window, const int width, const int height)
         texture_cube
     };
 
-    std::vector<TextureCube*> shadow_textures = {
-        shadow_buffer->getTexture()
-    };
+    std::vector<TextureCube*> shadow_textures;
+
+    for(std::vector< FrameBuffer<TextureCube> * >::iterator it = shadow_buffer.begin(); it != shadow_buffer.end(); ++it) {
+        shadow_textures.push_back((*it)->getTexture());
+    }
 
     mesh_screen = new Mesh(ex_42_quad_vertices_screen, ex_42_quad_indices, std::vector<Texture2D*>(), VERTEX_TYPE::ATTRIB_PNT);
-    mesh_screen_debug = new Mesh(ex_42_quad_vertices_screen_debug, ex_42_quad_indices, std::vector<Texture2D*>(), VERTEX_TYPE::ATTRIB_PNT);
 
     mesh_plane = new Mesh(ex_42_quad_vertices_plane, ex_42_quad_indices, plane_textures, shadow_textures, VERTEX_TYPE::ATTRIB_PNT);
     mesh_cube = new Mesh(ex_42_cube_vertices, ex_42_cube_indices, cube_textures, shadow_textures, VERTEX_TYPE::ATTRIB_PNT);
@@ -268,10 +268,11 @@ static void loadScene(GLFWwindow* window, const int width, const int height)
 
 static void updateScene(GLFWwindow* window, const int width, const int height)
 {
-    // glm::vec4 light_position = glm::vec4(camera->getCamPos() + (camera->getCamFront() * 3.0f), 0.0f);
-    light_position = light_position * glm::rotate(glm::mat4(1.0f), glm::radians(delta_time) * 100.0f, glm::vec3(0.0f, 1.0f, 0.0f));
-
-    p_light->setPosition(light_position);
+    for(unsigned i = 0; i < p_light.size(); ++i)
+    {
+        light_position[i] = light_position[i] * glm::rotate(glm::mat4(1.0f), glm::radians(delta_time) * 100.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+        p_light[i]->setPosition(light_position[i]);
+    }
 
     // global matrices
     {
@@ -299,9 +300,6 @@ static void updateShader(GLFWwindow* window, const int width, const int height)
         shader_plane->use();
         shader_plane->setFloat("gama", _gamma);
 
-        shader_debug->use();
-        shader_debug->setInt("depth_cubemap", 0);
-
         first = false;
     }
 
@@ -310,7 +308,8 @@ static void updateShader(GLFWwindow* window, const int width, const int height)
         for(auto *shader : config_shader) {
             shader->use();
 
-            shader->setUniform4fv("lights[0].position", glm::value_ptr(light_position));
+            // Light 1
+            shader->setUniform4fv("lights[0].position", glm::value_ptr(light_position[0]));
             shader->setUniform4fv("lights[0].ambient", glm::value_ptr(glm::vec3(1.0f, 1.0f, 1.0f) * 0.05f));
             shader->setUniform4fv("lights[0].diffuse", glm::value_ptr(glm::vec3(1.0f, 1.0f, 1.0f)));
             shader->setUniform4fv("lights[0].specular", glm::value_ptr(glm::vec3(1.0f, 1.0f, 1.0f)));
@@ -324,17 +323,57 @@ static void updateShader(GLFWwindow* window, const int width, const int height)
             shader->setFloat("lights[0].spot_cutoff", 0.0f);
             shader->setFloat("lights[0].spot_exponent", 0.0f);
 
-            shader->setFloat("lights[0].near_plane", p_light->getNearPlane());
-            shader->setFloat("lights[0].far_plane", p_light->getFarPlane());
+            shader->setFloat("lights[0].near_plane", p_light[0]->getNearPlane());
+            shader->setFloat("lights[0].far_plane", p_light[0]->getFarPlane());
+
+            shader->setInt("lights[0].cubemap_index", 1);
 
             shader->setBool("lights[0].enabled", light_enabled);
-        }
-    }
 
-    /// shader shadow casting
-    {
-        p_light->settingShader(shader_shadow);
-        p_light->settingShader(shader_debug);
+            // Light 2
+            shader->setUniform4fv("lights[1].position", glm::value_ptr(light_position[1]));
+            shader->setUniform4fv("lights[1].ambient", glm::value_ptr(glm::vec3(1.0f, 1.0f, 1.0f) * 0.05f));
+            shader->setUniform4fv("lights[1].diffuse", glm::value_ptr(glm::vec3(1.0f, 1.0f, 1.0f)));
+            shader->setUniform4fv("lights[1].specular", glm::value_ptr(glm::vec3(1.0f, 1.0f, 1.0f)));
+
+            shader->setUniform3fv("lights[1].spot_direction", glm::value_ptr(glm::vec3(0.0f, 0.0f, 0.0f)));
+
+            shader->setFloat("lights[1].constant_attenuation", 0.0f);
+            shader->setFloat("lights[1].linear_attenuation", 0.0f);
+            shader->setFloat("lights[1].quadratic_attenuation", 0.0f);
+
+            shader->setFloat("lights[1].spot_cutoff", 0.0f);
+            shader->setFloat("lights[1].spot_exponent", 0.0f);
+
+            shader->setFloat("lights[1].near_plane", p_light[1]->getNearPlane());
+            shader->setFloat("lights[1].far_plane", p_light[1]->getFarPlane());
+
+            shader->setInt("lights[1].cubemap_index", 2);
+
+            shader->setBool("lights[1].enabled", light_enabled);
+
+            // Light 3
+            shader->setUniform4fv("lights[2].position", glm::value_ptr(light_position[2]));
+            shader->setUniform4fv("lights[2].ambient", glm::value_ptr(glm::vec3(1.0f, 1.0f, 1.0f) * 0.05f));
+            shader->setUniform4fv("lights[2].diffuse", glm::value_ptr(glm::vec3(1.0f, 1.0f, 1.0f)));
+            shader->setUniform4fv("lights[2].specular", glm::value_ptr(glm::vec3(1.0f, 1.0f, 1.0f)));
+
+            shader->setUniform3fv("lights[2].spot_direction", glm::value_ptr(glm::vec3(0.0f, 0.0f, 0.0f)));
+
+            shader->setFloat("lights[2].constant_attenuation", 0.0f);
+            shader->setFloat("lights[2].linear_attenuation", 0.0f);
+            shader->setFloat("lights[2].quadratic_attenuation", 0.0f);
+
+            shader->setFloat("lights[2].spot_cutoff", 0.0f);
+            shader->setFloat("lights[2].spot_exponent", 0.0f);
+
+            shader->setFloat("lights[2].near_plane", p_light[2]->getNearPlane());
+            shader->setFloat("lights[2].far_plane", p_light[2]->getFarPlane());
+
+            shader->setInt("lights[2].cubemap_index", 3);
+
+            shader->setBool("lights[2].enabled", light_enabled);
+        }
     }
 }
 
@@ -373,8 +412,6 @@ static void renderScene(GLFWwindow* window, const int width, const int height, S
 
     /// Draw wall
     {
-        used->use();
-
         // left
 
         glm::mat4 model = glm::mat4(1.0f);
@@ -382,6 +419,7 @@ static void renderScene(GLFWwindow* window, const int width, const int height, S
         model = glm::scale(model, glm::vec3(size_room, size_room, size_room));
         model = glm::rotate(model, glm::radians(180.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 
+        used->use();
         used->setMatrix4fv("model", glm::value_ptr(model));
 
         mesh_plane->draw(used);
@@ -392,6 +430,7 @@ static void renderScene(GLFWwindow* window, const int width, const int height, S
         model = glm::translate(model, glm::vec3(0.0f, 0.0f, -size_room));
         model = glm::scale(model, glm::vec3(size_room, size_room, size_room));
 
+        used->use();
         used->setMatrix4fv("model", glm::value_ptr(model));
 
         mesh_plane->draw(used);
@@ -404,6 +443,7 @@ static void renderScene(GLFWwindow* window, const int width, const int height, S
         model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
         model = glm::rotate(model, glm::radians(90.0f), glm::vec3(-1.0f, 0.0f, 0.0f));
 
+        used->use();
         used->setMatrix4fv("model", glm::value_ptr(model));
 
         mesh_plane->draw(used);
@@ -416,6 +456,7 @@ static void renderScene(GLFWwindow* window, const int width, const int height, S
         model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
         model = glm::rotate(model, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 
+        used->use();
         used->setMatrix4fv("model", glm::value_ptr(model));
 
         mesh_plane->draw(used);
@@ -436,15 +477,20 @@ static void renderScene(GLFWwindow* window, const int width, const int height, S
 
 static void renderLight(GLFWwindow* window, const int width, const int height)
 {
-    if(light_enabled) {
-        glm::mat4 model(1.0f);
-        model = glm::translate(model, glm::vec3(light_position));
-        model = glm::scale(model, glm::vec3(0.05f, 0.05f, 0.05f));
+    if(light_enabled)
+    {
+        for(std::vector<glm::vec4>::iterator it = light_position.begin(); it != light_position.end(); ++it)
+        {
+            shader_light->use();
 
-        shader_light->use();
-        shader_light->setMatrix4fv("model", glm::value_ptr(model));
+            glm::mat4 model(1.0f);
+            model = glm::translate(model, glm::vec3(*it));
+            model = glm::scale(model, glm::vec3(0.05f, 0.05f, 0.05f));
 
-        mesh_light->draw(shader_light);
+            shader_light->setMatrix4fv("model", glm::value_ptr(model));
+
+            mesh_light->draw(shader_light);
+        }
     }
 }
 
@@ -472,18 +518,7 @@ static void renderProcessing(GLFWwindow* window, const int width, const int heig
 
 static void renderProcessingDebug(GLFWwindow* window, const int width, const int height)
 {
-    msaa_buffer->unbind();
-
-    glDisable(GL_DEPTH_TEST);
-    glDisable(GL_CULL_FACE);
-
-    // draw screen debug
-    {
-        shader_debug->use();
-        shadow_buffer->getTexture()->bind(GL_TEXTURE0);
-
-        mesh_screen_debug->draw(shader_debug);
-    }
+    return;
 }
 
 static void processInput(GLFWwindow *window, float delta_time)
@@ -529,16 +564,19 @@ int run_042(const int width, const int height)
         updateScene(window, width, height);
         updateShader(window, width, height);
 
-        {
-            glViewport(0, 0, shadow_buffer->getWidth(), shadow_buffer->getHeight());
-            shadow_buffer->bind();
+        /// shader shadow casting
+        for(unsigned i = 0; i < p_light.size(); ++i) {
+            shadow_buffer[i]->bind();
+            glViewport(0, 0, shadow_buffer[i]->getWidth(), shadow_buffer[i]->getHeight());
             clearGL();
+            p_light[i]->settingShader(shader_shadow);
             renderScene(window, width, height, shader_shadow);
+            shadow_buffer[i]->unbind();
         }
 
         {
-            glViewport(0, 0, screen_buffer->getWidth(), screen_buffer->getHeight());
             msaa_buffer->bind();
+            glViewport(0, 0, screen_buffer->getWidth(), screen_buffer->getHeight());
             clearGL();
             renderScene(window, width, height);
             renderLight(window, width, height);
