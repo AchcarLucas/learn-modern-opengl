@@ -173,6 +173,8 @@ static std::vector<glm::vec4> light_position = {
     glm::vec4(0.5f, 1.0f, 0.5f, 1.0f)
 };
 
+#define MAX_DEPTH_CUBEMAP 7
+
 static bool light_enabled = true;
 
 static void clearGL()
@@ -190,7 +192,7 @@ static void loadScene(GLFWwindow* window, const int width, const int height)
     camera->setCamSpeed(25.0f);
 
     float near_light = 1.0f;
-    float far_light = 25.0f;
+    float far_light = 100.0f;
 
     for(std::vector<glm::vec4>::iterator it = light_position.begin(); it != light_position.end(); ++it) {
         p_light.push_back(new PointLight(*it, width, height, near_light, far_light));
@@ -214,7 +216,7 @@ static void loadScene(GLFWwindow* window, const int width, const int height)
     screen_buffer = new FrameBuffer<Texture2D>(width, height);
 
     // buffers shadow mapping
-    for(unsigned i = 0; i < p_light.size(); ++i) {
+    for(unsigned i = 0; i < MAX_DEPTH_CUBEMAP; ++i) {
         shadow_buffer.push_back(new FrameBuffer<TextureCube>(1024, 1024, GL_NONE, GL_NONE, TextureType::FRAMEBUFFER_DEPTH_CUBEMAP));
     }
 
@@ -291,14 +293,14 @@ static void updateShader(GLFWwindow* window, const int width, const int height)
 
     if(first) {
         shader_screen->use();
-        shader_screen->setFloat("gama", _gamma);
+        shader_screen->setFloat("gamma", _gamma);
         shader_screen->setInt("screen_texture", 0);
 
         shader_cube->use();
-        shader_cube->setFloat("gama", _gamma);
+        shader_cube->setFloat("gamma", _gamma);
 
         shader_plane->use();
-        shader_plane->setFloat("gama", _gamma);
+        shader_plane->setFloat("gamma", _gamma);
 
         first = false;
     }
@@ -310,9 +312,9 @@ static void updateShader(GLFWwindow* window, const int width, const int height)
 
             // Light 1
             shader->setUniform4fv("lights[0].position", glm::value_ptr(light_position[0]));
-            shader->setUniform4fv("lights[0].ambient", glm::value_ptr(glm::vec3(1.0f, 1.0f, 1.0f) * 0.05f));
-            shader->setUniform4fv("lights[0].diffuse", glm::value_ptr(glm::vec3(1.0f, 1.0f, 1.0f)));
-            shader->setUniform4fv("lights[0].specular", glm::value_ptr(glm::vec3(1.0f, 1.0f, 1.0f)));
+            shader->setUniform4fv("lights[0].ambient", glm::value_ptr(glm::vec3(1.0f, 1.0f, 1.0f) * 20.0f));
+            shader->setUniform4fv("lights[0].diffuse", glm::value_ptr(glm::vec3(1.0f, 1.0f, 1.0f) * 20.0f));
+            shader->setUniform4fv("lights[0].specular", glm::value_ptr(glm::vec3(1.0f, 1.0f, 1.0f) * 20.0f));
 
             shader->setUniform3fv("lights[0].spot_direction", glm::value_ptr(glm::vec3(0.0f, 0.0f, 0.0f)));
 
@@ -332,9 +334,9 @@ static void updateShader(GLFWwindow* window, const int width, const int height)
 
             // Light 2
             shader->setUniform4fv("lights[1].position", glm::value_ptr(light_position[1]));
-            shader->setUniform4fv("lights[1].ambient", glm::value_ptr(glm::vec3(1.0f, 1.0f, 1.0f) * 0.05f));
-            shader->setUniform4fv("lights[1].diffuse", glm::value_ptr(glm::vec3(1.0f, 1.0f, 1.0f)));
-            shader->setUniform4fv("lights[1].specular", glm::value_ptr(glm::vec3(1.0f, 1.0f, 1.0f)));
+            shader->setUniform4fv("lights[1].ambient", glm::value_ptr(glm::vec3(1.0f, 1.0f, 1.0f) * 20.0f));
+            shader->setUniform4fv("lights[1].diffuse", glm::value_ptr(glm::vec3(1.0f, 1.0f, 1.0f) * 20.0f));
+            shader->setUniform4fv("lights[1].specular", glm::value_ptr(glm::vec3(1.0f, 1.0f, 1.0f) * 20.0f));
 
             shader->setUniform3fv("lights[1].spot_direction", glm::value_ptr(glm::vec3(0.0f, 0.0f, 0.0f)));
 
@@ -354,9 +356,9 @@ static void updateShader(GLFWwindow* window, const int width, const int height)
 
             // Light 3
             shader->setUniform4fv("lights[2].position", glm::value_ptr(light_position[2]));
-            shader->setUniform4fv("lights[2].ambient", glm::value_ptr(glm::vec3(1.0f, 1.0f, 1.0f) * 0.05f));
-            shader->setUniform4fv("lights[2].diffuse", glm::value_ptr(glm::vec3(1.0f, 1.0f, 1.0f)));
-            shader->setUniform4fv("lights[2].specular", glm::value_ptr(glm::vec3(1.0f, 1.0f, 1.0f)));
+            shader->setUniform4fv("lights[2].ambient", glm::value_ptr(glm::vec3(1.0f, 1.0f, 1.0f) * 20.0f));
+            shader->setUniform4fv("lights[2].diffuse", glm::value_ptr(glm::vec3(1.0f, 1.0f, 1.0f) * 20.0f));
+            shader->setUniform4fv("lights[2].specular", glm::value_ptr(glm::vec3(1.0f, 1.0f, 1.0f) * 20.0f));
 
             shader->setUniform3fv("lights[2].spot_direction", glm::value_ptr(glm::vec3(0.0f, 0.0f, 0.0f)));
 
