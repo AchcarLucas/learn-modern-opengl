@@ -10,6 +10,7 @@
 #include "ubo.hpp"
 #include "object.hpp"
 #include "light.hpp"
+#include "rendertext.hpp"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -34,13 +35,13 @@ static void mouseCallback(GLFWwindow*, double, double);
 static void scrollCallback(GLFWwindow*, double, double);
 
 // camera class
-static Camera *camera = new Camera(glm::vec3(5.0f, 5.0f, -5.0f), glm::vec3(0.0f, 0.0f, 0.0f));
+static Camera *camera = new Camera(glm::vec3(0.0f, 0.0f, -5.0f), glm::vec3(0.0f, 0.0f, 0.0f));
 
 // timing
 static float delta_time = 0.0f;	// time between current frame and last frame
 static float last_frame = 0.0f;
 
-static float _gamma = 2.0f;
+static float _gamma = 2.2f;
 
 static std::vector<Vertex> ex_43_quad_vertices_screen = {
     Vertex(glm::vec3(1.0f,  1.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec2(1.0f, 1.0f)),
@@ -50,10 +51,10 @@ static std::vector<Vertex> ex_43_quad_vertices_screen = {
 };
 
 static std::vector<Vertex> ex_43_quad_vertices_plane = {
-    Vertex(glm::vec3(1.0f,  1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec2(10.0f, 10.0f)),
-    Vertex(glm::vec3(1.0f, -1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec2(10.0f, 0.0f)),
+    Vertex(glm::vec3(1.0f,  1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec2(1.0f, 1.0f)),
+    Vertex(glm::vec3(1.0f, -1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec2(1.0f, 0.0f)),
     Vertex(glm::vec3(-1.0f, -1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec2(0.0f, 0.0f)),
-    Vertex(glm::vec3(-1.0f,  1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec2(0.0f, 10.0f))
+    Vertex(glm::vec3(-1.0f,  1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec2(0.0f, 1.0f))
 };
 
 static std::vector<GLuint> ex_43_quad_indices = {
@@ -134,6 +135,7 @@ static Shader *shader_plane;
 static Shader *shader_cube;
 static Shader *shader_light;
 static Shader *shader_shadow;
+static Shader *shader_text;
 
 // msaa com multisample 4
 static FrameBuffer<Texture2D> *msaa_buffer;
@@ -148,6 +150,8 @@ static UBO *ubo_camera;
 static Mesh *mesh_screen;
 static Mesh *mesh_plane;
 static Mesh *mesh_light;
+
+static RenderText *render_text_screen;
 
 static std::vector<PointLight *> p_light;
 
@@ -181,6 +185,8 @@ static std::vector<glm::vec3> light_color = {
 };
 
 static bool light_enabled = true;
+static bool hdr_enabled = true;
+static float exposure = 1.0f;
 
 #define MAX_DEPTH_CUBEMAP 7
 
@@ -210,11 +216,14 @@ static void loadScene(GLFWwindow* window, const int width, const int height)
     shader_cube = new Shader("glsl/ex_43/object.vs", "glsl/ex_43/object.fs");
     shader_light = new Shader("glsl/ex_43/light.vs", "glsl/ex_43/light.fs");
     shader_shadow = new Shader("glsl/ex_43/depth.vs", "glsl/ex_43/depth.fs", "glsl/ex_43/depth.gs");
+    shader_text = new Shader("glsl/text_sdf/text_sdf.vs", "glsl/text_sdf/text_sdf.fs");
 
     config_shader.push_back(shader_cube);
     config_shader.push_back(shader_plane);
 
-    texture_wood = new Texture2D("./resources/textures/wood.png", TextureType::DIFFUSE, true, GL_RGBA);
+    texture_wood = new Texture2D("./resources/textures/wood.png", TextureType::DIFFUSE, true, GL_SRGB_ALPHA);
+
+    render_text_screen = new RenderText("fonts/arial.ttf", width, height, 0, 32, TextType::DRAW_TO_SCREEN, true);
 
     // msaa com multisample 4
     msaa_buffer = new FrameBuffer<Texture2D>(width, height, GL_DEPTH24_STENCIL8, GL_DEPTH_STENCIL_ATTACHMENT, 4);
@@ -250,7 +259,7 @@ static void loadScene(GLFWwindow* window, const int width, const int height)
 
     /// global matrices
     {
-        glm::mat4 _projection = camera->getPerspectiveMatrix(width, height, 0.1f, 1000.0f);
+        glm::mat4 _projection = camera->getPerspectiveMatrix(width, height, 0.1f, 100.0f);
         glm::mat4 _view = camera->getViewMatrix();
 
         ubo_matrices->UBOSubBuffer(glm::value_ptr(_projection), 0, sizeof(glm::mat4));
@@ -292,11 +301,12 @@ static void updateScene(GLFWwindow* window, const int width, const int height)
 
 static void updateShader(GLFWwindow* window, const int width, const int height)
 {
-    static bool first = true;
 
-    if(first) {
+    {
         shader_screen->use();
         shader_screen->setFloat("gamma", _gamma);
+        shader_screen->setFloat("exposure", exposure);
+        shader_screen->setBool("hdr_enabled", hdr_enabled);
         shader_screen->setInt("screen_texture", 0);
 
         shader_cube->use();
@@ -304,8 +314,6 @@ static void updateShader(GLFWwindow* window, const int width, const int height)
 
         shader_plane->use();
         shader_plane->setFloat("gamma", _gamma);
-
-        first = false;
     }
 
     /// Global lights
@@ -317,7 +325,7 @@ static void updateShader(GLFWwindow* window, const int width, const int height)
                 string s_lights = "lights[" + std::to_string(i) + "].";
                 shader->setUniform4fv(s_lights + "position", glm::value_ptr(light_position[i]));
                 shader->setUniform4fv(s_lights + "ambient", glm::value_ptr(light_color[i]));
-                shader->setUniform4fv(s_lights + "diffuse", glm::value_ptr(light_color[i]));
+                shader->setUniform4fv(s_lights + "diffuse", glm::value_ptr(glm::vec3(0.0, 0.0, 0.0)));
                 shader->setUniform4fv(s_lights + "specular", glm::value_ptr(glm::vec3(0.0, 0.0, 0.0)));
 
                 shader->setUniform3fv(s_lights + "spot_direction", glm::value_ptr(glm::vec3(0.0f, 0.0f, 0.0f)));
@@ -457,7 +465,6 @@ static void renderProcessing(GLFWwindow* window, const int width, const int heig
     msaa_buffer->bind(GL_READ_FRAMEBUFFER);
     screen_buffer->bind(GL_DRAW_FRAMEBUFFER);
     glBlitFramebuffer(0, 0, msaa_buffer->getWidth(), msaa_buffer->getHeight(), 0, 0, screen_buffer->getWidth(), screen_buffer->getHeight(), GL_COLOR_BUFFER_BIT, GL_NEAREST);
-
     msaa_buffer->unbind();
 
     // draw screen
@@ -480,7 +487,36 @@ static void renderProcessingDebug(GLFWwindow* window, const int width, const int
 
 static void processInput(GLFWwindow *window, float delta_time)
 {
+    static float waiting_time = 0.0f;
+
     camera->processInput(window, delta_time);
+
+    if(waiting_time > 0.2f) {
+        if (glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS) {
+            light_enabled = !light_enabled;
+            std::cout << "light [" << (light_enabled ? "ON" : "OFF") << "]" << std::endl;
+            waiting_time = 0.0f;
+        }
+
+        if (glfwGetKey(window, GLFW_KEY_H) == GLFW_PRESS) {
+            hdr_enabled = !hdr_enabled;
+            std::cout << "hdr [" << (hdr_enabled ? "ON" : "OFF") << "]" << std::endl;
+            waiting_time = 0.0f;
+        }
+
+        if (glfwGetKey(window, GLFW_KEY_KP_ADD) == GLFW_PRESS)
+        {
+            exposure -= 0.05f;
+            exposure =  glm::clamp(exposure, 0.0f, 5.0f);
+        }
+        else if (glfwGetKey(window, GLFW_KEY_KP_SUBTRACT) == GLFW_PRESS)
+        {
+            exposure += 0.05f;
+            exposure = glm::clamp(exposure, 0.0f, 5.0f);
+        }
+    }
+
+    waiting_time += delta_time;
 }
 
 static void mouseCallback(GLFWwindow* window, double x_pos, double y_pos)
@@ -537,6 +573,30 @@ int run_043(const int width, const int height)
             clearGL();
             renderScene(window, width, height);
             renderLight(window, width, height);
+
+            // screen text render
+            {
+                render_text_screen->draw(shader_text,
+                    string("Press L to ") +
+                                (light_enabled ? string("Disabled") : string("Enabled")) +
+                                string(" Light "),
+                    530.0f, 530.0f, 0.5f,
+                    glm::vec3(0.5, 0.8f, 0.2f));
+
+                render_text_screen->draw(shader_text,
+                    string("Press H to ") +
+                                (hdr_enabled ? string("Disabled") : string("Enabled")) +
+                                string(" HDR "),
+                    530.0f, 500.0f, 0.5f,
+                    glm::vec3(0.5, 0.8f, 0.2f));
+
+                render_text_screen->draw(shader_text,
+                string("Press '+' or '-' to ") + to_string(exposure) + string(" Exposure HDR"),
+                480.0f, 470.0f, 0.5f,
+                glm::vec3(0.5, 0.8f, 0.2f));
+            }
+
+            msaa_buffer->unbind();
         }
 
         renderProcessing(window, width, height);
@@ -547,6 +607,8 @@ int run_043(const int width, const int height)
         glfwPollEvents();
         glfwSwapBuffers(window);
     }
+
+    delete render_text_screen;
 
     delete shader_plane;
     delete shader_screen;

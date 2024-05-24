@@ -5,18 +5,24 @@ in VS_DATA {
     vec2 tex;
 } vs_in;
 
-uniform float gamma = 2.2f;
+uniform float gamma;
+uniform float exposure;
+uniform bool hdr_enabled;
 uniform sampler2D screen_texture;
 
-vec4 gammaCorrection(vec4 color)
+vec3 gammaCorrection(vec3 color)
 {
-    return pow(color, 1.0 / vec4(gamma));
+    return pow(color, vec3(1.0 / gamma));
 }
 
 void main()
 {
-    vec3 col = texture(screen_texture, vs_in.tex).rgb;
-    //vec4 color = vec4(vec3(col), 1.0);
-    //FragColor = gammaCorrection(color);
-    FragColor = vec4(col, 1.0);
+    if(hdr_enabled) {
+        vec3 col = texture(screen_texture, vs_in.tex).rgb;
+        vec3 mapped = vec3(1.0) - exp(-col * exposure);
+        FragColor = vec4(gammaCorrection(mapped.xyz), 1.0);
+    } else {
+        vec3 col = texture(screen_texture, vs_in.tex).rgb;
+        FragColor = vec4(gammaCorrection(col.xyz), 1.0);
+    }
 } 

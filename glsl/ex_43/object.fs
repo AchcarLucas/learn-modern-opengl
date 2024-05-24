@@ -79,8 +79,8 @@ vec3 CalcPointLight(lightSource light, vec3 light_dir, vec3 view_dir, vec3 norma
 	 * se o ângulo entre a view e a normal
      * for maior que 90º, então não temos luz na outra face
 	 */
-	if (dot(view_dir, normal) < 0.0f) {
-		diff = spec = 0.0f;
+	if (dot(view_dir, normal) < 0.0) {
+		diff = spec = 0.0;
 	}
 
 	diffuse = diff * diffuse;
