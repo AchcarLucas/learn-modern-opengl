@@ -310,15 +310,15 @@ static void loadScene(GLFWwindow* window, const int width, const int height)
 
     {
         shader_screen->use();
-        shader_cube->setFloat("gama", 2.2f);
+        shader_cube->setFloat("gamma", 2.2f);
         shader_screen->setInt("screen_texture", 0);
 
 
         shader_cube->use();
-        shader_cube->setFloat("gama", 2.2f);
+        shader_cube->setFloat("gamma", 2.2f);
 
         shader_floor->use();
-        shader_floor->setFloat("gama", 2.2f);
+        shader_floor->setFloat("gamma", 2.2f);
 
         shader_debug->use();
         shader_debug->setInt("depth_map", 0);

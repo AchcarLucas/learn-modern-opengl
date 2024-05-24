@@ -40,7 +40,7 @@ layout (std140) uniform Camera {
 
 const int NR_LIGHTS = 16;
 
-uniform float gamma = 2.2f;
+uniform float gamma = 2.2;
 uniform lightSource lights[NR_LIGHTS];
 
 vec3 CalcDirectionalLight(lightSource light, vec3 light_dir, vec3 view_dir, vec3 normal)
