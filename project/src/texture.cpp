@@ -17,7 +17,7 @@ static GLenum ImageTypeFormat(int format)
     return GL_NONE;
 }
 
-Texture2D::Texture2D(const std::string file, const TextureType type, bool flip, const GLenum gl_format, const GLenum texture_wrap_s, const GLenum texture_wrap_t)
+Texture2D::Texture2D(const std::string file, const TextureType type, bool flip, const GLenum gl_format, const GLenum texture_wrap_s, const GLenum texture_wrap_t, GLenum variable_type)
 {
     _stbi_set_flip_vertically_on_load(flip);
 
@@ -42,7 +42,7 @@ Texture2D::Texture2D(const std::string file, const TextureType type, bool flip, 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-    glTexImage2D(GL_TEXTURE_2D, 0, (gl_format != GL_NONE) ? gl_format : this->format, width, height, 0, this->format, GL_UNSIGNED_BYTE, image);
+    glTexImage2D(GL_TEXTURE_2D, 0, (gl_format != GL_NONE) ? gl_format : this->format, width, height, 0, this->format, variable_type, image);
     glGenerateMipmap(GL_TEXTURE_2D);
 
     glBindTexture(GL_TEXTURE_2D, 0);
@@ -55,7 +55,7 @@ Texture2D::Texture2D(const std::string file, const TextureType type, bool flip, 
     _stbi_image_free(image);
 }
 
-Texture2D::Texture2D(const int width, const int height, const TextureType type, const GLenum gl_internalformat, const GLenum gl_format)
+Texture2D::Texture2D(const int width, const int height, const TextureType type, const GLenum gl_internalformat, const GLenum gl_format, GLenum variable_type)
 {
     this->width = width;
     this->height = height;
@@ -68,7 +68,7 @@ Texture2D::Texture2D(const int width, const int height, const TextureType type, 
 
     switch(type) {
         case TextureType::FRAMEBUFFER_DEPTH_MAPPING:
-            glTexImage2D(GL_TEXTURE_2D, 0, gl_internalformat, width, height, 0, gl_format, GL_FLOAT, NULL);
+            glTexImage2D(GL_TEXTURE_2D, 0, gl_internalformat, width, height, 0, gl_format, variable_type, NULL);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
@@ -78,7 +78,7 @@ Texture2D::Texture2D(const int width, const int height, const TextureType type, 
             glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, border);
             break;
         default:
-            glTexImage2D(GL_TEXTURE_2D, 0, gl_internalformat, width, height, 0, gl_format, GL_UNSIGNED_BYTE, NULL);
+            glTexImage2D(GL_TEXTURE_2D, 0, gl_internalformat, width, height, 0, gl_format, variable_type, NULL);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
             break;

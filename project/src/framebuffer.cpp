@@ -4,6 +4,37 @@ template class FrameBuffer<Texture2D>;
 template class FrameBuffer<TextureCube>;
 
 template <typename T>
+FrameBuffer<T>::FrameBuffer(std::vector<AttachmentFrameBuffer> attachment_frame_buffer)
+{
+    glGenFramebuffers(1, &this->fbo);
+    glBindFramebuffer(GL_FRAMEBUFFER, this->fbo);
+
+    unsigned int attachments[attachment_frame_buffer.size()];
+
+    for(unsigned i = 0; i < attachment_frame_buffer.size(); ++i) {
+        T *_texture = dynamic_cast<T*>(new Texture2D(   attachment_frame_buffer[i].width,
+                                                        attachment_frame_buffer[i].height,
+                                                        attachment_frame_buffer[i].type,
+                                                        attachment_frame_buffer[i].gl_internalformat,
+                                                        attachment_frame_buffer[i].gl_format,
+                                                        attachment_frame_buffer[i].variable_type));
+        framebuffer_tex.push_back(_texture);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D, _texture->getGenTexture(), 0);
+        attachments[i] = GL_COLOR_ATTACHMENT0 + i;
+    }
+
+    glDrawBuffers(attachment_frame_buffer.size(), attachments);
+
+    if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
+        std::cout << "ERROR::FRAMEBUFFER:: Framebuffer is not complete!" << std::endl;
+        delete this;
+        return;
+    }
+
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+template <typename T>
 FrameBuffer<T>::FrameBuffer(const int width, const int height, unsigned num_attachment)
 {
     this->width = width;
@@ -50,7 +81,7 @@ FrameBuffer<T>::FrameBuffer(const int width, const int height, const GLenum gl_i
 
     switch(type) {
         case TextureType::FRAMEBUFFER_DEPTH_MAPPING:
-            _texture = dynamic_cast<T*>(new Texture2D(width, height, type, GL_DEPTH_COMPONENT, GL_DEPTH_COMPONENT));
+            _texture = dynamic_cast<T*>(new Texture2D(width, height, type, GL_DEPTH_COMPONENT, GL_DEPTH_COMPONENT, GL_FLOAT));
             framebuffer_tex.push_back(_texture);
             glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, _texture->getGenTexture(), 0);
             break;
