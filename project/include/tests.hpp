@@ -7,7 +7,7 @@
 // #define run(width, height) run_default(width, height)
 // #define run(width, height) imgui_test(width, height)
 
-#define run(width, height) run_044(width, height)
+#define run(width, height) run_045(width, height)
 
 int load_assimp_test();
 int freetype_test();
@@ -59,5 +59,6 @@ int run_041(const int, const int);
 int run_042(const int, const int);
 int run_043(const int, const int);
 int run_044(const int, const int);
+int run_045(const int, const int);
 
 #endif // INIT_HPP
