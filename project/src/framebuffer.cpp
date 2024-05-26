@@ -189,9 +189,9 @@ FrameBuffer<T>::~FrameBuffer()
             delete (*it);
 
         framebuffer_tex.clear();
-
-        glDeleteFramebuffers(1, &this->fbo);
     }
+
+    glDeleteFramebuffers(1, &this->fbo);
 }
 
 template <typename T>
