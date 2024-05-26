@@ -704,23 +704,41 @@ int run_044(const int width, const int height)
         glfwSwapBuffers(window);
     }
 
-    delete render_text_screen;
+    delete texture_wood;
+    delete texture_cube;
 
     delete shader_blur;
     delete shader_bloom;
     delete shader_posprocessing;
-
     delete shader_plane;
-
     delete shader_cube;
     delete shader_light;
+    delete shader_shadow;
+    delete shader_text;
+
+    delete blur_buffer;
+    delete bloom_buffer;
+    delete render_buffer;
+    delete screen_buffer;
+
+    for(std::vector< FrameBuffer<TextureCube> * >::iterator it = shadow_buffer.begin(); it != shadow_buffer.end(); ++it)
+        delete (*it);
+
+    shadow_buffer.clear();
+
+    delete ubo_matrices;
+    delete ubo_camera;
 
     delete mesh_screen;
     delete mesh_plane;
+    delete mesh_light;
 
-    delete camera;
+    delete render_text_screen;
 
-    delete texture_wood;
+    for(std::vector<PointLight *>::iterator it = p_light.begin(); it != p_light.end(); ++it)
+        delete (*it);
+
+    p_light.clear();
 
     glfwTerminate();
     return 0;
