@@ -188,3 +188,6 @@ Após finalizar a instalação das libs e a configuração do codeblock, no arqu
 
 ## Exemplo-44 (Bloom With HDR)
 ![ex_44_1](./images/ex_44_2.png)
+
+## Exemplo-45 (Deferred Shader no Optimization)
+![ex_45](./images/ex_45.png)
