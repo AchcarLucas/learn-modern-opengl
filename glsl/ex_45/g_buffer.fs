@@ -1,5 +1,4 @@
 #version 330 core
-out vec4 FragColor;
 
 layout (location = 0) out vec3 gPosition;
 layout (location = 1) out vec3 gNormal;
@@ -12,8 +11,9 @@ in VS_DATA {
 } vs_in;
 
 struct Material {
-	sampler2D diffuse_1;
-	sampler2D specular_1;
+    sampler2D diffuse_1;
+    sampler2D normal_1;
+    sampler2D specular_1;
 };
 
 uniform Material material;
