@@ -4,26 +4,33 @@ template class FrameBuffer<Texture2D>;
 template class FrameBuffer<TextureCube>;
 
 template <typename T>
-FrameBuffer<T>::FrameBuffer(std::vector<AttachmentFrameBuffer> attachment_frame_buffer)
+FrameBuffer<T>::FrameBuffer(int width, int height, std::vector<AttachmentFrameBuffer> attachment_frame_buffer)
 {
     glGenFramebuffers(1, &this->fbo);
     glBindFramebuffer(GL_FRAMEBUFFER, this->fbo);
 
+    this->width = width;
+    this->height = height;
+
     unsigned int attachments[attachment_frame_buffer.size()];
 
     for(unsigned i = 0; i < attachment_frame_buffer.size(); ++i) {
-        T *_texture = dynamic_cast<T*>(new Texture2D(   attachment_frame_buffer[i].width,
-                                                        attachment_frame_buffer[i].height,
-                                                        attachment_frame_buffer[i].type,
+        T *_texture = dynamic_cast<T*>(new Texture2D(   width,
+                                                        height,
+                                                        TextureType::FRAMEBUFFER,
                                                         attachment_frame_buffer[i].gl_internalformat,
                                                         attachment_frame_buffer[i].gl_format,
                                                         attachment_frame_buffer[i].variable_type));
+
         framebuffer_tex.push_back(_texture);
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D, _texture->getGenTexture(), 0);
         attachments[i] = GL_COLOR_ATTACHMENT0 + i;
     }
 
     glDrawBuffers(attachment_frame_buffer.size(), attachments);
+
+    this->rbo = new RBO(width, height, GL_DEPTH_COMPONENT);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, this->rbo->getRBO());
 
     if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
         std::cout << "ERROR::FRAMEBUFFER:: Framebuffer is not complete!" << std::endl;
