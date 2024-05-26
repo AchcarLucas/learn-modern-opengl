@@ -177,10 +177,12 @@ template <typename T>
 FrameBuffer<T>::~FrameBuffer()
 {
     typename std::vector<T *>::iterator it;
-    for(it = framebuffer_tex.end(); it != framebuffer_tex.begin(); --it) {
-        delete *it;
-        it = framebuffer_tex.erase(it);
-    }
+
+    for(it = framebuffer_tex.begin(); it != framebuffer_tex.end(); ++it)
+        delete (*it);
+
+    framebuffer_tex.clear();
+
     delete rbo;
 
     glDeleteFramebuffers(1, &this->fbo);
