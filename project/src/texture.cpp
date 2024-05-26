@@ -176,7 +176,7 @@ TextureCube::TextureCube(const int width, const int height)
 
 TextureCube::~TextureCube()
 {
-    glDeleteTextures(6, &this->texture);
+    glDeleteTextures(1, &this->texture);
 }
 
 void TextureCube::bind(GLenum _GL_TEXTURE)
