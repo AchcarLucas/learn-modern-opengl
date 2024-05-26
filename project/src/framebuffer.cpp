@@ -9,6 +9,7 @@ FrameBuffer<T>::FrameBuffer(int width, int height, std::vector<AttachmentFrameBu
     glGenFramebuffers(1, &this->fbo);
     glBindFramebuffer(GL_FRAMEBUFFER, this->fbo);
 
+    this->rbo = nullptr;
     this->width = width;
     this->height = height;
 
@@ -44,11 +45,12 @@ FrameBuffer<T>::FrameBuffer(int width, int height, std::vector<AttachmentFrameBu
 template <typename T>
 FrameBuffer<T>::FrameBuffer(const int width, const int height, unsigned num_attachment)
 {
-    this->width = width;
-    this->height = height;
-
     glGenFramebuffers(1, &this->fbo);
     glBindFramebuffer(GL_FRAMEBUFFER, this->fbo);
+
+    this->rbo = nullptr;
+    this->width = width;
+    this->height = height;
 
     for(unsigned i = 0; i < num_attachment; ++i) {
         T *_texture = dynamic_cast<T*>(new Texture2D(width, height));
@@ -78,11 +80,12 @@ FrameBuffer<T>::FrameBuffer(const int width, const int height, unsigned num_atta
 template <typename T>
 FrameBuffer<T>::FrameBuffer(const int width, const int height, const GLenum gl_internalformat, const GLenum gl_attachment, TextureType type, unsigned num_attachment)
 {
-    this->width = width;
-    this->height = height;
-
     glGenFramebuffers(1, &this->fbo);
     glBindFramebuffer(GL_FRAMEBUFFER, this->fbo);
+
+    this->rbo = nullptr;
+    this->width = width;
+    this->height = height;
 
     T *_texture;
 
@@ -139,11 +142,12 @@ FrameBuffer<T>::FrameBuffer(const int width, const int height, const GLenum gl_i
 template <typename T>
 FrameBuffer<T>::FrameBuffer(const int width, const int height, const GLenum gl_internalformat, const GLenum gl_attachment, unsigned int multisample, unsigned num_attachment)
 {
-    this->width = width;
-    this->height = height;
-
     glGenFramebuffers(1, &this->fbo);
     glBindFramebuffer(GL_FRAMEBUFFER, this->fbo);
+
+    this->rbo = nullptr;
+    this->width = width;
+    this->height = height;
 
     this->rbo = new RBO(width, height, gl_internalformat, multisample);
 
@@ -176,16 +180,18 @@ FrameBuffer<T>::FrameBuffer(const int width, const int height, const GLenum gl_i
 template <typename T>
 FrameBuffer<T>::~FrameBuffer()
 {
-    typename std::vector<T *>::iterator it;
+    if(this->rbo != nullptr)
+        delete rbo;
 
-    for(it = framebuffer_tex.begin(); it != framebuffer_tex.end(); ++it)
-        delete (*it);
+    if(framebuffer_tex.size() > 0) {
+        typename std::vector<T *>::iterator it;
+        for(it = framebuffer_tex.begin(); it != framebuffer_tex.end(); ++it)
+            delete (*it);
 
-    framebuffer_tex.clear();
+        framebuffer_tex.clear();
 
-    delete rbo;
-
-    glDeleteFramebuffers(1, &this->fbo);
+        glDeleteFramebuffers(1, &this->fbo);
+    }
 }
 
 template <typename T>
