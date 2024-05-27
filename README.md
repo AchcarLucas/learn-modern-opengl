@@ -191,3 +191,6 @@ Após finalizar a instalação das libs e a configuração do codeblock, no arqu
 
 ## Exemplo-45 (Deferred Shader no Optimization)
 ![ex_45](./images/ex_45.png)
+
+## Exemplo-46 (Deferred Shader Simple Optimization)
+![ex_46](./images/ex_46.png)

@@ -7,7 +7,7 @@
 // #define run(width, height) run_default(width, height)
 // #define run(width, height) imgui_test(width, height)
 
-#define run(width, height) run_045(width, height)
+#define run(width, height) run_046(width, height)
 
 int load_assimp_test();
 int freetype_test();
