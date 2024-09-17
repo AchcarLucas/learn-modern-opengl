@@ -121,8 +121,8 @@ int run_047(const int width, const int height)
 
     camera->setCamPos(glm::vec3(0.0f, 2.0f, 8.0f));
 
-    Shader *shader = new Shader("glsl/ex_14/model_loading.vs", "glsl/ex_14/model_loading.fs");
-    Shader *posprocessing_shader = new Shader("glsl/ex_16/posprocessing.vs", "glsl/ex_16/posprocessing.fs");
+    Shader *shader = new Shader("glsl/ex_47/model_loading.vs", "glsl/ex_14/model_loading.fs");
+    Shader *posprocessing_shader = new Shader("glsl/ex_47/posprocessing.vs", "glsl/ex_16/posprocessing.fs");
 
     std::vector<Texture2D*> textures;
     textures.push_back(new Texture2D("resources/textures/floor.png", TextureType::ALBEDO));
