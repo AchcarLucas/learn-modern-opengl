@@ -55,6 +55,7 @@ make
 ```
 
 O arquivo ```.a```  deverá estar em uma pasta oculta chamada ```.lib``` dentro de objs
+Copie a lib ```libfreetype.a``` para dentro da pasta ```./lib/freetype-2.13.2/lib``` do projeto
 
 PS: O projeto já consta com a lib compilada e configurada para linux (Ubuntu 24.04 - 6.2.0-37-generic)
 
