@@ -21,7 +21,6 @@ Após baixar, extrair e faça a compilação usando os comandos dentro da pasta 
 cmake -S . -B build
 cmake build
 cd build
-make build
 sudo make install
 ```
 
