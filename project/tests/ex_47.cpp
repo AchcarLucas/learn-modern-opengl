@@ -210,7 +210,7 @@ static float lerp(float a, float b, float f)
 }
 
 static std::vector<glm::vec3> global_ssao_noise;
-std::vector<glm::vec3> global_ssao_kernel;
+static std::vector<glm::vec3> global_ssao_kernel;
 
 static std::default_random_engine generator;
 static std::uniform_real_distribution<float> randomFloats(0.0, 1.0); // random floats between [0.0, 1.0]
