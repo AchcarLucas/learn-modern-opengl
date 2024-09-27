@@ -16,6 +16,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include <random>
+
 using namespace std;
 
 static void clearGL(GLbitfield bit = GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT, GLfloat r = 0.0f, GLfloat g = 0.0f, GLfloat b = 0.0f, GLfloat a = 1.0f);
@@ -202,6 +204,61 @@ static int steps = 10;
 static std::vector<glm::vec3> light_positions;
 static std::vector<glm::vec4> light_colors;
 
+static float lerp(float a, float b, float f)
+{
+    return a + f * (b - a);
+}
+
+static std::vector<glm::vec3> global_ssao_noise;
+std::vector<glm::vec3> global_ssao_kernel;
+
+static std::default_random_engine generator;
+static std::uniform_real_distribution<float> randomFloats(0.0, 1.0); // random floats between [0.0, 1.0]
+
+static std::vector<glm::vec3> createSSAOKernel()
+{
+    std::vector<glm::vec3> ssao_kernel;
+
+    for (unsigned int i = 0; i < 64; ++i)
+    {
+        glm::vec3 sample(
+            randomFloats(generator) * 2.0 - 1.0,
+            randomFloats(generator) * 2.0 - 1.0,
+            randomFloats(generator)
+        );
+
+        sample  = glm::normalize(sample);
+
+        /*
+        sample *= randomFloats(generator);
+        ssao_kernel.push_back(sample);
+        */
+
+        float scale = (float)i / 64.0;
+        scale = lerp(0.1f, 1.0f, scale * scale);
+        sample *= scale;
+        ssao_kernel.push_back(sample);
+    }
+
+    return ssao_kernel;
+}
+
+static std::vector<glm::vec3> createSSAONoise()
+{
+    std::vector<glm::vec3> ssao_noise;
+
+    for (unsigned int i = 0; i < 16; i++)
+    {
+        glm::vec3 noise(
+            randomFloats(generator) * 2.0 - 1.0,
+            randomFloats(generator) * 2.0 - 1.0,
+            0.0f);
+        ssao_noise.push_back(noise);
+    }
+
+    return ssao_noise;
+}
+
 static void clearGL(GLbitfield bit, GLfloat r, GLfloat g, GLfloat b, GLfloat a)
 {
     glClearColor(r, g, b, a);
@@ -216,6 +273,9 @@ static void loadScene(GLFWwindow* window, const int width, const int height)
 
     light_positions.push_back(glm::vec3(0, 10, 0));
     light_colors.push_back(glm::vec4(1.0, 1.0, 1.0, 50.0f));
+
+    global_ssao_noise = createSSAOKernel();
+    global_ssao_noise = createSSAONoise();
 
     camera->setCamSpeed(25.0f);
 
@@ -315,8 +375,8 @@ static void updateShader(GLFWwindow* window, const int width, const int height)
                 string s_lights = "lights[" + std::to_string(i) + "].";
                 shader->setUniform3fv(s_lights + "position", glm::value_ptr(light_positions[i]));
                 shader->setUniform3fv(s_lights + "color", glm::value_ptr(light_colors[i]));
-                shader->setFloat(s_lights + "linear",  100.0f);
-                shader->setFloat(s_lights + "quadratic", 2.1f);
+                shader->setFloat(s_lights + "linear",  0.7f);
+                shader->setFloat(s_lights + "quadratic", 1.8f);
                 shader->setBool(s_lights + "enabled", light_enabled);
             }
         }
