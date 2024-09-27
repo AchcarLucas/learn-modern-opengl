@@ -214,22 +214,8 @@ static void loadScene(GLFWwindow* window, const int width, const int height)
 {
     _stbi_set_flip_vertically_on_load(true);
 
-    const unsigned int NR_LIGHTS = 32;
-    srand(13);
-
-    for (unsigned int i = 0; i < NR_LIGHTS; i++) {
-        // calculate slightly random offsets
-        float x_pos = static_cast<float>(((rand() % 100) / 100.0) * 10.0 - 5.0);
-        float y_pos = static_cast<float>(((rand() % 100) / 100.0) * 10.0 - 5.0);
-        float z_pos = static_cast<float>(((rand() % 100) / 100.0) * 10.0 - 5.0);
-        light_positions.push_back(glm::vec3(x_pos, y_pos, z_pos));
-
-        // also calculate random color
-        float r_color = static_cast<float>(((rand() % 100) / 200.0f) + 0.5); // between 0.5 and 1.0
-        float g_color = static_cast<float>(((rand() % 100) / 200.0f) + 0.5); // between 0.5 and 1.0
-        float b_color = static_cast<float>(((rand() % 100) / 200.0f) + 0.5); // between 0.5 and 1.0
-        light_colors.push_back(glm::vec4(r_color, g_color, b_color, 50.0f));
-    }
+    light_positions.push_back(glm::vec3(0, 10, 0));
+    light_colors.push_back(glm::vec4(1.0, 1.0, 1.0, 50.0f));
 
     camera->setCamSpeed(25.0f);
 
@@ -329,8 +315,8 @@ static void updateShader(GLFWwindow* window, const int width, const int height)
                 string s_lights = "lights[" + std::to_string(i) + "].";
                 shader->setUniform3fv(s_lights + "position", glm::value_ptr(light_positions[i]));
                 shader->setUniform3fv(s_lights + "color", glm::value_ptr(light_colors[i]));
-                shader->setFloat(s_lights + "linear",  0.7f);
-                shader->setFloat(s_lights + "quadratic", 1.8f);
+                shader->setFloat(s_lights + "linear",  100.0f);
+                shader->setFloat(s_lights + "quadratic", 2.1f);
                 shader->setBool(s_lights + "enabled", light_enabled);
             }
         }

@@ -53,13 +53,15 @@ void main()
         vec3 specular = lights[l].color * spec * frag_specular;
 
         // attenuation
+        /*
         float _distance = length(lights[l].position - frag_pos);
         float attenuation = 1.0 / (1.0 + lights[l].linear * _distance + lights[l].quadratic * _distance * _distance);
 
         diffuse *= attenuation;
         specular *= attenuation;
+        */
 
-        lighting += diffuse + specular;        
+        lighting += diffuse + specular;
 	}
 
     vec3 bloom = texture(gBloom, vs_in.tex).rgb;
