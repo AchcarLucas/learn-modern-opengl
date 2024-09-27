@@ -122,12 +122,14 @@ class TextureBuffer : public TextureBase
                              const int height,
                              const void *buffer,
                              const GLenum type = GL_FLOAT,
-                             const GLint internal_format = GL_RGBA32F,
                              const GLint format = GL_RGB,
+                             const GLint internal_format = GL_RGBA32F,
                              const GLenum min_filter = GL_NEAREST,
                              const GLenum mag_filter = GL_NEAREST,
                              const GLenum wrap_s = GL_REPEAT,
                              const GLenum wrap_t = GL_REPEAT);
+
+    void bind(GLenum);
 };
 
 #endif // TEXTURE_HPP

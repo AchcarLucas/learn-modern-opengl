@@ -185,14 +185,31 @@ TextureBuffer::TextureBuffer(const int width,
                              const int height,
                              const void *buffer,
                              const GLenum type,
-                             const GLint internal_format,
                              const GLint format,
+                             const GLint internal_format,
                              const GLenum min_filter,
                              const GLenum mag_filter,
                              const GLenum wrap_s,
                              const GLenum wrap_t)
 {
+    this->width = width;
+    this->height = height;
+    this->type = TextureType::BUFFER;
+
     glGenTextures(1, &this->texture);
-    glBindTexture(GL_TEXTURE_CUBE_MAP, this->texture);
-    // ...
+    glBindTexture(GL_TEXTURE_2D, this->texture);
+
+    glTexImage2D(GL_TEXTURE_2D, 0, internal_format, width, height, 0, format, type, buffer);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, min_filter);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, mag_filter);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrap_s);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrap_t);
+
+    glBindTexture(GL_TEXTURE_2D, 0);
+}
+
+void TextureBuffer::bind(GLenum _GL_TEXTURE)
+{
+    glActiveTexture(_GL_TEXTURE);
+    glBindTexture(GL_TEXTURE_2D, this->texture);
 }
