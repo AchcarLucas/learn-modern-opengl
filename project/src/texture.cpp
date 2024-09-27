@@ -99,7 +99,7 @@ Texture2D::Texture2D(const int width, const int height, unsigned int multisample
     glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
 }
 
-Texture2D::~Texture2D()
+TextureBase::~TextureBase()
 {
     glDeleteTextures(1, &this->texture);
 }
@@ -174,13 +174,25 @@ TextureCube::TextureCube(const int width, const int height)
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 }
 
-TextureCube::~TextureCube()
-{
-    glDeleteTextures(1, &this->texture);
-}
-
 void TextureCube::bind(GLenum _GL_TEXTURE)
 {
     glActiveTexture(_GL_TEXTURE);
     glBindTexture(GL_TEXTURE_CUBE_MAP, this->texture);
+}
+
+
+TextureBuffer::TextureBuffer(const int width,
+                             const int height,
+                             const void *buffer,
+                             const GLenum type,
+                             const GLint internal_format,
+                             const GLint format,
+                             const GLenum min_filter,
+                             const GLenum mag_filter,
+                             const GLenum wrap_s,
+                             const GLenum wrap_t)
+{
+    glGenTextures(1, &this->texture);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, this->texture);
+    // ...
 }

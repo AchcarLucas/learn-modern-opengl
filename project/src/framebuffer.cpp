@@ -1,7 +1,9 @@
 #include "framebuffer.hpp"
 
+template class FrameBuffer<TextureBase>;
 template class FrameBuffer<Texture2D>;
 template class FrameBuffer<TextureCube>;
+template class FrameBuffer<TextureBuffer>;
 
 template <typename T>
 FrameBuffer<T>::FrameBuffer(int width, int height, std::vector<AttachmentFrameBuffer> attachment_frame_buffer)

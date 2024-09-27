@@ -28,11 +28,12 @@ enum TextureType {
     REFLECTION,
     LIGHTMAP,
     HEIGHT,
+    BUFFER,
     FRAMEBUFFER,
     FRAMEBUFFER_DEPTH_MAPPING,
     FRAMEBUFFER_DEPTH_CUBEMAP,
     FRAMEBUFFER_CUBEMAP,
-    FRAMEBUFFER_MULTISAMPLE,
+    FRAMEBUFFER_MULTISAMPLE
 };
 
 typedef std::map<TextureType, std::string> TextureTypeMap;
@@ -55,68 +56,78 @@ inline TextureTypeMap textureTypeMap = {
     {TextureType::REFLECTION, "reflection"},
     {TextureType::LIGHTMAP, "lightmap"},
     {TextureType::HEIGHT, "height"},
+    {TextureType::BUFFER, "buffer"},
     {TextureType::FRAMEBUFFER, "framebuffer"},
     {TextureType::FRAMEBUFFER_DEPTH_MAPPING, "depth"},
     {TextureType::FRAMEBUFFER_DEPTH_CUBEMAP, "depth_cubemap"},
     {TextureType::FRAMEBUFFER_CUBEMAP, "cubemap"},
-    {TextureType::FRAMEBUFFER_MULTISAMPLE, "multisample"},
+    {TextureType::FRAMEBUFFER_MULTISAMPLE, "multisample"}
 };
 
-class Texture2D
+class TextureBase
+{
+    public:
+        virtual ~TextureBase();
+
+        TextureType getType() { return this->type; }
+        GLenum getFormat() { return this->format; }
+
+        unsigned int getWidth() { return this->width; }
+        unsigned int getHeight() { return this->height; }
+
+        virtual void bind(GLenum) = 0;
+
+        GLuint getGenTexture() { return texture; }
+
+    protected:
+        GLuint texture;
+        TextureType type;
+        GLenum format;
+        unsigned int width, height;
+};
+
+class Texture2D : public TextureBase
 {
     public:
         Texture2D(const std::string file, const TextureType type = TextureType::ALBEDO, bool flip = true, const GLenum gl_format = GL_NONE, const GLenum texture_wrap_s = GL_REPEAT, const GLenum texture_wrap_t = GL_REPEAT, GLenum variable_type = GL_UNSIGNED_BYTE);
         Texture2D(const int width, const int height, const TextureType type = TextureType::FRAMEBUFFER, const GLenum gl_internalformat = GL_RGB, const GLenum gl_format = GL_RGB, GLenum variable_type = GL_UNSIGNED_BYTE);
         Texture2D(const int width, const int height, unsigned int multisample);
-        virtual ~Texture2D();
 
         void bind(GLenum);
 
-        TextureType getType() { return this->type; }
         std::string getFile() { return this->file; }
-        GLenum getFormat() { return this->format; }
-
-        unsigned int getWidth() { return this->width; }
-        unsigned int getHeight() { return this->height; }
-
-        GLuint getGenTexture() { return texture; }
-    protected:
-        GLuint texture;
-        TextureType type;
-        GLenum format;
-        unsigned int width, height;
 
     private:
         std::string file;
 };
 
-class TextureCube
+class TextureCube : public TextureBase
 {
     public:
         TextureCube(std::vector<std::string> files, bool flip = true);
         TextureCube(const int width, const int height);
-        virtual ~TextureCube();
-
-        unsigned int getWidth() { return this->width; }
-        unsigned int getHeight() { return this->height; }
 
         void bind(GLenum);
 
-        TextureType getType() { return this->type; }
-        GLuint getGenTexture() { return texture; }
         std::vector<std::string> getFiles() { return this->files; }
-        GLenum getFormat() { return this->format; }
-
-    protected:
-        GLuint texture;
-        TextureType type;
-        GLenum format;
-        unsigned int width, height;
 
     private:
-
         std::vector<std::string> files;
+};
 
+class TextureBuffer : public TextureBase
+{
+    public:
+        TextureBuffer(const int width,
+                             const int height,
+                             const void *buffer,
+                             const GLenum type = GL_FLOAT,
+                             const GLint internal_format = GL_RGBA32F,
+                             const GLint format = GL_RGB,
+                             const GLenum min_filter = GL_NEAREST,
+                             const GLenum mag_filter = GL_NEAREST,
+                             const GLenum wrap_s = GL_REPEAT,
+                             const GLenum wrap_t = GL_REPEAT);
 };
 
 #endif // TEXTURE_HPP
