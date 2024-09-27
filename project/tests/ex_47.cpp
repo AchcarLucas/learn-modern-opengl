@@ -274,7 +274,7 @@ static void loadScene(GLFWwindow* window, const int width, const int height)
     light_positions.push_back(glm::vec3(0, 10, 0));
     light_colors.push_back(glm::vec4(1.0, 1.0, 1.0, 50.0f));
 
-    global_ssao_noise = createSSAOKernel();
+    global_ssao_kernel = createSSAOKernel();
     global_ssao_noise = createSSAONoise();
 
     camera->setCamSpeed(25.0f);
