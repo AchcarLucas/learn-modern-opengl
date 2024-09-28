@@ -56,32 +56,11 @@ static std::vector<Vertex> ex_44_quad_vertices_plane = {
     Vertex(glm::vec3(-1.0f,  1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec2(0.0f, 1.0f))
 };
 
-static std::vector<Vertex> ex_44_quad_vertices_screen_debug_1 = {
-    Vertex(glm::vec3(-0.25f,  0.0f, 0.0f) + glm::vec3(0.75f,  1.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec2(1.0f, 1.0f)),
-    Vertex(glm::vec3(-0.25f, -0.25f, 0.0f) + glm::vec3(0.75f,  1.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec2(1.0f, 0.0f)),
-    Vertex(glm::vec3(0.0f, -0.25f, 0.0f) + glm::vec3(0.75f,  1.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec2(0.0f, 0.0f)),
-    Vertex(glm::vec3(0.0f,  0.0f, 0.0f) + glm::vec3(0.75f,  1.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec2(0.0f, 1.0f))
-};
-
-static std::vector<Vertex> ex_44_quad_vertices_screen_debug_2 = {
-    Vertex(glm::vec3(-0.25f,  0.0f, 0.0f) + glm::vec3(1.0f,  1.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec2(1.0f, 1.0f)),
-    Vertex(glm::vec3(-0.25f, -0.25f, 0.0f) + glm::vec3(1.0f,  1.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec2(1.0f, 0.0f)),
-    Vertex(glm::vec3(0.0f, -0.25f, 0.0f) + glm::vec3(1.0f,  1.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec2(0.0f, 0.0f)),
-    Vertex(glm::vec3(0.0f,  0.0f, 0.0f) + glm::vec3(1.0f,  1.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec2(0.0f, 1.0f))
-};
-
-static std::vector<Vertex> ex_44_quad_vertices_screen_debug_3 = {
-    Vertex(glm::vec3(-0.25f,  0.0f, 0.0f) + glm::vec3(1.0f,  0.75f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec2(1.0f, 1.0f)),
-    Vertex(glm::vec3(-0.25f, -0.25f, 0.0f) + glm::vec3(1.0f,  0.75f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec2(1.0f, 0.0f)),
-    Vertex(glm::vec3(0.0f, -0.25f, 0.0f) + glm::vec3(1.0f,  0.75f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec2(0.0f, 0.0f)),
-    Vertex(glm::vec3(0.0f,  0.0f, 0.0f) + glm::vec3(1.0f,  0.75f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec2(0.0f, 1.0f))
-};
-
-static std::vector<Vertex> ex_44_quad_vertices_screen_debug_4 = {
-    Vertex(glm::vec3(-0.25f,  0.0f, 0.0f) + glm::vec3(0.75f,  0.75f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec2(1.0f, 1.0f)),
-    Vertex(glm::vec3(-0.25f, -0.25f, 0.0f) + glm::vec3(0.75f,  0.75f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec2(1.0f, 0.0f)),
-    Vertex(glm::vec3(0.0f, -0.25f, 0.0f) + glm::vec3(0.75f,  0.75f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec2(0.0f, 0.0f)),
-    Vertex(glm::vec3(0.0f,  0.0f, 0.0f) + glm::vec3(0.75f,  0.75f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec2(0.0f, 1.0f))
+static std::vector<Vertex> ex_44_quad_vertices_screen_debug = {
+    Vertex(glm::vec3(1.0f,  1.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec2(1.0f, 1.0f)),
+    Vertex(glm::vec3(1.0f, 0.5f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec2(1.0f, 0.0f)),
+    Vertex(glm::vec3(0.5f, 0.5f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec2(0.0f, 0.0f)),
+    Vertex(glm::vec3(0.5f,  1.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec2(0.0f, 1.0f))
 };
 
 static std::vector<GLuint> ex_44_quad_indices = {
@@ -154,6 +133,18 @@ static std::vector<GLuint> ex_44_cube_indices = {
     33, 34, 35
 };
 
+static std::vector<Vertex> ex_18_floor_vertices = {
+    Vertex(glm::vec3(0.5f,  0.5f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(7.0f, 7.0f)),
+    Vertex(glm::vec3(0.5f, -0.5f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(7.0f, 0.0f)),
+    Vertex(glm::vec3(-0.5f, -0.5f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(0.0f, 0.0f)),
+    Vertex(glm::vec3(-0.5f,  0.5f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(0.0f, 7.0f))
+};
+
+static std::vector<GLuint> ex_18_indices = {
+    0, 1, 3,
+    1, 2, 3
+};
+
 static Shader *shader_blur;
 static Shader *shader_bloom;
 static Shader *shader_g_buffer;
@@ -161,7 +152,13 @@ static Shader *shader_debug;
 static Shader *shader_object;
 static Shader *shader_light;
 static Shader *shader_deferred;
+static Shader *shader_ssao;
 
+// buffer noise
+static TextureBuffer *noise_buffer;
+
+// ssao buffer
+static FrameBuffer<Texture2D> *ssao_buffer;
 // blur buffer
 static FrameBuffer<Texture2D> *blur_buffer;
 // bloom buffer
@@ -178,7 +175,8 @@ static UBO *ubo_camera;
 
 static Mesh *mesh_screen;
 static Mesh *mesh_light;
-static Mesh *mesh_screen_debug[4];
+static Mesh *mesh_screen_debug;
+static Mesh *mesh_floor;
 
 static Model *model_obj;
 
@@ -209,6 +207,8 @@ static float lerp(float a, float b, float f)
     return a + f * (b - a);
 }
 
+static int kernel_size = 64;
+
 static std::vector<glm::vec3> global_ssao_noise;
 static std::vector<glm::vec3> global_ssao_kernel;
 
@@ -219,7 +219,7 @@ static std::vector<glm::vec3> createSSAOKernel()
 {
     std::vector<glm::vec3> ssao_kernel;
 
-    for (unsigned int i = 0; i < 64; ++i)
+    for (unsigned int i = 0; i < kernel_size; ++i)
     {
         glm::vec3 sample(
             randomFloats(generator) * 2.0 - 1.0,
@@ -229,14 +229,14 @@ static std::vector<glm::vec3> createSSAOKernel()
 
         sample  = glm::normalize(sample);
 
-        /*
         sample *= randomFloats(generator);
         ssao_kernel.push_back(sample);
-        */
 
+        // scale samples s.t. they're more aligned to center of kernel
         float scale = (float)i / 64.0;
         scale = lerp(0.1f, 1.0f, scale * scale);
         sample *= scale;
+
         ssao_kernel.push_back(sample);
     }
 
@@ -287,6 +287,7 @@ static void loadScene(GLFWwindow* window, const int width, const int height)
     shader_object = new Shader("glsl/ex_47/model_loading.vs", "glsl/ex_47/model_loading.fs");
     shader_deferred = new Shader("glsl/ex_47/deferred_shading.vs", "glsl/ex_47/deferred_shading.fs");
     shader_light = new Shader("glsl/ex_47/light.vs", "glsl/ex_47/light.fs");
+    shader_ssao = new Shader("glsl/ex_47/ssao.vs", "glsl/ex_47/ssao.fs");
 
     config_shader.push_back(shader_object);
     config_shader.push_back(shader_deferred);
@@ -294,6 +295,11 @@ static void loadScene(GLFWwindow* window, const int width, const int height)
     model_obj = new Model("./resources/obj/backpack/backpack.obj");
     // model_obj = new Model("./resources/obj/planet/planet.obj");
 
+    // noise buffer
+    noise_buffer = new TextureBuffer(4, 4, &global_ssao_noise[0]);
+
+    // ssao buffer
+    ssao_buffer = new FrameBuffer<Texture2D>(width, height);
     // blur buffer
     blur_buffer = new FrameBuffer<Texture2D>(width, height);
     // bloom buffer
@@ -318,10 +324,12 @@ static void loadScene(GLFWwindow* window, const int width, const int height)
     mesh_screen = new Mesh(ex_44_quad_vertices_screen, ex_44_quad_indices, std::vector<Texture2D*>(), VERTEX_TYPE::ATTRIB_PNT);
     mesh_light = new Mesh(ex_44_cube_vertices, ex_44_cube_indices, std::vector<Texture2D*>(), VERTEX_TYPE::ATTRIB_PNT);
 
-    mesh_screen_debug[0] = new Mesh(ex_44_quad_vertices_screen_debug_1, ex_44_quad_indices, std::vector<Texture2D*>(), VERTEX_TYPE::ATTRIB_PNT);
-    mesh_screen_debug[1] = new Mesh(ex_44_quad_vertices_screen_debug_2, ex_44_quad_indices, std::vector<Texture2D*>(), VERTEX_TYPE::ATTRIB_PNT);
-    mesh_screen_debug[2] = new Mesh(ex_44_quad_vertices_screen_debug_3, ex_44_quad_indices, std::vector<Texture2D*>(), VERTEX_TYPE::ATTRIB_PNT);
-    mesh_screen_debug[3] = new Mesh(ex_44_quad_vertices_screen_debug_4, ex_44_quad_indices, std::vector<Texture2D*>(), VERTEX_TYPE::ATTRIB_PNT);
+
+    std::vector<Texture2D*> floor_texture;
+    floor_texture.push_back(new Texture2D("resources/textures/wood.png", TextureType::ALBEDO));
+    mesh_floor = new Mesh(ex_18_floor_vertices, ex_18_indices, floor_texture, VERTEX_TYPE::ATTRIB_PNT);
+
+    mesh_screen_debug = new Mesh(ex_44_quad_vertices_screen_debug, ex_44_quad_indices, std::vector<Texture2D*>(), VERTEX_TYPE::ATTRIB_PNT);
 
     ubo_matrices = new UBO("Matrices", 2 * sizeof(glm::mat4), 0);
     ubo_camera = new UBO("Camera", sizeof(glm::vec3), 2);
@@ -389,6 +397,16 @@ static void renderScene(GLFWwindow* window, const int width, const int height, S
 
     used->use();
 
+    // floor
+    {
+        glm::mat4 model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(0.0f, -3.0f, 0.0f)); // translate it down so it's at the center of the scene
+        model = glm::scale(model, glm::vec3(100.0f, 1.0f, 100.0f));	// it's a bit too big for our scene, so scale it down
+        model = glm::rotate(model, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+        used->setMatrix4fv("model", glm::value_ptr(model));
+        mesh_floor->draw(used);
+    }
+
     for(short x = -2; x <= 2; ++x) {
         for(short z = -2; z <= 2; ++z) {
             glm::mat4 model = glm::mat4(1.0f);
@@ -405,6 +423,44 @@ static void renderProcessing(GLFWwindow* window, const int width, const int heig
     glDisable(GL_DEPTH_TEST);
     glDisable(GL_CULL_FACE);
 
+    // pos-processing SSAO
+    {
+        ssao_buffer->bind();
+        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
+        glDisable(GL_DEPTH_TEST);
+        glDisable(GL_CULL_FACE);
+
+        shader_ssao->use();
+
+        shader_ssao->setInt("gPosition", 0);
+        shader_ssao->setInt("gNormal", 1);
+        shader_ssao->setInt("tNoise", 2);
+
+        for (unsigned int i = 0; i < kernel_size; ++i)
+        {
+            shader_ssao->setUniform3fv("samples[" + std::to_string(i) + "]", glm::value_ptr(global_ssao_kernel[i]));
+        }
+
+        shader_ssao->setInt("kernelSize", kernel_size);
+
+        float radius = 0.5;
+        float bias = 0.025;
+
+        shader_ssao->setUniform1fv("radius", &radius);
+        shader_ssao->setUniform1fv("bias", &bias);
+
+        shader_ssao->setInt("width", width);
+        shader_ssao->setInt("height", height);
+
+        g_buffer->getTexture(0)->bind(GL_TEXTURE0);
+        g_buffer->getTexture(1)->bind(GL_TEXTURE1);
+        noise_buffer->bind(GL_TEXTURE2);
+
+        mesh_screen->draw(shader_ssao);
+        ssao_buffer->unbind();
+    }
+
     // pos-processing blur
     {
         blur_buffer->bind();
@@ -417,6 +473,7 @@ static void renderProcessing(GLFWwindow* window, const int width, const int heig
 
         for(int s = 0; s < steps * 2; ++s) {
             shader_blur->use();
+
             shader_blur->setInt("_texture", 0);
             shader_blur->setBool("horizontal", _horizontal);
 
@@ -457,15 +514,22 @@ static void renderProcessing(GLFWwindow* window, const int width, const int heig
     // pos-processing deferred
     {
         clearGL();
+
         shader_deferred->use();
+
         shader_deferred->setInt("gPosition", 0);
         shader_deferred->setInt("gNormal", 1);
         shader_deferred->setInt("gAlbedoSpec", 2);
-        shader_deferred->setInt("gBloom", 3);
+        shader_deferred->setInt("Bloom", 3);
+        shader_deferred->setInt("SSAO", 4);
+
         g_buffer->getTexture(0)->bind(GL_TEXTURE0);
         g_buffer->getTexture(1)->bind(GL_TEXTURE1);
         g_buffer->getTexture(2)->bind(GL_TEXTURE2);
+
         bloom_buffer->getTexture(0)->bind(GL_TEXTURE3);
+        ssao_buffer->getTexture(0)->bind(GL_TEXTURE4);
+
         mesh_screen->draw(shader_deferred);
     }
 
@@ -481,23 +545,9 @@ static void renderProcessingDebug(GLFWwindow* window, const int width, const int
     shader_debug->use();
     shader_debug->setInt("_texture", 0);
     shader_debug->setBool("isSpecular", false);
-    g_buffer->getTexture(0)->bind(GL_TEXTURE0);
-    mesh_screen_debug[0]->draw(shader_debug);
+    ssao_buffer->getTexture(0)->bind(GL_TEXTURE0);
+    mesh_screen_debug->draw(shader_debug);
 
-    shader_debug->setInt("_texture", 0);
-    shader_debug->setBool("isSpecular", false);
-    g_buffer->getTexture(1)->bind(GL_TEXTURE0);
-    mesh_screen_debug[1]->draw(shader_debug);
-
-    shader_debug->setInt("_texture", 0);
-    shader_debug->setBool("isSpecular", false);
-    g_buffer->getTexture(2)->bind(GL_TEXTURE0);
-    mesh_screen_debug[2]->draw(shader_debug);
-
-    shader_debug->setInt("_texture", 0);
-    shader_debug->setBool("isSpecular", true);
-    g_buffer->getTexture(2)->bind(GL_TEXTURE0);
-    mesh_screen_debug[3]->draw(shader_debug);
 
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
@@ -633,10 +683,7 @@ int run_047(const int width, const int height)
     delete mesh_screen;
     delete mesh_light;
 
-    delete mesh_screen_debug[0];
-    delete mesh_screen_debug[1];
-    delete mesh_screen_debug[2];
-    delete mesh_screen_debug[3];
+    delete mesh_screen_debug;
 
     delete model_obj;
 

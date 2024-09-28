@@ -13,7 +13,8 @@ layout (std140) uniform Camera {
 uniform sampler2D gPosition;
 uniform sampler2D gNormal;
 uniform sampler2D gAlbedoSpec;
-uniform sampler2D gBloom;
+uniform sampler2D Bloom;
+uniform sampler2D SSAO;
 
 struct lightSource {
     vec3 position;
@@ -64,7 +65,7 @@ void main()
         lighting += diffuse + specular;
 	}
 
-    vec3 bloom = texture(gBloom, vs_in.tex).rgb;
+    vec3 bloom = texture(Bloom, vs_in.tex).rgb;
 
 	FragColor = vec4(lighting + bloom, 1.0f);
 }
