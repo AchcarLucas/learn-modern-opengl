@@ -356,6 +356,8 @@ static void loadScene(GLFWwindow* window, const int width, const int height)
         shader_g_buffer->setUniformBlockBinding(ubo_camera->getName(), ubo_camera->getBinding());
 
         shader_light->setUniformBlockBinding(ubo_matrices->getName(), ubo_matrices->getBinding());
+
+        shader_ssao->setUniformBlockBinding(ubo_matrices->getName(), ubo_matrices->getBinding());
     }
 }
 
@@ -383,8 +385,8 @@ static void updateShader(GLFWwindow* window, const int width, const int height)
                 string s_lights = "lights[" + std::to_string(i) + "].";
                 shader->setUniform3fv(s_lights + "position", glm::value_ptr(light_positions[i]));
                 shader->setUniform3fv(s_lights + "color", glm::value_ptr(light_colors[i]));
-                shader->setFloat(s_lights + "linear",  0.7f);
-                shader->setFloat(s_lights + "quadratic", 1.8f);
+                shader->setFloat(s_lights + "linear",  0.09f);
+                shader->setFloat(s_lights + "quadratic", 0.032f);
                 shader->setBool(s_lights + "enabled", light_enabled);
             }
         }
@@ -426,10 +428,7 @@ static void renderProcessing(GLFWwindow* window, const int width, const int heig
     // pos-processing SSAO
     {
         ssao_buffer->bind();
-        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
-        glDisable(GL_DEPTH_TEST);
-        glDisable(GL_CULL_FACE);
 
         shader_ssao->use();
 

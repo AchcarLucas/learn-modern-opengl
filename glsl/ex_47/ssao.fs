@@ -1,6 +1,6 @@
 #version 330 core
 
-layout (location = 0) out vec4 FragColor;
+out vec4 FragColor;
 
 in VS_DATA {
 	vec2 tex;
@@ -19,7 +19,10 @@ uniform float bias;
 uniform int width;
 uniform int height;
 
-uniform mat4 projection;
+layout (std140) uniform Matrices {
+    mat4 projection;
+    mat4 view;
+} matrices;
 
 void main()
 {
@@ -43,7 +46,7 @@ void main()
         
         // project sample position (to sample texture) (to get position on screen/texture)
         vec4 offset = vec4(samplePos, 1.0);
-        offset = projection * offset; // from view to clip-space
+        offset = matrices.projection * offset; // from view to clip-space
         offset.xyz /= offset.w; // perspective divide
         offset.xyz = offset.xyz * 0.5 + 0.5; // transform to range 0.0 - 1.0
         
