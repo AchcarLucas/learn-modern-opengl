@@ -36,7 +36,7 @@ static void mouseCallback(GLFWwindow*, double, double);
 static void scrollCallback(GLFWwindow*, double, double);
 
 // camera class
-static Camera *camera = new Camera(glm::vec3(25.0f, 25.0f, -25.0f), glm::vec3(0.0f, 0.0f, 0.0f));
+static Camera *camera = new Camera(glm::vec3(5.0f, 0.0f, 5.0f), glm::vec3(0.0f, 0.0f, 0.0f));
 
 // timing
 static float delta_time = 0.0f;	// time between current frame and last frame
@@ -195,7 +195,7 @@ static std::vector<ModelTransform> cube_models = {
     ModelTransform(glm::vec3( 3.5f, 3.5f, 2.5), glm::vec3(0.9), glm::vec3(1.0, 0.0, 1.0), 60.0f)
 };
 
-static bool light_enabled = false;
+static bool light_enabled = true;
 
 static int steps = 10;
 
@@ -271,8 +271,8 @@ static void loadScene(GLFWwindow* window, const int width, const int height)
 {
     _stbi_set_flip_vertically_on_load(true);
 
-    light_positions.push_back(glm::vec3(0, 10, 0));
-    light_colors.push_back(glm::vec4(1.0, 1.0, 1.0, 50.0f));
+    light_positions.push_back(glm::vec3(2.0, 4.0, -2.0));
+    light_colors.push_back(glm::vec4(0.2, 0.2, 0.7, 50.0f));
 
     global_ssao_kernel = createSSAOKernel();
     global_ssao_noise = createSSAONoise();

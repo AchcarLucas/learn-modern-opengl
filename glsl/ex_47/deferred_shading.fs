@@ -37,9 +37,10 @@ void main()
     vec3 frag_normal = texture(gNormal, vs_in.tex).rgb;
     vec3 frag_diffuse = texture(gAlbedoSpec, vs_in.tex).rgb;
     float frag_specular = texture(gAlbedoSpec, vs_in.tex).a;
+    float ambient_occlusion = texture(SSAO, vs_in.tex).r;
 
     // then calculate lighting as usual
-    vec3 lighting = frag_diffuse * 0.1; // hard-coded ambient component
+    vec3 lighting = ambient_occlusion * frag_diffuse * 0.3; // hard-coded ambient component
     vec3 view_dir = normalize(camera.position - vec3(frag_pos));
 
     bool has_light = false;
@@ -54,7 +55,7 @@ void main()
 		vec3 diffuse = max(dot(frag_normal, light_dir), 0.0) * frag_diffuse * lights[l].color;
 	
 		vec3 halfway_dir = normalize(light_dir + view_dir);  
-        float spec = pow(max(dot(frag_normal, halfway_dir), 0.0), 16.0);
+        float spec = pow(max(dot(frag_normal, halfway_dir), 0.0), 8.0);
         vec3 specular = lights[l].color * spec * frag_specular;
 
         // attenuation
