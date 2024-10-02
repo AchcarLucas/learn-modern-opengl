@@ -195,19 +195,19 @@ static std::vector<ModelTransform> cube_models = {
     ModelTransform(glm::vec3( 3.5f, 3.5f, 2.5), glm::vec3(0.9), glm::vec3(1.0, 0.0, 1.0), 60.0f)
 };
 
-static bool light_enabled = true;
+static bool light_enabled = false;
 
 static int steps = 10;
 
 static std::vector<glm::vec3> light_positions;
 static std::vector<glm::vec4> light_colors;
 
-static float lerp(float a, float b, float f)
+static float ourLerp(float a, float b, float f)
 {
     return a + f * (b - a);
 }
 
-static int kernel_size = 64;
+static unsigned int kernel_size = 64;
 
 static std::vector<glm::vec3> global_ssao_noise;
 static std::vector<glm::vec3> global_ssao_kernel;
@@ -234,7 +234,7 @@ static std::vector<glm::vec3> createSSAOKernel()
 
         // scale samples s.t. they're more aligned to center of kernel
         float scale = (float)i / 64.0;
-        scale = lerp(0.1f, 1.0f, scale * scale);
+        scale = ourLerp(0.1f, 1.0f, scale * scale);
         sample *= scale;
 
         ssao_kernel.push_back(sample);
@@ -249,10 +249,10 @@ static std::vector<glm::vec3> createSSAONoise()
 
     for (unsigned int i = 0; i < 16; i++)
     {
-        glm::vec3 noise(
-            randomFloats(generator) * 2.0 - 1.0,
-            randomFloats(generator) * 2.0 - 1.0,
-            0.0f);
+        glm::vec3 noise(randomFloats(generator) * 2.0 - 1.0,
+                        randomFloats(generator) * 2.0 - 1.0,
+                        0.0f);
+
         ssao_noise.push_back(noise);
     }
 
@@ -298,8 +298,13 @@ static void loadScene(GLFWwindow* window, const int width, const int height)
     // noise buffer
     noise_buffer = new TextureBuffer(4, 4, &global_ssao_noise[0]);
 
+    /// SSAO BUFFER
+    std::vector<AttachmentFrameBuffer> attachment_ssao_frame_buffer;
+    attachment_ssao_frame_buffer.push_back(AttachmentFrameBuffer(GL_RED, GL_RED, GL_FLOAT));
     // ssao buffer
-    ssao_buffer = new FrameBuffer<Texture2D>(width, height);
+    ssao_buffer = new FrameBuffer<Texture2D>(width, height, attachment_ssao_frame_buffer);
+
+
     // blur buffer
     blur_buffer = new FrameBuffer<Texture2D>(width, height);
     // bloom buffer
@@ -307,17 +312,17 @@ static void loadScene(GLFWwindow* window, const int width, const int height)
     // render buffer
     render_buffer = new FrameBuffer<Texture2D>(width, height, GL_DEPTH_COMPONENT, GL_DEPTH_ATTACHMENT, TextureType::FRAMEBUFFER, 2);
 
-    std::vector<AttachmentFrameBuffer> attachment_frame_buffer;
-
+    /// Geometry BUFFER
+    std::vector<AttachmentFrameBuffer> attachment_geometry_frame_buffer;
     // buffer position
-    attachment_frame_buffer.push_back(AttachmentFrameBuffer(GL_RGBA16F, GL_RGBA, GL_FLOAT));
+    attachment_geometry_frame_buffer.push_back(AttachmentFrameBuffer(GL_RGBA16F, GL_RGBA, GL_FLOAT));
     // buffer normal
-    attachment_frame_buffer.push_back(AttachmentFrameBuffer(GL_RGBA16F, GL_RGBA, GL_FLOAT));
+    attachment_geometry_frame_buffer.push_back(AttachmentFrameBuffer(GL_RGBA16F, GL_RGBA, GL_FLOAT));
     // buffer color + specular
-    attachment_frame_buffer.push_back(AttachmentFrameBuffer(GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE));
+    attachment_geometry_frame_buffer.push_back(AttachmentFrameBuffer(GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE));
 
     // g-buffer
-    g_buffer = new FrameBuffer<Texture2D>(width, height, attachment_frame_buffer);
+    g_buffer = new FrameBuffer<Texture2D>(width, height, attachment_geometry_frame_buffer);
 
     std::vector<TextureCube*> shadow_textures;
 
@@ -334,7 +339,7 @@ static void loadScene(GLFWwindow* window, const int width, const int height)
     ubo_matrices = new UBO("Matrices", 2 * sizeof(glm::mat4), 0);
     ubo_camera = new UBO("Camera", sizeof(glm::vec3), 2);
 
-    /// global matrices
+    /// ubo global matrices
     {
         glm::mat4 _projection = camera->getPerspectiveMatrix(width, height, 0.1f, 100.0f);
         glm::mat4 _view = camera->getViewMatrix();
@@ -343,11 +348,12 @@ static void loadScene(GLFWwindow* window, const int width, const int height)
         ubo_matrices->UBOSubBuffer(glm::value_ptr(_view), sizeof(glm::mat4), sizeof(glm::mat4));
     }
 
-    /// global camera
+    /// ubo global camera
     {
         ubo_camera->UBOSubBuffer(glm::value_ptr(camera->getCamPos()), 0, sizeof(glm::vec3));
     }
 
+    /// bind ubo to shader
     {
         shader_object->setUniformBlockBinding(ubo_matrices->getName(), ubo_matrices->getBinding());
         shader_object->setUniformBlockBinding(ubo_camera->getName(), ubo_camera->getBinding());
@@ -409,7 +415,7 @@ static void renderScene(GLFWwindow* window, const int width, const int height, S
         mesh_floor->draw(used);
     }
 
-    for(short x = -2; x <= 2; ++x) {
+    /*for(short x = -2; x <= 2; ++x) {
         for(short z = -2; z <= 2; ++z) {
             glm::mat4 model = glm::mat4(1.0f);
             model = glm::translate(model, glm::vec3((float)x * -5.0f, 0.0f, (float)z * -5.0f));
@@ -417,7 +423,17 @@ static void renderScene(GLFWwindow* window, const int width, const int height, S
             used->setMatrix4fv("model", glm::value_ptr(model));
             model_obj->draw(used);
         }
+    }*/
+
+    {
+        glm::mat4 model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
+        model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+        used->setMatrix4fv("model", glm::value_ptr(model));
+        model_obj->draw(used);
     }
+
+
 }
 
 static void renderProcessing(GLFWwindow* window, const int width, const int height)
@@ -445,12 +461,14 @@ static void renderProcessing(GLFWwindow* window, const int width, const int heig
 
         float radius = 0.5;
         float bias = 0.025;
+        float _width = width;
+        float _height = height;
 
         shader_ssao->setUniform1fv("radius", &radius);
         shader_ssao->setUniform1fv("bias", &bias);
 
-        shader_ssao->setInt("width", width);
-        shader_ssao->setInt("height", height);
+        shader_ssao->setUniform1fv("width", &_width);
+        shader_ssao->setUniform1fv("height", &_height);
 
         g_buffer->getTexture(0)->bind(GL_TEXTURE0);
         g_buffer->getTexture(1)->bind(GL_TEXTURE1);
@@ -543,7 +561,6 @@ static void renderProcessingDebug(GLFWwindow* window, const int width, const int
 
     shader_debug->use();
     shader_debug->setInt("_texture", 0);
-    shader_debug->setBool("isSpecular", false);
     ssao_buffer->getTexture(0)->bind(GL_TEXTURE0);
     mesh_screen_debug->draw(shader_debug);
 

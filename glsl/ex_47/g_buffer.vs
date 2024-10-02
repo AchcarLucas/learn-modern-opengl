@@ -19,8 +19,8 @@ uniform mat4 model;
 
 void main()
 {
-    vs_out.frag_model_position = model * vec4(iPosition, 1.0);
+    vs_out.frag_model_position = matrices.view * model * vec4(iPosition, 1.0);
 	vs_out.normal = mat3(transpose(inverse(model))) * iNormal;
 	vs_out.tex = iTexCoord;
-	gl_Position = matrices.projection * matrices.view * vs_out.frag_model_position;
+	gl_Position = matrices.projection * vs_out.frag_model_position;
 }

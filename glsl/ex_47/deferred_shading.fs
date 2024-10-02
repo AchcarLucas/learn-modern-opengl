@@ -42,9 +42,13 @@ void main()
     vec3 lighting = frag_diffuse * 0.1; // hard-coded ambient component
     vec3 view_dir = normalize(camera.position - vec3(frag_pos));
 
+    bool has_light = false;
+
 	for(int l = 0; l < NR_LIGHTS; ++l) {
 		if(!lights[l].enabled)
 			continue;
+        
+        has_light = true;
 
 		vec3 light_dir = normalize(vec3(lights[l].position) - vec3(frag_pos));
 		vec3 diffuse = max(dot(frag_normal, light_dir), 0.0) * frag_diffuse * lights[l].color;
@@ -54,18 +58,21 @@ void main()
         vec3 specular = lights[l].color * spec * frag_specular;
 
         // attenuation
-        /*
         float _distance = length(lights[l].position - frag_pos);
         float attenuation = 1.0 / (1.0 + lights[l].linear * _distance + lights[l].quadratic * _distance * _distance);
 
         diffuse *= attenuation;
         specular *= attenuation;
-        */
 
         lighting += diffuse + specular;
 	}
 
     vec3 bloom = texture(Bloom, vs_in.tex).rgb;
+
+    if(!has_light)
+    {
+        lighting = frag_diffuse;
+    }
 
 	FragColor = vec4(lighting + bloom, 1.0f);
 }

@@ -7,16 +7,9 @@ in VS_DATA {
 	vec2 tex;
 } vs_in;
 
-uniform bool isSpecular;
 uniform sampler2D _texture;
 
 void main()
 {
-	if(isSpecular) {
-		float a = texture(_texture, vs_in.tex).a;
-		FragColor = vec4(a, a, a, 1.0);
-	} else {
-		vec3 _rgb = texture(_texture, vs_in.tex).rgb;
-		FragColor = vec4(_rgb, 1.0);
-	}
+	FragColor = vec4(texture(_texture, vs_in.tex).r);
 }
