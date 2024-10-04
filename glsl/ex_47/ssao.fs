@@ -12,7 +12,7 @@ uniform sampler2D tNoise;
 
 uniform vec3 samples[64];
 
-uniform int kernelSize;
+uniform int kernel_size;
 uniform float radius;
 uniform float bias;
 
@@ -26,38 +26,41 @@ layout (std140) uniform Matrices {
 
 void main()
 {
-    vec2 noiseScale = vec2(width / 4.0, height / 4.0);
+    vec2 noise_scale = vec2(width / 4.0, height / 4.0);
 
     // get input for SSAO algorithm
-    vec3 fragPos = texture(gPosition, vs_in.tex).xyz;
+    vec3 frag_pos = texture(gPosition, vs_in.tex).xyz;
     vec3 normal = normalize(texture(gNormal, vs_in.tex).rgb);
-    vec3 randomVec = normalize(texture(tNoise, vs_in.tex * noiseScale).xyz);
+    vec3 random_vec = normalize(texture(tNoise, vs_in.tex * noise_scale).xyz);
+
     // create TBN change-of-basis matrix: from tangent-space to view-space
-    vec3 tangent = normalize(randomVec - normal * dot(randomVec, normal));
+    vec3 tangent = normalize(random_vec - normal * dot(random_vec, normal));
     vec3 bitangent = cross(normal, tangent);
     mat3 TBN = mat3(tangent, bitangent, normal);
+
     // iterate over the sample kernel and calculate occlusion factor
     float occlusion = 0.0;
-    for(int i = 0; i < kernelSize; ++i)
-    {
+
+    for(int i = 0; i < kernel_size; ++i) {
         // get sample position
-        vec3 samplePos = TBN * samples[i]; // from tangent to view-space
-        samplePos = fragPos + samplePos * radius;
+        vec3 sample_pos = TBN * samples[i]; // from tangent to view-space
+        sample_pos = frag_pos + sample_pos * radius;
         
         // project sample position (to sample texture) (to get position on screen/texture)
-        vec4 offset = vec4(samplePos, 1.0);
+        vec4 offset = vec4(sample_pos, 1.0);
         offset = matrices.projection * offset; // from view to clip-space
         offset.xyz /= offset.w; // perspective divide
         offset.xyz = offset.xyz * 0.5 + 0.5; // transform to range 0.0 - 1.0
         
         // get sample depth
-        float sampleDepth = texture(gPosition, offset.xy).z; // get depth value of kernel sample
+        float sample_depth = texture(gPosition, offset.xy).z; // get depth value of kernel sample
         
         // range check & accumulate
-        float rangeCheck = smoothstep(0.0, 1.0, radius / abs(fragPos.z - sampleDepth));
-        occlusion += (sampleDepth >= samplePos.z + bias ? 1.0 : 0.0) * rangeCheck;           
+        float range_check = smoothstep(0.0, 1.0, radius / abs(frag_pos.z - sample_depth));
+        occlusion += (sample_depth >= sample_pos.z + bias ? 1.0 : 0.0) * range_check;
     }
-    occlusion = 1.0 - (occlusion / kernelSize);
+
+    occlusion = 1.0 - (occlusion / kernel_size);
     
     FragColor = vec4(occlusion);
 

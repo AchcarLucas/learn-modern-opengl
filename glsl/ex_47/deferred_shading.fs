@@ -31,6 +31,8 @@ const int NR_LIGHTS = 32;
 uniform float gamma;
 uniform lightSource lights[NR_LIGHTS];
 
+uniform bool ssao_enabled;
+
 void main()
 {
     vec3 frag_pos = texture(gPosition, vs_in.tex).rgb;
@@ -40,7 +42,8 @@ void main()
     float ambient_occlusion = texture(SSAO, vs_in.tex).r;
 
     // then calculate lighting as usual
-    vec3 lighting = ambient_occlusion * frag_diffuse * 0.3; // hard-coded ambient component
+
+    vec3 lighting = (ssao_enabled ? ambient_occlusion : 1.0) * frag_diffuse * 0.8; // hard-coded ambient component
     vec3 view_dir = normalize(camera.position - vec3(frag_pos));
 
     bool has_light = false;

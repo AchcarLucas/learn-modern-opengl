@@ -153,12 +153,18 @@ static Shader *shader_object;
 static Shader *shader_light;
 static Shader *shader_deferred;
 static Shader *shader_ssao;
+static Shader *shader_text;
+
+static RenderText *render_text_screen;
 
 // buffer noise
 static TextureBuffer *noise_buffer;
 
 // ssao buffer
 static FrameBuffer<Texture2D> *ssao_buffer;
+// ssao blur buffer
+static FrameBuffer<Texture2D> *ssao_blur_buffer;
+
 // blur buffer
 static FrameBuffer<Texture2D> *blur_buffer;
 // bloom buffer
@@ -181,6 +187,9 @@ static Mesh *mesh_floor;
 static Model *model_obj;
 
 static std::vector<Shader*> config_shader;
+
+static bool ssao_enabled = true;
+static bool ssao_blur_enabled = true;
 
 static std::vector<ModelTransform> cube_models = {
     ModelTransform(glm::vec3( 0.0f, 2.5f, 0.0), glm::vec3(0.5f)),
@@ -289,6 +298,10 @@ static void loadScene(GLFWwindow* window, const int width, const int height)
     shader_light = new Shader("glsl/ex_47/light.vs", "glsl/ex_47/light.fs");
     shader_ssao = new Shader("glsl/ex_47/ssao.vs", "glsl/ex_47/ssao.fs");
 
+    shader_text = new Shader("glsl/text_sdf/text_sdf.vs", "glsl/text_sdf/text_sdf.fs");
+
+    render_text_screen = new RenderText("fonts/arial.ttf", width, height, 0, 32, TextType::DRAW_TO_SCREEN, true);
+
     config_shader.push_back(shader_object);
     config_shader.push_back(shader_deferred);
 
@@ -303,7 +316,8 @@ static void loadScene(GLFWwindow* window, const int width, const int height)
     attachment_ssao_frame_buffer.push_back(AttachmentFrameBuffer(GL_RED, GL_RED, GL_FLOAT));
     // ssao buffer
     ssao_buffer = new FrameBuffer<Texture2D>(width, height, attachment_ssao_frame_buffer);
-
+    // ssao blur buffer
+    ssao_blur_buffer = new FrameBuffer<Texture2D>(width, height);
 
     // blur buffer
     blur_buffer = new FrameBuffer<Texture2D>(width, height);
@@ -415,16 +429,7 @@ static void renderScene(GLFWwindow* window, const int width, const int height, S
         mesh_floor->draw(used);
     }
 
-    /*for(short x = -2; x <= 2; ++x) {
-        for(short z = -2; z <= 2; ++z) {
-            glm::mat4 model = glm::mat4(1.0f);
-            model = glm::translate(model, glm::vec3((float)x * -5.0f, 0.0f, (float)z * -5.0f));
-            model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
-            used->setMatrix4fv("model", glm::value_ptr(model));
-            model_obj->draw(used);
-        }
-    }*/
-
+    // model
     {
         glm::mat4 model = glm::mat4(1.0f);
         model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
@@ -457,7 +462,7 @@ static void renderProcessing(GLFWwindow* window, const int width, const int heig
             shader_ssao->setUniform3fv("samples[" + std::to_string(i) + "]", glm::value_ptr(global_ssao_kernel[i]));
         }
 
-        shader_ssao->setInt("kernelSize", kernel_size);
+        shader_ssao->setInt("kernel_size", kernel_size);
 
         float radius = 0.5;
         float bias = 0.025;
@@ -476,6 +481,35 @@ static void renderProcessing(GLFWwindow* window, const int width, const int heig
 
         mesh_screen->draw(shader_ssao);
         ssao_buffer->unbind();
+    }
+
+    // pos-processing blur (SSAO)
+    {
+        ssao_blur_buffer->bind();
+        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
+        glDisable(GL_DEPTH_TEST);
+        glDisable(GL_CULL_FACE);
+
+        bool _horizontal = true;
+
+        for(int s = 0; s < steps * 2; ++s) {
+            shader_blur->use();
+
+            shader_blur->setInt("_texture", 0);
+            shader_blur->setBool("horizontal", _horizontal);
+
+            if(s == 0)
+                ssao_buffer->getTexture(0)->bind(GL_TEXTURE0);
+            else
+                ssao_blur_buffer->getTexture(0)->bind(GL_TEXTURE0);
+
+            mesh_screen->draw(shader_blur);
+
+            _horizontal = !_horizontal;
+        }
+
+        ssao_blur_buffer->unbind();
     }
 
     // pos-processing blur
@@ -540,12 +574,18 @@ static void renderProcessing(GLFWwindow* window, const int width, const int heig
         shader_deferred->setInt("Bloom", 3);
         shader_deferred->setInt("SSAO", 4);
 
+        shader_deferred->setBool("ssao_enabled", ssao_enabled);
+
         g_buffer->getTexture(0)->bind(GL_TEXTURE0);
         g_buffer->getTexture(1)->bind(GL_TEXTURE1);
         g_buffer->getTexture(2)->bind(GL_TEXTURE2);
 
         bloom_buffer->getTexture(0)->bind(GL_TEXTURE3);
-        ssao_buffer->getTexture(0)->bind(GL_TEXTURE4);
+
+        if(ssao_blur_enabled)
+            ssao_blur_buffer->getTexture(0)->bind(GL_TEXTURE4);
+        else
+            ssao_buffer->getTexture(0)->bind(GL_TEXTURE4);
 
         mesh_screen->draw(shader_deferred);
     }
@@ -561,9 +601,13 @@ static void renderProcessingDebug(GLFWwindow* window, const int width, const int
 
     shader_debug->use();
     shader_debug->setInt("_texture", 0);
-    ssao_buffer->getTexture(0)->bind(GL_TEXTURE0);
-    mesh_screen_debug->draw(shader_debug);
 
+    if(ssao_blur_enabled)
+        ssao_blur_buffer->getTexture(0)->bind(GL_TEXTURE0);
+    else
+        ssao_buffer->getTexture(0)->bind(GL_TEXTURE0);
+
+    mesh_screen_debug->draw(shader_debug);
 
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
@@ -594,6 +638,20 @@ static void processInput(GLFWwindow *window, float delta_time)
     static float waiting_time = 0.0f;
 
     camera->processInput(window, delta_time);
+
+    if(waiting_time > 0.2f) {
+        if (glfwGetKey(window, GLFW_KEY_M) == GLFW_PRESS) {
+            ssao_enabled = !ssao_enabled;
+            std::cout << "SSAO Enabled [" << (ssao_enabled ? "ON" : "OFF") << "]" << std::endl;
+            waiting_time = 0.0f;
+        }
+
+        if (glfwGetKey(window, GLFW_KEY_N) == GLFW_PRESS) {
+            ssao_blur_enabled = !ssao_blur_enabled;
+            std::cout << "SSAO Blur Enabled [" << (ssao_blur_enabled ? "ON" : "OFF") << "]" << std::endl;
+            waiting_time = 0.0f;
+        }
+    }
 
     waiting_time += delta_time;
 }
@@ -668,6 +726,24 @@ int run_047(const int width, const int height)
             glViewport(0, 0, render_buffer->getWidth(), render_buffer->getHeight());
             clearGL(GL_COLOR_BUFFER_BIT);
             renderLight(window, width, height);
+
+            // screen text render
+            {
+                render_text_screen->draw(shader_text,
+                    string("Press M to ") +
+                                (ssao_enabled ? string("Disabled") : string("Enabled")) +
+                                string(" SSAO "),
+                    530.0f, 330.0f, 0.5f,
+                    glm::vec3(0.5, 0.8f, 0.2f));
+
+                render_text_screen->draw(shader_text,
+                    string("Press N to ") +
+                                (ssao_blur_enabled ? string("Disabled") : string("Enabled")) +
+                                string(" SSAO Blur "),
+                    530.0f, 300.0f, 0.5f,
+                    glm::vec3(0.5, 0.8f, 0.2f));
+            }
+
             render_buffer->unbind();
             glEnable(GL_BLEND);
         }
@@ -687,6 +763,9 @@ int run_047(const int width, const int height)
     delete shader_object;
     delete shader_light;
     delete shader_deferred;
+    delete shader_text;
+
+    delete render_text_screen;
 
     delete blur_buffer;
     delete bloom_buffer;
