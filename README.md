@@ -194,3 +194,6 @@ Após finalizar a instalação das libs e a configuração do codeblock, no arqu
 
 ## Exemplo-46 (Deferred Shader Simple Optimization)
 ![ex_46](./images/ex_46.png)
+
+## Exemplo-47 (SSAO - Ambiente Occlusion)
+![ex_47](./images/ex_47.gif)
